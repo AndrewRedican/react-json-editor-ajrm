@@ -1,0 +1,40 @@
+/* ========================================== */
+/* Disable Select and Drag
+*/
+img, p, h1, h2, h3, h4, h5, h6, a, br, span, .h1, .h2, .h3, .h4, .h5, .h6 {
+    user-drag: none; 
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    draggable: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+/* ========================================== */
+/* Scroll Bar
+*/
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #888;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(100,100,100,0.4); 
+}
