@@ -13,7 +13,7 @@
     "allow-same-version": true
   },
   "scripts": {
-    "prepublishOnly": "npm build",
+    "prepublishOnly": "npm run build",
     "build": "node ./node_modules/webpack/bin/webpack.js"
   },
   "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
