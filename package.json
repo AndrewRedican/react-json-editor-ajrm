@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "ISC",
@@ -8,10 +8,13 @@
   "bugs": {
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "allow-same-version": true
+  },
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack/dev.config.js",
-    "build": "node ./node_modules/webpack/bin/webpack.js --config webpack/prod.config.js"
+    "prepublishOnly": "npm build",
+    "build": "node ./node_modules/webpack/bin/webpack.js"
   },
   "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
   "keywords": [
@@ -34,7 +37,21 @@
     "javascript object syntax validator",
     "json debug"
   ],
-  "dependencies": {
-    "react": "^16.2.0"
+  "peerDependencies": {
+    "react": ">=16.2.0",
+    "react-dom": ">=16.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-remove-strict-mode": "0.0.2",
+    "webpack": "^3.10.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "react": ">=16.2.0",
+    "react-dom": ">=16.2.0"
   }
 }

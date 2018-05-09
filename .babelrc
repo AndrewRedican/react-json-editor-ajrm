@@ -1,0 +1,7 @@
+{
+  "presets": ["react", "env"],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-remove-strict-mode"
+  ]
+}

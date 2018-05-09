@@ -61,7 +61,9 @@
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()          | A unique id to identify component.                                                     | string  | Mandatory |
-| [colors]()      | Contains the following properties to customize the color palette used: ``              | object  | Optional  |
+| [colors]()      | Contains the following properties to customize the color used for each data type:
+                    `default`, `string`, `number`, `colon`, `keys`, `keys_whiteSpace`, `primitive`, 
+                    `error`, `background`, and `background_warning`                                        | object  | Optional  |
 | [confirmGood]() | Send `false` if you would like for the checkmark to confirm good syntax to be hidden.  | boolean | Optional  |
 | [height]()      | Set a specific height for the entire component                                         | string  | Optional  |
 | [viewOnly]()    | Send `true` if you would like for content shown not to be editable.                    | boolean | Optional  |
