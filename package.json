@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "ISC",
@@ -9,9 +9,6 @@
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
   },
   "main": "dist/index.js",
-  "publishConfig": {
-    "allow-same-version": true
-  },
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "node ./node_modules/webpack/bin/webpack.js"
