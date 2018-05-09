@@ -7,18 +7,17 @@ const
 
 module.exports = {
     entry : [
-        'babel-polyfill',
         './src/index.js'
     ],
-    output: {      
-        path           : path.join(__dirname, './dist'),      
-        filename       : 'index.js',      
-        library        : libraryName,      
-        libraryTarget  : 'umd',      
-        publicPath     : '/dist/',      
-        umdNamedDefine : true  
+    output: {
+        path           : path.join(__dirname, './dist'), 
+        filename       : 'index.js',
+        library        : libraryName,
+        libraryTarget  : 'umd',
+        publicPath     : '/dist/',
+        umdNamedDefine : true
     },
-    plugins : [ 
+    plugins : [
         new webpack.DefinePlugin({ 'process.env.NODE_ENV': 'true' }),
         new UglifyJSPlugin()
     ],
@@ -38,24 +37,24 @@ module.exports = {
             }
         ]
     },
-    resolve: {      
-        alias: {          
+    resolve: {
+        alias: {
             react      : path.resolve(__dirname, './node_modules/react'),
-            'react-dom': path.resolve(__dirname, './node_modules/react-dom'),      
-        }  
+            'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+        }
     },
     externals: {
-        react: {          
-            commonjs  : 'react',          
-            commonjs2 : 'react',          
-            amd       : 'React',          
-            root      : 'React'      
-        },      
-        'react-dom': {          
-            commonjs  : 'react-dom',          
-            commonjs2 : 'react-dom',          
-            amd       : 'ReactDOM',          
-            root      : 'ReactDOM'      
-        }  
+        react: {
+            commonjs  : 'react',
+            commonjs2 : 'react',
+            amd       : 'React',
+            root      : 'React'
+        },
+        'react-dom': {
+            commonjs  : 'react-dom',
+            commonjs2 : 'react-dom',
+            amd       : 'ReactDOM',
+            root      : 'ReactDOM'
+        }
     }
 }
