@@ -25,7 +25,7 @@
 ## Live Demo ? Test it right away!
 
 1. Clone or fork this Github repository
-2. Go to [footFolder/example/](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
+2. Go to [react-json-editor-ajrm/example/](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
 ```
     $ cd path/to/repo/example
 ```
@@ -40,7 +40,7 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes - May 8, 2018
+## Latest Release Notes [v2.0.4] - May 8, 2018
 1. Enhanced validations and information.
 2. Previous issue where the content format changed to due errors in syntax, has been fixed.
 3. Includes additional properties to further customize component.
@@ -61,9 +61,7 @@
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()          | A unique id to identify component.                                                     | string  | Mandatory |
-| [colors]()      | Contains the following properties to customize the color used for each data type:
-                    `default`, `string`, `number`, `colon`, `keys`, `keys_whiteSpace`, `primitive`, 
-                    `error`, `background`, and `background_warning`                                        | object  | Optional  |
+| [colors]()      | Contains the following properties to customize the color used for each data type: `default`, `string`, `number`, `colon`, `keys`, `keys_whiteSpace`, `primitive`, `error`, `background`, and `background_warning` | object  | Optional  |
 | [confirmGood]() | Send `false` if you would like for the checkmark to confirm good syntax to be hidden.  | boolean | Optional  |
 | [height]()      | Set a specific height for the entire component                                         | string  | Optional  |
 | [viewOnly]()    | Send `true` if you would like for content shown not to be editable.                    | boolean | Optional  |
