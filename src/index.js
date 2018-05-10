@@ -154,6 +154,7 @@ class JSONInput extends Component {
                         fontFamily : 'Roboto, sans-serif',
                         ...style.container
                     }}
+                    onClick = { this.onClick }
                 >
                     <div
                         name  = 'warning-box'
@@ -169,6 +170,7 @@ class JSONInput extends Component {
                             transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
                             ...style.warningBox
                         }}
+                        onClick = { this.onClick }
                     >
                         <span
                             style = {{
@@ -180,7 +182,8 @@ class JSONInput extends Component {
                                 overflow      : 'hidden',
                                 verticalAlign : 'top',
                                 pointerEvents : 'none'
-                            }} 
+                            }}
+                            onClick = { this.onClick }
                         >
                             <div
                                 style = {{
@@ -192,6 +195,7 @@ class JSONInput extends Component {
                                     margin        : 0,
                                     pointerEvents : 'none'
                                 }}
+                                onClick = { this.onClick }
                             >
                                 <div
                                     style = {{
@@ -201,6 +205,7 @@ class JSONInput extends Component {
                                         transform     : 'translate(-50%, -50%)',
                                         pointerEvents : 'none'
                                     }}
+                                    onClick = { this.onClick }
                                 >
                                     <svg
                                         height  = '25px'
@@ -227,7 +232,8 @@ class JSONInput extends Component {
                                 verticalAlign : 'top',
                                 position      : 'absolute',
                                 pointerEvents : 'none'
-                            }}    
+                            }}
+                            onClick = { this.onClick }  
                         >
                             { this.renderErrorMessage() }
                         </span>
@@ -249,6 +255,7 @@ class JSONInput extends Component {
                             transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
                             ...style.body
                         }}
+                        onClick = { this.onClick }
                     >
                         <div
                             name  = 'labels'
@@ -264,6 +271,7 @@ class JSONInput extends Component {
                                 color     : '#D4D4D4',
                                 ...style.labelColumn
                             }}
+                            onClick = { this.onClick }
                         >
                         { this.renderLabels() }
                         </div>
