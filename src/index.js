@@ -17,7 +17,7 @@ class JSONInput extends Component {
         this.onKeyDown          = this.onKeyDown           .bind(this);
         this.stopEvent          = this.stopEvent           .bind(this);
         this.uniqueID           = 'AJRM-JSON-EDITOR' + this.props.id;
-        let colors = {};
+        let colors = {}, style = {};
         if('colors' in this.props)
             colors = {
                 default            : 'default'            in this.props.colors ? this.props.colors.default            : '#D4D4D4',
@@ -45,6 +45,29 @@ class JSONInput extends Component {
                 background_warning : '#1E1E1E'
             };
         this.colors = colors;
+        if('style' in this.props)
+            style = {
+                outerBox     : 'outerBox'     in this.props.style ?  this.props.style.outerBox     : {},
+                container    : 'container'    in this.props.style ?  this.props.style.container    : {},
+                warningBox   : 'warningBox'   in this.props.style ?  this.props.style.warningBox   : {},
+                errorMessage : 'errorMessage' in this.props.style ?  this.props.style.errorMessage : {},
+                body         : 'body'         in this.props.style ?  this.props.style.body         : {},
+                labelColumn  : 'labelColumn'  in this.props.style ?  this.props.style.labelColumn  : {},
+                labels       : 'labels'       in this.props.style ?  this.props.style.labels       : {},
+                contentBox   : 'contentBox'   in this.props.style ?  this.props.style.contentBox   : {} 
+            };
+        else
+            style = {
+                outerBox     : {},
+                container    : {},
+                warningBox   : {},
+                errorMessage : {},
+                body         : {},
+                labelColumn  : {},
+                labels       : {},
+                contentBox   : {}
+            };
+        this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
         this.state  = { 
             preText     : '',
@@ -64,6 +87,7 @@ class JSONInput extends Component {
             focused     = this.state.focused,
             uniqueID    = this.uniqueID,
             colors      = this.colors,
+            style       = this.style,
             confirmGood = this.confirmGood,
             hasError    = error ? 'token' in error : false,
             totalHeight = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
@@ -82,7 +106,7 @@ class JSONInput extends Component {
                     margin     : 0,
                     boxSizing  : 'border-box',
                     position   : 'relative',
-                    ...this.props.style.outerBox
+                    ...style.outerBox
                 }}
             >
                 {
@@ -128,7 +152,7 @@ class JSONInput extends Component {
                         boxSizing  : 'border-box',
                         overflow   : 'hidden',
                         fontFamily : 'Roboto, sans-serif',
-                        ...this.props.style.container
+                        ...style.container
                     }}
                 >
                     <div
@@ -143,7 +167,7 @@ class JSONInput extends Component {
                             backgroundColor          : colors.background_warning,
                             transitionDuration       : '0.2s',
                             transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
-                            ...this.props.style.warningBox
+                            ...style.warningBox
                         }}
                     >
                         <span
@@ -223,7 +247,7 @@ class JSONInput extends Component {
                             backgroundColor          : colors.background,
                             transitionDuration       : '0.2s',
                             transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
-                            ...this.props.style.body
+                            ...style.body
                         }}
                     >
                         <div
@@ -238,7 +262,7 @@ class JSONInput extends Component {
                                 padding   : '5px 0px 5px 10px',
                                 overflow  : 'hidden',
                                 color     : '#D4D4D4',
-                                ...this.props.style.labelColumn
+                                ...style.labelColumn
                             }}
                         >
                         { this.renderLabels() }
@@ -259,7 +283,7 @@ class JSONInput extends Component {
                                 whiteSpace : 'pre-line',
                                 color      : '#D4D4D4',
                                 outline    : 'none',
-                                ...this.props.style.contentBox
+                                ...style.contentBox
                             }}
                             dangerouslySetInnerHTML = { this.createMarkup(markupText) }
                             onKeyPress     = { this.onKeyPress }
@@ -278,7 +302,9 @@ class JSONInput extends Component {
         );
     }
     renderErrorMessage(){
-        const error = this.state.error;
+        const
+            error = this.state.error,
+            style = this.style;
         if(!error) return void(0);
         return (
             <p
@@ -296,7 +322,7 @@ class JSONInput extends Component {
                     display        : 'flex',
                     flexDirection  : 'column',
                     justifyContent : 'center',
-                    ...this.props.style.errorMessage
+                    ...style.errorMessage
                 }}
             >
             { error.reason + ' at line ' + error.line }
@@ -307,6 +333,7 @@ class JSONInput extends Component {
         const
             uniqueID  = this.uniqueID + '-line-',
             colors    = this.colors,
+            style     = this.style,
             errorLine = this.state.error ? this.state.error.line : -1,
             lines     = this.state.lines ? this.state.lines : 1;
         let
@@ -319,7 +346,7 @@ class JSONInput extends Component {
                     key   = {uniqueID + number}
                     id    = {uniqueID + number}
                     style = {{
-                        ...this.props.style.labels,
+                        ...style.labels,
                         color : color
                     }}
                 >
