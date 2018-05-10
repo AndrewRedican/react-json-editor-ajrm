@@ -69,6 +69,17 @@ class JSONInput extends Component {
             };
         this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
+        const
+            totalHeight   = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
+            totalWidth    = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
+            bodyHeight    = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
+            bodyWidth     = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
+            messageWidth  = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
+        this.totalHeight  = totalHeight;
+        this.totalWidth   = totalWidth;
+        this.bodyHeight   = bodyHeight;
+        this.bodyWidth    = bodyWidth;
+        this.messageWidth = messageWidth;
         this.state  = { 
             preText     : '',
             markupText  : '',
@@ -89,12 +100,12 @@ class JSONInput extends Component {
             colors       = this.colors,
             style        = this.style,
             confirmGood  = this.confirmGood,
-            hasError     = error ? 'token' in error : false,
-            totalHeight  = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
-            totalWidth   = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
-            bodyHeight   = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
-            bodyWidth    = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
-            messageWidth = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
+            totalHeight  = this.totalHeight,
+            totalWidth   = this.totalWidth,
+            bodyHeight   = this.bodyHeight,
+            bodyWidth    = this.bodyWidth,
+            messageWidth = this.messageWidth,
+            hasError     = error ? 'token' in error : false;
         return (
             <div
                 name  = 'outer-box'
@@ -312,8 +323,9 @@ class JSONInput extends Component {
     }
     renderErrorMessage(){
         const
-            error = this.state.error,
-            style = this.style;
+            messageWidth = this.messageWidth,
+            error        = this.state.error,
+            style        = this.style;
         if(!error) return void(0);
         return (
             <p
