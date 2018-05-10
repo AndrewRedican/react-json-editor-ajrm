@@ -67,7 +67,9 @@ class JSONInput extends Component {
             confirmGood = this.confirmGood,
             hasError    = error ? 'token' in error : false,
             totalHeight = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
-            bodyHeight  =  (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px';
+            totalWidth  = 'width' in this.props ?  (parseInt(this.props.width.replace(/px/,'')) + 44) + 'px' : '479px',
+            bodyHeight  =  (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
+            bodyWidth   =  (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px';
         return (
             <div
                 name  = 'outer-box'
@@ -76,10 +78,11 @@ class JSONInput extends Component {
                     display    : 'block',
                     overflow   : 'none',
                     height     : totalHeight,
-                    width      : '479px',
+                    width      : totalWidth,
                     margin     : 0,
                     boxSizing  : 'border-box',
-                    position   : 'relative'
+                    position   : 'relative',
+                    ...this.style.outerBox
                 }}
             >
                 {
@@ -120,11 +123,12 @@ class JSONInput extends Component {
                     style = {{
                         display    : 'block',
                         height     : totalHeight,
-                        width      : '479px',
+                        width      : totalWidth,
                         margin     : 0,
                         boxSizing  : 'border-box',
                         overflow   : 'hidden',
-                        fontFamily : 'Roboto, sans-serif'
+                        fontFamily : 'Roboto, sans-serif',
+                        ...this.props.style.container
                     }}
                 >
                     <div
@@ -134,11 +138,12 @@ class JSONInput extends Component {
                             display                  : 'block',
                             overflow                 : 'hidden',
                             height                   : hasError ? '60px' : '0px',
-                            width                    : '479px',
+                            width                    : totalWidth,
                             margin                   : 0,
                             backgroundColor          : colors.background_warning,
                             transitionDuration       : '0.2s',
-                            transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)'
+                            transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
+                            ...this.props.style.warningBox
                         }}
                     >
                         <span
@@ -210,28 +215,30 @@ class JSONInput extends Component {
                             display                  : 'block',
                             overflow                 : 'none',
                             height                   : hasError ? bodyHeight : totalHeight,
-                            width                    : '479px',
+                            width                    : totalWidth,
                             margin                   : 0,
                             resize                   : 'none',
                             fontFamily               : 'Roboto Mono, Monaco, monospace',
                             fontSize                 : '11px',
                             backgroundColor          : colors.background,
                             transitionDuration       : '0.2s',
-                            transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)'
+                            transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
+                            ...this.props.style.body
                         }}
                     >
                         <div
-                            name  = 'label'
+                            name  = 'labels'
                             id    = {uniqueID + '-labels'}
                             style = {{
                                 display   : 'inline-block',
                                 boxSizing : 'border-box',
                                 height    : '100%',
-                                width     : '9%',
+                                width     : '44px',
                                 margin    : 0,
                                 padding   : '5px 0px 5px 10px',
                                 overflow  : 'hidden',
-                                color     : '#D4D4D4'
+                                color     : '#D4D4D4',
+                                ...this.props.style.labelColumn
                             }}
                         >
                         { this.renderLabels() }
@@ -243,7 +250,7 @@ class JSONInput extends Component {
                                 display    : 'inline-block',
                                 boxSizing  : 'border-box',
                                 height     : '100%',
-                                width      : '91%',
+                                width      : bodyWidth,
                                 margin     : 0,
                                 padding    : '5px',
                                 overflowX  : 'hidden',
@@ -251,7 +258,8 @@ class JSONInput extends Component {
                                 wordWrap   : 'break-word',
                                 whiteSpace : 'pre-line',
                                 color      : '#D4D4D4',
-                                outline    : 'none'
+                                outline    : 'none',
+                                ...this.props.style.contentBox
                             }}
                             dangerouslySetInnerHTML = { this.createMarkup(markupText) }
                             onKeyPress     = { this.onKeyPress }
@@ -287,7 +295,8 @@ class JSONInput extends Component {
                     overflowWrap   : 'break-word',
                     display        : 'flex',
                     flexDirection  : 'column',
-                    justifyContent : 'center'
+                    justifyContent : 'center',
+                    ...this.props.style.errorMessage
                 }}
             >
             { error.reason + ' at line ' + error.line }
@@ -309,7 +318,10 @@ class JSONInput extends Component {
                 <div 
                     key   = {uniqueID + number}
                     id    = {uniqueID + number}
-                    style = {{ color : color }}
+                    style = {{
+                        ...this.props.style.labels,
+                        color : color
+                    }}
                 >
                     {number}
                 </div>
