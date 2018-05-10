@@ -82,18 +82,19 @@ class JSONInput extends Component {
     }
     render(){
         const 
-            markupText  = this.state.markupText,
-            error       = this.state.error,
-            focused     = this.state.focused,
-            uniqueID    = this.uniqueID,
-            colors      = this.colors,
-            style       = this.style,
-            confirmGood = this.confirmGood,
-            hasError    = error ? 'token' in error : false,
-            totalHeight = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
-            totalWidth  = 'width' in this.props ?  (parseInt(this.props.width.replace(/px/,'')) + 44) + 'px' : '479px',
-            bodyHeight  =  (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
-            bodyWidth   =  (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px';
+            markupText   = this.state.markupText,
+            error        = this.state.error,
+            focused      = this.state.focused,
+            uniqueID     = this.uniqueID,
+            colors       = this.colors,
+            style        = this.style,
+            confirmGood  = this.confirmGood,
+            hasError     = error ? 'token' in error : false,
+            totalHeight  = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
+            totalWidth   = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
+            bodyHeight   = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
+            bodyWidth    = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
+            messageWidth = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
         return (
             <div
                 name  = 'outer-box'
@@ -226,7 +227,7 @@ class JSONInput extends Component {
                             style = {{
                                 display       : 'inline-block',
                                 height        : '60px',
-                                width         : '419px',
+                                width         : messageWidth,
                                 margin        : 0,
                                 overflow      : 'hidden',
                                 verticalAlign : 'top',
@@ -320,7 +321,7 @@ class JSONInput extends Component {
                     color          : 'red',
                     fontSize       : '12px',
                     position       : 'absolute',
-                    width          : '419px',
+                    width          : messageWidth,
                     height         : '60px',
                     boxSizing      : 'border-box',
                     margin         : 0,
