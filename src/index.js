@@ -82,7 +82,7 @@ class JSONInput extends Component {
                     margin     : 0,
                     boxSizing  : 'border-box',
                     position   : 'relative',
-                    ...this.style.outerBox
+                    ...this.props.style.outerBox
                 }}
             >
                 {
