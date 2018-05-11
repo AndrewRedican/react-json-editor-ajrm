@@ -440,7 +440,7 @@ class JSONInput extends Component {
         const preText = this.state.preText;
         if(!('placeholder' in this.props))  return;
         const placeholder = this.props.placeholder;
-        if([preText,undefined].indexOf(placeholder)>-1) return;
+        if([preText,undefined,null].indexOf(placeholder)>-1) return;
         if(typeof placeholder !== 'object') return console.error('placeholder in props is not an object:',placeholder);
         const data = this.tokenize(placeholder);
         this.setState({
