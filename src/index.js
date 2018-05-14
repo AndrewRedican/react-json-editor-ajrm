@@ -523,8 +523,8 @@ class JSONInput extends Component {
                             buffer[buffer.active] = char;
                         break;
                         default :
-                            if(type===buffer.active) buffer[type] += char;
-                            else {
+                            const linebreakNextToString = char==='\n' && buffer.active==='string' && buffer.string.length > 0;
+                            if(type!==buffer.active||linebreakNextToString){
                                 if(buffer.active) buffer.quarks.push({
                                     string : buffer[buffer.active],
                                     type   : prefix + '-' + buffer.active
@@ -533,6 +533,7 @@ class JSONInput extends Component {
                                 buffer.active  = type;
                                 buffer[buffer.active] = char;
                             }
+                            else buffer[type] += char;
                         break;
                     }
                 }
