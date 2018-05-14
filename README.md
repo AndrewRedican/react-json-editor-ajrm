@@ -40,7 +40,7 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.2.0] - May 14, 2018
+## Latest Release Notes [v2.2.2] - May 14, 2018
 1. Fixed issues when data is pasted into component.
 
 ## Features
