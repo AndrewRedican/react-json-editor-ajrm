@@ -9,6 +9,7 @@ class JSONInput extends Component {
         this.onBlur             = this.onBlur              .bind(this);
         this.update             = this.update              .bind(this);
         this.renderLabels       = this.renderLabels        .bind(this);
+        this.newSpan            = this.newSpan             .bind(this);
         this.renderErrorMessage = this.renderErrorMessage  .bind(this);
         this.onScroll           = this.onScroll            .bind(this);
         this.showPlaceholder    = this.showPlaceholder     .bind(this);
@@ -17,7 +18,7 @@ class JSONInput extends Component {
         this.onKeyDown          = this.onKeyDown           .bind(this);
         this.onPaste            = this.onPaste             .bind(this);
         this.stopEvent          = this.stopEvent           .bind(this);
-        this.uniqueID           = 'AJRM-JSON-EDITOR' + this.props.id;
+        this.uniqueID           = 'AJRM-JSON-EDITOR-' + this.props.id;
         let colors = {}, style = {};
         if('colors' in this.props)
             colors = {
@@ -81,6 +82,7 @@ class JSONInput extends Component {
         this.bodyHeight   = bodyHeight;
         this.bodyWidth    = bodyWidth;
         this.messageWidth = messageWidth;
+        this.renderCount  = 1;
         this.state  = { 
             preText     : '',
             markupText  : '',
@@ -105,6 +107,7 @@ class JSONInput extends Component {
             bodyWidth    = this.bodyWidth,
             messageWidth = this.messageWidth,
             hasError     = error ? 'token' in error : false;
+        this.renderCount++;
         return (
             <div
                 name  = 'outer-box'
@@ -380,6 +383,31 @@ class JSONInput extends Component {
         if(markupText===undefined) return { __html: '' };
         return { __html: '' + markupText };
     }
+    newSpan(i,token,depth){
+        const
+            uniqueID = this.uniqueID + '-token-' + i + '-rc-' + this.renderCount,
+            colors   = this.colors,
+            type     = token.type,
+            string   = token.string;
+        let color = '';
+        switch(type){
+            case 'string' : case 'number' : case 'primitive' : case 'error' :     color = colors[token.type]; break;
+            case 'key'    : if(string===' ') color = colors.keys_whiteSpace; else color = colors.keys;        break;
+            case 'symbol' : if(string===':') color = colors.colon;           else color = colors.default;     break;
+            default : color = colors.default; break;
+        }
+        return (
+            '<span' + 
+                ' id="'           + uniqueID + 
+                '" key="'         + uniqueID + 
+                '" type="'        + type     + 
+                '" value="'       + string   + 
+                '" depth="'       + depth    + 
+                '" style="color:' + color    +
+            '">'                  + string   +
+            '</span>'
+        );
+    }
     update(){
         const
             uniqueID  = this.uniqueID,
@@ -456,7 +484,7 @@ class JSONInput extends Component {
     }
     tokenize(something){
         if(typeof something !== 'object') return console.error('tokenize() expects object type properties only. Got \'' + typeof something + '\' type instead.');
-
+        const newSpan = this.newSpan;
         /**
          *     DOM NODE || ONBLUR OR UPDATE
          */
@@ -1124,26 +1152,6 @@ class JSONInput extends Component {
             let
                 _line   = 1,
                 _depth  = 0;
-            function newSpan(token, colors){
-                const
-                    type   = token.type,
-                    string = token.string;
-                let color = '';
-                switch(type){
-                    case 'string' : case 'number' : case 'primitive' : case 'error' :     color = colors[token.type]; break;
-                    case 'key'    : if(string===' ') color = colors.keys_whiteSpace; else color = colors.keys;        break;
-                    case 'symbol' : if(string===':') color = colors.colon;           else color = colors.default;     break;
-                    default : color = colors.default; break;
-                }
-                return (
-                    '<span id="' + i + 
-                        '" type="'  + type  + 
-                        '" value="' + string + 
-                        '" depth="' + _depth + 
-                        '" style="color:' + color +
-                    '">' + string + '</span>'
-                );
-            }
             function newIndent(){
                 var space = []; 
                 for (var i = 0; i < _depth * 2; i++) space.push('&nbsp;'); 
@@ -1166,28 +1174,28 @@ class JSONInput extends Component {
                 switch(type){
                     case 'space' : case 'linebreak' : break;
                     case 'string' : case 'number'    : case 'primitive' : case 'error' : 
-                        buffer.markup += ((followsSymbol(i,[',','[']) ? newLineBreakAndIndent() : '') + newSpan(token,colors)); 
+                        buffer.markup += ((followsSymbol(i,[',','[']) ? newLineBreakAndIndent() : '') + newSpan(i,token,_depth)); 
                     break;
                     case 'key' :
-                        buffer.markup += (newLineBreakAndIndent() + newSpan(token,colors));
+                        buffer.markup += (newLineBreakAndIndent() + newSpan(i,token,_depth));
                     break;
                     case 'colon' :
-                        buffer.markup += (newSpan(token,colors) + '&nbsp;');
+                        buffer.markup += (newSpan(i,token,_depth) + '&nbsp;');
                     break;
                     case 'symbol' :
                         switch(string){
                             case '[' : case '{' :
-                                buffer.markup += ((!followsSymbol(i,[':']) ? newLineBreakAndIndent() : '') + newSpan(token,colors)); _depth++;
+                                buffer.markup += ((!followsSymbol(i,[':']) ? newLineBreakAndIndent() : '') + newSpan(i,token,_depth)); _depth++;
                             break;
                             case ']' : case '}' :
                                 _depth--;
                                 const
                                     islastToken  = i === buffer.tokens_merge.length - 1,
                                     _adjustment = i > 0 ? ['[','{'].indexOf(buffer.tokens_merge[i-1].string)>-1  ? '' : newLineBreakAndIndent(islastToken) : '';
-                                buffer.markup += (_adjustment + newSpan(token,colors));
+                                buffer.markup += (_adjustment + newSpan(i,token,_depth));
                             break;
                             case ',' :
-                                buffer.markup += newSpan(token,colors);
+                                buffer.markup += newSpan(i,token,_depth);
                             break;
                         }
                     break;
@@ -1209,7 +1217,7 @@ class JSONInput extends Component {
                         type   = token.type,
                         string = token.string;
                     if(type==='linebreak') _line++;
-                    buffer.markup += newSpan(token,colors);
+                    buffer.markup += newSpan(i,token,_depth);
                     _line_fallback += countCarrigeReturn(string);
                 }
                 _line++;
@@ -1453,19 +1461,7 @@ class JSONInput extends Component {
             let markup = ''; 
             const lastIndex = buffer2.tokens.length - 1;
             buffer2.tokens.forEach( (token, i) => {
-                let span = (
-                    '<span id="' + i +
-                        '" type="'  + token.type  + 
-                        '" value="' + token.value + 
-                        '" depth="' + token.depth + 
-                        '" style="color:'
-                    );
-                let color = colors.default;
-                if(['string','number','primitive'].indexOf(token.type) > -1) color = colors[token.type];
-                else if(token.type==='key')
-                        if(token.string.indexOf(' ') > -1) color = colors.keys_whiteSpace; else color = colors.keys;
-                else if(token.string===':') color = colors.colon;
-                span += color + '">' + token.string + '</span>';
+                let span = newSpan(i,token,token.depth);
                 switch(token.string){
                     case '{' : case '[' :
                         const nextToken = i < (buffer2.tokens.length - 1) - 1 ? buffer2.tokens[i+1] : '';
