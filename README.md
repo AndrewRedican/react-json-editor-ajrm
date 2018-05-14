@@ -40,8 +40,8 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.1.0] - May 10, 2018
-1. Able to customize component further via new properties.
+## Latest Release Notes [v2.1.9] - May 10, 2018
+1. Fixed issues when data is pasted into component.
 
 ## Features
 
