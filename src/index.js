@@ -88,15 +88,13 @@ class JSONInput extends Component {
             json        : '',
             jsObject    : undefined,
             lines       : false,
-            error       : false,
-            focused     : false
+            error       : false
         };
     }
     render(){
         const 
             markupText   = this.state.markupText,
             error        = this.state.error,
-            focused      = this.state.focused,
             uniqueID     = this.uniqueID,
             colors       = this.colors,
             style        = this.style,
@@ -421,11 +419,10 @@ class JSONInput extends Component {
     }
     onClick(){ 
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
-        this.state = { focused : true };
     }
     onBlur(){
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
-        if(this.state.focused) this.update();
+        this.update();
     }
     onScroll(event){
         const uniqueID = this.uniqueID;
