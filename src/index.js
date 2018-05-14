@@ -15,6 +15,7 @@ class JSONInput extends Component {
         this.tokenize           = this.tokenize            .bind(this);
         this.onKeyPress         = this.onKeyPress          .bind(this);
         this.onKeyDown          = this.onKeyDown           .bind(this);
+        this.onPaste            = this.onPaste             .bind(this);
         this.stopEvent          = this.stopEvent           .bind(this);
         this.uniqueID           = 'AJRM-JSON-EDITOR' + this.props.id;
         let colors = {}, style = {};
@@ -311,6 +312,7 @@ class JSONInput extends Component {
                             onClick        = { this.onClick }
                             onBlur         = { this.onBlur }
                             onScroll       = { this.onScroll }
+                            onPaste        = { this.onPaste }
                             autoComplete   = 'off'
                             autoCorrect    = 'off' 
                             autoCapitalize = 'off'
@@ -390,7 +392,7 @@ class JSONInput extends Component {
             markupText : data.markup,
             json       : data.json,
             jsObject   : data.jsObject,
-            lines      : data.lines, 
+            lines      : data.lines,
             error      : data.error
         });
         this.setState({
@@ -412,6 +414,10 @@ class JSONInput extends Component {
     }
     onKeyDown(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+    }
+    onPaste(event){
+        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        this.update();
     }
     onClick(){ 
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
