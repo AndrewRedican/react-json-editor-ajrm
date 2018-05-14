@@ -4,8 +4,8 @@ import ReactDOM             from 'react-dom';
 /** 
  * Import JSONInput component
  */
-import JSONInput          from 'react-json-editor-ajrm'; // Using distribution version in node_modules 
-//import JSONInput          from '../../src/index'; // Use source code
+//import JSONInput          from 'react-json-editor-ajrm'; // Using distribution version in node_modules 
+import JSONInput          from '../../src/index'; // Use source code
 
 /**
  * Import some data. This is a sample object, which will be passed down to JSONInput component properperties.
