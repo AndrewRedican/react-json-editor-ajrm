@@ -472,7 +472,7 @@ class JSONInput extends Component {
         if(!('placeholder' in this.props))  return;
         const placeholder = this.props.placeholder;
         if([preText,undefined,null].indexOf(placeholder)>-1) return;
-        if(typeof placeholder !== 'object') return console.error('placeholder in props is not an object:',placeholder);
+        if(typeof placeholder !== 'object') return;
         const data = this.tokenize(placeholder);
         this.setState({
             preText    : placeholder,
@@ -1429,27 +1429,6 @@ class JSONInput extends Component {
                     default : indentation += token.string; break;
                 }
             });
-            let json = ''; buffer2.tokens.forEach( token => {
-                switch(token.type){
-                    case 'string' : case 'key' :
-                        let
-                            segment = '', 
-                            string  = token.string;
-                        if(string.length > 3){
-                            segment = string.substring(1,string.length - 1);
-                            segment = segment.replace(/"/g, '\\"');
-                            string  = string.charAt(0) + segment + string.charAt(string.length - 1);
-                        }
-                        if(string.charAt(0)==="'")
-                            string = '"' + string.substring(1,string.length - 1) + '"';
-                        else
-                            if(string.charAt(0)!=='"') string = '"' + string + '"';
-                        json += string;
-                        break;
-                    default : json += token.string; break;
-                }
-            });
-            let jsObject = JSON.parse(json);
             const colors = this.colors;
             let lines = 1;
             function indentII(number){ 
@@ -1487,8 +1466,8 @@ class JSONInput extends Component {
                 tokens   : buffer2.tokens,
                 noSpaces : clean,
                 indented : indentation,
-                json     : json,
-                jsObject : jsObject,
+                json     : JSON.stringify(something),
+                jsObject : something,
                 markup   : markup,
                 lines    : lines
             };
