@@ -89,7 +89,7 @@ class JSONInput extends Component {
         this.bodyWidth         = bodyWidth;
         this.messageWidth      = messageWidth;
         this.renderCount       = 1;
-        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate) this.timer = setInterval(this.scheduledUpdate,500);
+        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate) this.timer = setInterval(this.scheduledUpdate,100);
         this.updateTime        = false;
         this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;  
         this.state  = { 
