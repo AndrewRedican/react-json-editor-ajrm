@@ -24,6 +24,7 @@ class JSONInput extends Component {
         this.onPaste            = this.onPaste             .bind(this);
         this.stopEvent          = this.stopEvent           .bind(this);
         this.uniqueID           = 'AJRM-JSON-EDITOR-' + this.randomString(10) + '-' + this.props.id;
+        this.contentID          = this.uniqueID + '-content-box';
         let colors = {}, style = {};
         if('colors' in this.props)
             colors = {
@@ -106,6 +107,7 @@ class JSONInput extends Component {
             markupText   = this.state.markupText,
             error        = this.state.error,
             uniqueID     = this.uniqueID,
+            contentID    = this.contentID,
             colors       = this.colors,
             style        = this.style,
             confirmGood  = this.confirmGood,
@@ -298,7 +300,7 @@ class JSONInput extends Component {
                         { this.renderLabels() }
                         </div>
                         <div
-                            id = {uniqueID + '-content-box'}
+                            id = {contentID}
                             contentEditable = { true }  
                             style = {{
                                 display    : 'inline-block',
@@ -424,15 +426,15 @@ class JSONInput extends Component {
         return result;
     }    
     getCursorPosition(){
-        const { uniqueID } = this;
+        const contentID = this.contentID;
         function isChildOf(node) {
             while (node !== null) {
-                if (node.id === uniqueID) return true;
+                if (node.id === contentID) return true;
                 node = node.parentNode;
             }
             return false;
         };
-        var 
+        let 
             selection = window.getSelection(),
             charCount = -1,
             node;
@@ -441,7 +443,7 @@ class JSONInput extends Component {
             node = selection.focusNode; 
             charCount = selection.focusOffset;
             while (node) {
-                if (node.id === uniqueID) break;
+                if (node.id === contentID) break;
                 if (node.previousSibling) {
                     node = node.previousSibling;
                     charCount += node.textContent.length;
@@ -453,22 +455,47 @@ class JSONInput extends Component {
         }
         return charCount;
     }
-    setCursorPosition(chars) {
-        if (chars >= 0) {
+    setCursorPosition(nextPosition) {
+        if([false,null,undefined].indexOf(nextPosition)>-1) return;
+        const contentID = this.contentID;
+        function createRange(node, chars, range) {
+            if (!range) {
+                range = document.createRange();
+                range.selectNode(node);
+                range.setStart(node, 0);
+            }
+            if (chars.count === 0) {
+                range.setEnd(node, chars.count);
+            } else if (node && chars.count >0) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (node.textContent.length < chars.count) chars.count -= node.textContent.length;
+                    else { range.setEnd(node, chars.count); chars.count = 0; }
+                } else
+                for (var lp = 0; lp < node.childNodes.length; lp++) {
+                    range = createRange(node.childNodes[lp], chars, range);
+                    if (chars.count === 0) break; 
+                }
+            }
+            return range;
+        };
+        function setPosition(chars) {
+            if (chars < 0) return;
             let
                 selection = window.getSelection(),
-                range     = createRange(document.getElementById(uniqueID).parentNode, { count: chars });
-            if (range) {
-                range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
+                range     = createRange(document.getElementById(contentID), { count: chars });
+            if (!range) return;
+            range.collapse(false);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        };
+        if(nextPosition > 0) setPosition(nextPosition); 
+        else document.getElementById(contentID).focus();
     }
-    update(){
+    update(cursorOffset=0){
+        let cursorPosition = this.getCursorPosition() + cursorOffset;
         const
-            uniqueID  = this.uniqueID,
-            container = document.getElementById(uniqueID + '-content-box'),
+            contentID  = this.contentID,
+            container = document.getElementById(contentID),
             data      = this.tokenize(container);
         if('onChange' in this.props) this.props.onChange({
             plainText  : data.indentation,
@@ -487,6 +514,7 @@ class JSONInput extends Component {
             error      : data.error
         });
         this.updateTime = false;
+        this.setCursorPosition(cursorPosition);
     }
     scheduledUpdate(){
         if('onKeyPressUpdate' in this.props) if(this.props.onKeyPressUpdate===false) return;
@@ -546,8 +574,8 @@ class JSONInput extends Component {
             }
     }
     componentDidMount(){
-        const uniqueID = this.uniqueID;
-        document.getElementById(uniqueID + '-content-box').addEventListener('paste', e => {
+        const contentID = this.contentID;
+        document.getElementById(contentID).addEventListener('paste', e => {
             e.preventDefault();
             var text = e.clipboardData.getData('text/plain');
             document.execCommand('insertHTML', false, text);
