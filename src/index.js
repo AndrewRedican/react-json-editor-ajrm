@@ -8,6 +8,8 @@ class JSONInput extends Component {
         this.onClick            = this.onClick             .bind(this);
         this.onBlur             = this.onBlur              .bind(this);
         this.update             = this.update              .bind(this);
+        this.scheduledUpdate    = this.scheduledUpdate     .bind(this);
+        this.setUpdateTime      = this.setUpdateTime       .bind(this);
         this.renderLabels       = this.renderLabels        .bind(this);
         this.newSpan            = this.newSpan             .bind(this);
         this.renderErrorMessage = this.renderErrorMessage  .bind(this);
@@ -72,17 +74,20 @@ class JSONInput extends Component {
         this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
         const
-            totalHeight   = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
-            totalWidth    = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
-            bodyHeight    = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
-            bodyWidth     = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
-            messageWidth  = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
-        this.totalHeight  = totalHeight;
-        this.totalWidth   = totalWidth;
-        this.bodyHeight   = bodyHeight;
-        this.bodyWidth    = bodyWidth;
-        this.messageWidth = messageWidth;
-        this.renderCount  = 1;
+            totalHeight        = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
+            totalWidth         = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
+            bodyHeight         = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
+            bodyWidth          = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
+            messageWidth       = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
+        this.totalHeight       = totalHeight;
+        this.totalWidth        = totalWidth;
+        this.bodyHeight        = bodyHeight;
+        this.bodyWidth         = bodyWidth;
+        this.messageWidth      = messageWidth;
+        this.renderCount       = 1;
+        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate) this.timer = setInterval(this.scheduledUpdate,500);
+        this.updateTime        = false;
+        this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;  
         this.state  = { 
             preText     : '',
             markupText  : '',
@@ -429,6 +434,18 @@ class JSONInput extends Component {
             lines      : data.lines, 
             error      : data.error
         });
+        this.updateTime = false;
+    }
+    scheduledUpdate(){
+        if('onKeyPressUpdate' in this.props) if(this.props.onKeyPressUpdate===false) return;
+        const { updateTime } = this;
+        if(updateTime===false) return;
+        if(updateTime > new Date().getTime()) return;
+        this.update();
+    }
+    setUpdateTime(){
+        if('onKeyPressUpdate' in this.props) if(this.props.onKeyPressUpdate===false) return;
+        this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
     }
     stopEvent(event){
         if(!event) return;
@@ -437,9 +454,17 @@ class JSONInput extends Component {
     }
     onKeyPress(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        this.setUpdateTime();
     }
     onKeyDown(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        switch(event.key){
+            case 'Backspace' : case 'Delete' :
+                this.setUpdateTime();
+                return;
+            break;
+            default : break;
+        }
     }
     onPaste(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
@@ -457,7 +482,17 @@ class JSONInput extends Component {
         var labels = document.getElementById(uniqueID + '-labels');
         labels.scrollTop = event.target.scrollTop;
     }
-    componentDidUpdate(){ this.showPlaceholder(); }
+    componentDidUpdate(){ 
+        this.showPlaceholder();
+        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
+            if(!this.timer) this.timer = setInterval(this.scheduledUpdate,500);
+        }
+        else 
+            if(this.timer){
+                clearInterval(this.timer);
+                this.timer = false;
+            }
+    }
     componentDidMount(){
         const uniqueID = this.uniqueID;
         document.getElementById(uniqueID + '-content-box').addEventListener('paste', e => {
@@ -466,6 +501,9 @@ class JSONInput extends Component {
             document.execCommand('insertHTML', false, text);
         });
         this.showPlaceholder();
+    }
+    componentWillUnmount(){
+        if(this.timer) clearInterval(this.timer);
     }
     showPlaceholder(){
         const preText = this.state.preText;
