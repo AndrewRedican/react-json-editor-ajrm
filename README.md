@@ -40,8 +40,10 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.2.3] - May 15, 2018
-1. Code optimizations.
+## Latest Release Notes [v2.3.0] - May 22, 2018
+1. Component now rerenders on every keystroke by default, but can be opt-out. Delay can also be customized.
+2. Cursor now gets positioned on the same place it was originally located after the content has been rerendered.
+3. Other code optimizations.
 
 ## Features
 
@@ -59,9 +61,11 @@
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted             | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
 | [onChange]()                  | Whenever `onBlur` event takes place it will return content values                     | object  | Optional  |
-| [confirmGood]()               | Send `false` if you would like for the checkmark to confirm good syntax to be hidden. | boolean | Optional  |
+| [confirmGood]()               | Send `false` if you would like for the checkmark to confirm good syntax to be hidden  | boolean | Optional  |
 | [height]()                    | A shorthand property to set a specific height for the entire component                | string  | Optional  |
 | [width]()                     | A shorthand property to set a specific width for the entire component                 | string  | Optional  |
+| [onKeyPressUpdate]()          | Send `false` if you would like for component not to automatically update on key press | boolean | Optional  |
+| [waitAfterKeyPress]()         | Amount of milliseconds to wait before re-rendering content after keypress. Value defaults to `1000` when not specified. In other words, component will update if there is no additional keystroke after the last one within 1 second. Less than `100` milliseconds does not makes a difference. | number  | Optional  |
 | [colors]()                    | **Contains the following properties:**                                                | object  | Optional  |
 | colors.[default]()            | Hex color code for any symbols, like curly `braces`, and `comma`.                     | string  | Optional  |
 | colors.[string]()             | Hex color code for tokens identified as `string` values.                              | string  | Optional  |
