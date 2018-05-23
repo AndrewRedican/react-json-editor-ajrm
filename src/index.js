@@ -4,10 +4,13 @@ class JSONInput extends Component {
     constructor(props){
         super(props);
         if(!('id' in this.props)) throw 'An \'id\' property must be specified. Must be unique';
+        this.randomString       = this.randomString        .bind(this);
         this.createMarkup       = this.createMarkup        .bind(this);
         this.onClick            = this.onClick             .bind(this);
         this.onBlur             = this.onBlur              .bind(this);
         this.update             = this.update              .bind(this);
+        this.getCursorPosition  = this.getCursorPosition   .bind(this);
+        this.setCursorPosition  = this.setCursorPosition   .bind(this);
         this.scheduledUpdate    = this.scheduledUpdate     .bind(this);
         this.setUpdateTime      = this.setUpdateTime       .bind(this);
         this.renderLabels       = this.renderLabels        .bind(this);
@@ -20,7 +23,7 @@ class JSONInput extends Component {
         this.onKeyDown          = this.onKeyDown           .bind(this);
         this.onPaste            = this.onPaste             .bind(this);
         this.stopEvent          = this.stopEvent           .bind(this);
-        this.uniqueID           = 'AJRM-JSON-EDITOR-' + this.props.id;
+        this.uniqueID           = 'AJRM-JSON-EDITOR-' + this.randomString(10) + '-' + this.props.id;
         let colors = {}, style = {};
         if('colors' in this.props)
             colors = {
@@ -412,6 +415,55 @@ class JSONInput extends Component {
             '">'                  + string   +
             '</span>'
         );
+    }
+    randomString(length){
+        if(typeof length !== 'number') throw '@randomString: Expected \'length\' to be a number';
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let result  = '';
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+        return result;
+    }    
+    getCursorPosition(){
+        const { uniqueID } = this;
+        function isChildOf(node) {
+            while (node !== null) {
+                if (node.id === uniqueID) return true;
+                node = node.parentNode;
+            }
+            return false;
+        };
+        var 
+            selection = window.getSelection(),
+            charCount = -1,
+            node;
+        if (selection.focusNode)
+        if (isChildOf(selection.focusNode)) {
+            node = selection.focusNode; 
+            charCount = selection.focusOffset;
+            while (node) {
+                if (node.id === uniqueID) break;
+                if (node.previousSibling) {
+                    node = node.previousSibling;
+                    charCount += node.textContent.length;
+                } else {
+                    node = node.parentNode;
+                    if (node === null) break;
+                }
+            }
+        }
+        return charCount;
+    }
+    setCursorPosition(chars) {
+        if (chars >= 0) {
+            let
+                selection = window.getSelection(),
+                range     = createRange(document.getElementById(uniqueID).parentNode, { count: chars });
+            if (range) {
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
     }
     update(){
         const
