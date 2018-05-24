@@ -40,10 +40,9 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.3.0] - May 22, 2018
-1. Component now rerenders on every keystroke by default, but can be opt-out. Delay can also be customized.
-2. Cursor now gets positioned on the same place it was originally located after the content has been rerendered.
-3. Other code optimizations.
+## Latest Release Notes [v2.3.1] - May 23, 2018
+1. Fixed bug: Component will now rerender according to updated properties after it has been mounted.
+2. Fixed bug: onBlur event will no longer auto focus cursor back into component.
 
 ## Features
 
