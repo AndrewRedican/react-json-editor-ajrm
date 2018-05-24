@@ -4,27 +4,41 @@ class JSONInput extends Component {
     constructor(props){
         super(props);
         if(!('id' in this.props)) throw 'An \'id\' property must be specified. Must be unique';
-        this.randomString       = this.randomString        .bind(this);
-        this.createMarkup       = this.createMarkup        .bind(this);
-        this.onClick            = this.onClick             .bind(this);
-        this.onBlur             = this.onBlur              .bind(this);
-        this.update             = this.update              .bind(this);
-        this.getCursorPosition  = this.getCursorPosition   .bind(this);
-        this.setCursorPosition  = this.setCursorPosition   .bind(this);
-        this.scheduledUpdate    = this.scheduledUpdate     .bind(this);
-        this.setUpdateTime      = this.setUpdateTime       .bind(this);
-        this.renderLabels       = this.renderLabels        .bind(this);
-        this.newSpan            = this.newSpan             .bind(this);
-        this.renderErrorMessage = this.renderErrorMessage  .bind(this);
-        this.onScroll           = this.onScroll            .bind(this);
-        this.showPlaceholder    = this.showPlaceholder     .bind(this);
-        this.tokenize           = this.tokenize            .bind(this);
-        this.onKeyPress         = this.onKeyPress          .bind(this);
-        this.onKeyDown          = this.onKeyDown           .bind(this);
-        this.onPaste            = this.onPaste             .bind(this);
-        this.stopEvent          = this.stopEvent           .bind(this);
-        this.uniqueID           = 'AJRM-JSON-EDITOR-' + this.randomString(10) + '-' + this.props.id;
-        this.contentID          = this.uniqueID + '-content-box';
+        this.updateInternalProps = this.updateInternalProps .bind(this);
+        this.randomString        = this.randomString        .bind(this);
+        this.createMarkup        = this.createMarkup        .bind(this);
+        this.onClick             = this.onClick             .bind(this);
+        this.onBlur              = this.onBlur              .bind(this);
+        this.update              = this.update              .bind(this);
+        this.getCursorPosition   = this.getCursorPosition   .bind(this);
+        this.setCursorPosition   = this.setCursorPosition   .bind(this);
+        this.scheduledUpdate     = this.scheduledUpdate     .bind(this);
+        this.setUpdateTime       = this.setUpdateTime       .bind(this);
+        this.renderLabels        = this.renderLabels        .bind(this);
+        this.newSpan             = this.newSpan             .bind(this);
+        this.renderErrorMessage  = this.renderErrorMessage  .bind(this);
+        this.onScroll            = this.onScroll            .bind(this);
+        this.showPlaceholder     = this.showPlaceholder     .bind(this);
+        this.tokenize            = this.tokenize            .bind(this);
+        this.onKeyPress          = this.onKeyPress          .bind(this);
+        this.onKeyDown           = this.onKeyDown           .bind(this);
+        this.onPaste             = this.onPaste             .bind(this);
+        this.stopEvent           = this.stopEvent           .bind(this);
+        this.uniqueID            = 'AJRM-JSON-EDITOR-' + this.randomString(10) + '-' + this.props.id;
+        this.contentID           = this.uniqueID + '-content-box';
+        this.updateInternalProps();
+        this.renderCount         = 1;
+        this.state  = { 
+            preText     : '',
+            markupText  : '',
+            plainText   : '',
+            json        : '',
+            jsObject    : undefined,
+            lines       : false,
+            error       : false
+        };
+    }
+    updateInternalProps(){
         let colors = {}, style = {};
         if('colors' in this.props)
             colors = {
@@ -88,19 +102,16 @@ class JSONInput extends Component {
         this.bodyHeight        = bodyHeight;
         this.bodyWidth         = bodyWidth;
         this.messageWidth      = messageWidth;
-        this.renderCount       = 1;
-        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate) this.timer = setInterval(this.scheduledUpdate,100);
+        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
+            if(!this.timer) this.timer = setInterval(this.scheduledUpdate,100);
+        }
+        else 
+            if(this.timer){
+                clearInterval(this.timer);
+                this.timer = false;
+            }
         this.updateTime        = false;
-        this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;  
-        this.state  = { 
-            preText     : '',
-            markupText  : '',
-            plainText   : '',
-            json        : '',
-            jsObject    : undefined,
-            lines       : false,
-            error       : false
-        };
+        this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;
     }
     render(){
         const 
@@ -491,7 +502,7 @@ class JSONInput extends Component {
         if(nextPosition > 0) setPosition(nextPosition); 
         else document.getElementById(contentID).focus();
     }
-    update(cursorOffset=0){
+    update(cursorOffset=0,updateCursorPosition=true){
         let cursorPosition = this.getCursorPosition() + cursorOffset;
         const
             contentID  = this.contentID,
@@ -514,7 +525,7 @@ class JSONInput extends Component {
             error      : data.error
         });
         this.updateTime = false;
-        this.setCursorPosition(cursorPosition);
+        if(updateCursorPosition) this.setCursorPosition(cursorPosition);
     }
     scheduledUpdate(){
         if('onKeyPressUpdate' in this.props) if(this.props.onKeyPressUpdate===false) return;
@@ -555,23 +566,16 @@ class JSONInput extends Component {
     }
     onBlur(){
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
-        this.update();
+        this.update(0,false);
     }
     onScroll(event){
         const uniqueID = this.uniqueID;
         var labels = document.getElementById(uniqueID + '-labels');
         labels.scrollTop = event.target.scrollTop;
     }
-    componentDidUpdate(){ 
+    componentDidUpdate(){
+        this.updateInternalProps();
         this.showPlaceholder();
-        if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
-            if(!this.timer) this.timer = setInterval(this.scheduledUpdate,500);
-        }
-        else 
-            if(this.timer){
-                clearInterval(this.timer);
-                this.timer = false;
-            }
     }
     componentDidMount(){
         const contentID = this.contentID;
