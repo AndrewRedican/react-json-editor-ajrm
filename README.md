@@ -40,9 +40,9 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.3.1] - May 23, 2018
-1. Fixed bug: Component will now rerender according to updated properties after it has been mounted.
-2. Fixed bug: onBlur event will no longer auto focus cursor back into component.
+## Latest Release Notes [v2.3.2] - May 25, 2018
+1. Removed /example and other development files directory from npm package.
+2. To contribute or modify the project, you may clone or fork this Github repository instead.
 
 ## Features
 
