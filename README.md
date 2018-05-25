@@ -40,9 +40,8 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.3.2] - May 25, 2018
-1. Removed /example and other development files directory from npm package.
-2. To contribute or modify the project, you may clone or fork this Github repository instead.
+## Latest Release Notes [v2.3.3] - May 25, 2018
+1. Updated documentation.
 
 ## Features
 
