@@ -1,2 +1,7 @@
-/node_modules/
-/example/node_modules/
+/example/
+.babelrc
+webpack.config.js
+CONTRIBUTING.md
+ISSUE_TEMPLATE.md
+CODE_OF_CONDUCT.md
+*.tgz
