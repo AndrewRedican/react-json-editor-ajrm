@@ -41,7 +41,7 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.0] - May 28, 2018
+## Latest Release Notes [v2.4.2] - May 28, 2018
 1. RJEA now supports built-in themes. Read more [here](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes).
 2. Extended documentation on content values and built-in themes.
 
