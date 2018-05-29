@@ -669,8 +669,7 @@ class JSONInput extends Component {
                             buffer[buffer.active] = char;
                         break;
                         default :
-                            const linebreakNextToString = char==='\n' && buffer.active==='string' && buffer.string.length > 0;
-                            if(type!==buffer.active||linebreakNextToString){
+                            if(type!==buffer.active||([buffer.string,char].indexOf('\n')>-1)){
                                 if(buffer.active) buffer.quarks.push({
                                     string : buffer[buffer.active],
                                     type   : prefix + '-' + buffer.active
@@ -696,16 +695,16 @@ class JSONInput extends Component {
                 for(var i = 0; i < text.length; i++){
                     const char = text.charAt(i);
                     switch(char){
-                        case '"'  : case "'" :       pushAndStore(char,'delimiter'); break;
-                        case ' '  : case '\u00A0' :  pushAndStore(char,'space');     break;
-                        case '{'  : case '}' :
-                        case '['  : case ']' :
-                        case ':'  : case ',' :       pushAndStore(char,'symbol');    break;
-                        case '0'  : case '1' :
-                        case '2'  : case '3' :
-                        case '4'  : case '5' :
-                        case '6'  : case '7' :
-                        case '8'  : case '9' :
+                        case '"'      : case "'"      : pushAndStore(char,'delimiter'); break;
+                        case ' '      : case '\u00A0' : pushAndStore(char,'space');     break;
+                        case '{'      : case '}'      :
+                        case '['      : case ']'      :
+                        case ':'      : case ','      : pushAndStore(char,'symbol');    break;
+                        case '0'      : case '1'      :
+                        case '2'      : case '3'      :
+                        case '4'      : case '5'      :
+                        case '6'      : case '7'      :
+                        case '8'      : case '9'      :
                             if(buffer.active==='string') pushAndStore(char,'string');
                             else pushAndStore(char,'number');
                         break;
