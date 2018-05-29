@@ -891,6 +891,15 @@ class JSONInput extends Component {
                     break;
                     case 'primitive' : case 'string' :
                         if(['false','true','null','undefined'].indexOf(string) > -1){
+                            const lastIndex = buffer.tokens_normalize.length - 1;
+                            if(lastIndex >= 0){
+                                if(buffer.tokens_normalize[lastIndex].type !== 'string'){
+                                    normalToken.type = 'primitive';
+                                    break;
+                                }
+                                normalToken.type = 'string';
+                                break;
+                            }
                             normalToken.type = 'primitive';
                             break;
                         }
