@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import themes               from './themes';
 
 class JSONInput extends Component {
     constructor(props){
@@ -39,32 +40,24 @@ class JSONInput extends Component {
         };
     }
     updateInternalProps(){
-        let colors = {}, style = {};
+        let colors = {}, style = {}, theme = themes.dark_vscode_tribute;
+        if('theme' in this.props)
+        if(typeof this.props.theme === 'string')
+        if(this.props.theme in themes)
+        theme  = themes[this.props.theme];
+        colors = theme;
         if('colors' in this.props)
             colors = {
-                default            : 'default'            in this.props.colors ? this.props.colors.default            : '#D4D4D4',
-                string             : 'string'             in this.props.colors ? this.props.colors.string             : '#CE8453',
-                number             : 'number'             in this.props.colors ? this.props.colors.number             : '#B5CE9F',
-                colon              : 'colon'              in this.props.colors ? this.props.colors.colon              : '#49B8F7',
-                keys               : 'keys'               in this.props.colors ? this.props.colors.keys               : '#9CDCFE',
-                keys_whiteSpace    : 'keys_whiteSpace'    in this.props.colors ? this.props.colors.keys_whiteSpace    : '#AF74A5',
-                primitive          : 'primitive'          in this.props.colors ? this.props.colors.primitive          : '#6392C6',
-                error              : 'error'              in this.props.colors ? this.props.colors.error              : '#ED0000',
-                background         : 'background'         in this.props.colors ? this.props.colors.background         : '#1E1E1E',
-                background_warning : 'background_warning' in this.props.colors ? this.props.colors.background_warning : '#1E1E1E'
-            };
-        else
-            colors = {
-                default            : '#D4D4D4',
-                string             : '#CE8453',
-                number             : '#B5CE9F',
-                colon              : '#49B8F7',
-                keys               : '#9CDCFE',
-                keys_whiteSpace    : '#AF74A5',
-                primitive          : '#6392C6',
-                error              : '#ED0000',
-                background         : '#1E1E1E',
-                background_warning : '#1E1E1E'
+                default            : 'default'            in this.props.colors ? this.props.colors.default            : colors.default,
+                string             : 'string'             in this.props.colors ? this.props.colors.string             : colors.string,
+                number             : 'number'             in this.props.colors ? this.props.colors.number             : colors.number,
+                colon              : 'colon'              in this.props.colors ? this.props.colors.colon              : colors.colon,
+                keys               : 'keys'               in this.props.colors ? this.props.colors.keys               : colors.keys,
+                keys_whiteSpace    : 'keys_whiteSpace'    in this.props.colors ? this.props.colors.keys_whiteSpace    : colors.keys_whiteSpace,
+                primitive          : 'primitive'          in this.props.colors ? this.props.colors.primitive          : colors.primitive,
+                error              : 'error'              in this.props.colors ? this.props.colors.error              : colors.error,
+                background         : 'background'         in this.props.colors ? this.props.colors.background         : colors.background,
+                background_warning : 'background_warning' in this.props.colors ? this.props.colors.background_warning : colors.background_warning
             };
         this.colors = colors;
         if('style' in this.props)
