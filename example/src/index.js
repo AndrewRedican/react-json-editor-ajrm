@@ -25,11 +25,11 @@ class App extends Component {
         return(
             <div style = {{ maxWidth: '1400px', maxHeight: '100%' }} >
                 <JSONInput
-                    id          = 'unique_string' //an id this is required
-                    placeholder = {sampleData}    //data to display initially
+                    id          = 'unique_string' //an id is required
+                    placeholder = {sampleData}    //data to display
                     theme       = 'light_mitsuketa_tribute'
                     colors      = {{
-                        string : '#DAA520' // <-- this overrides a string's theme color with whatever color value you want (must be hexcode)
+                        string : '#DAA520' // overrides a string's theme color with whatever color value you want
                     }}
                     height      = '550px'
                 />
