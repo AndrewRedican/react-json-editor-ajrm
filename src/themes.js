@@ -12,8 +12,8 @@ const dark_vscode_tribute = {
 
 const light_mitsuketa_tribute = {
     default            : '#D4D4D4',
-    background         : '#E3E9EA1A',
-    background_warning : '#F443361A',
+    background         : '#FCFDFD',
+    background_warning : '#FEECEB',
     string             : '#FA7921',
     number             : '#70CE35',
     colon              : '#49B8F7',
