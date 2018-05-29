@@ -43,7 +43,7 @@
 
 ## Latest Release Notes [v2.4.3] - May 29, 2018
 1. Fixed issue where content pasted into component would not recognize linebreak properly.
-2. Fixed issue where string "null" would be identified incorrectly as `null` value.
+2. Fixed issue where string `"null"` would be misidentified actual `null`.
 
 ## Features
 
