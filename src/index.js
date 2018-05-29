@@ -543,7 +543,9 @@ class JSONInput extends Component {
     onKeyDown(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
         switch(event.key){
-            case 'Backspace' : case 'Delete' :
+            case 'Backspace' : case 'Delete'     :
+            case 'ArrowLeft' : case 'ArrowRight' :
+            case 'ArrowUp'   : case 'ArrowDown'  :
                 this.setUpdateTime();
                 return;
             break;
