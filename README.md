@@ -42,7 +42,7 @@
 
 
 ## Latest Release Notes [v2.4.4] - May 30, 2018
-1. Fixed issue on Firefox where clicking content would not position cursor correctly.
+1. Fixed issue on example repo, where using Firefox, clicking on content would not position cursor correctly. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/12).
 
 ## Features
 
