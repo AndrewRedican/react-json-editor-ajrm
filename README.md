@@ -50,7 +50,7 @@
 1. Write as if you are in a text editor.
 2. Checks for syntax mistakes and provides feedback.
 3. You can customize color palette as you please.
-4. Accepts a javascript object in props.placeholder to display after component mounts. 
+4. Accepts a javascript object in `placeholder` property to display after component mounts. 
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
 
 ## Component Properties
@@ -60,7 +60,7 @@
 | [id]()                        | A unique id to identify component.                                                    | string  | Mandatory |
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted.            | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
-| [onChange]()                  | Whenever `onBlur` or `onKeyPress` eventa take place, it will return content values.   | object  | Optional  |
+| [onChange]()                  | Whenever `onBlur` or `onKeyPress` events take place, it will return content values.   | object  | Optional  |
 | [confirmGood]()               | Send `false` if you would like for the checkmark to confirm good syntax to be hidden. | boolean | Optional  |
 | [height]()                    | A shorthand property to set a specific height for the entire component.               | string  | Optional  |
 | [width]()                     | A shorthand property to set a specific width for the entire component.                | string  | Optional  |
