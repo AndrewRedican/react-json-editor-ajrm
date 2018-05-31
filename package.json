@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "ISC",
@@ -35,7 +35,9 @@
     "json validator",
     "javascript object syntax validator",
     "react",
-    "component"
+    "component",
+    "syntax editor",
+    "nosql"
   ],
   "peerDependencies": {
     "react": ">=16.2.0",
