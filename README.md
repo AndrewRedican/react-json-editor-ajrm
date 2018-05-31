@@ -43,7 +43,6 @@
 
 ## Latest Release Notes [v2.4.4] - May 30, 2018
 1. Fixed issue on Firefox where clicking content would not position cursor correctly.
-2. Fixed issue on Firefox where scroll element did not show it's built-in slim style.
 
 ## Features
 
