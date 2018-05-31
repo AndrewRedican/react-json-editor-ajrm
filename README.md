@@ -41,10 +41,9 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.3] - May 29, 2018
-1. Fixed issue where content pasted into component would not recognize linebreak properly.
-2. Fixed issue where strings such as `'true'` or `"null"` would be misidentified as actual primitive values `true` and `null`.
-3. OnKeyDown arrows will now delay component re-render.
+## Latest Release Notes [v2.4.4] - May 30, 2018
+1. Fixed issue on Firefox where clicking content would not position cursor correctly.
+2. Fixed issue on Firefox where scroll element did not show it's built-in slim style.
 
 ## Features
 
