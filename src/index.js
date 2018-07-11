@@ -398,7 +398,7 @@ class JSONInput extends Component {
         return { __html: '' + markupText };
     }
     newSpan(i,token,depth){
-        const
+        let
             uniqueID = this.uniqueID + '-token-' + i + '-rc-' + this.renderCount,
             colors   = this.colors,
             type     = token.type,
@@ -410,6 +410,7 @@ class JSONInput extends Component {
             case 'symbol' : if(string===':') color = colors.colon;           else color = colors.default;     break;
             default : color = colors.default; break;
         }
+       if(string.length!==string.replace(/</g,'').replace(/>/g,'').length) string = '<xmp style=display:inline;>' + string + '</xmp>';
         return (
             '<span' + 
                 ' id="'           + uniqueID + 
@@ -771,7 +772,7 @@ class JSONInput extends Component {
                                 return false;
                             }
                         } else {
-                            const nonAlphanumeric = '\'"`.,:;{}[]&<>=~*%<>\\|/-+!?@^ \xa0';
+                            const nonAlphanumeric = '\'"`.,:;{}[]&<>=~*%\\|/-+!?@^ \xa0';
                             for(var i = 0; i < nonAlphanumeric.length; i++){
                                 const nonAlpha = nonAlphanumeric.charAt(i);
                                 if(string.indexOf(nonAlpha) > -1) return false;
@@ -1173,7 +1174,13 @@ class JSONInput extends Component {
                         else if (firstChar!=='"') string = '"' + string + '"';
                         if('key'===type)
                         if('key'===typeFollowed(i)){
-                            setError(i,'Key containing space must be wrapped by quotes');
+                            if(i>0)
+                            if(!isNaN(buffer.tokens_merge[i-1])){
+                                buffer.tokens_merge[i-1] += buffer.tokens_merge[i];
+                                setError(i,'Key beginning with number and containing letters must be wrapped by quotes');
+                                break;
+                            }
+                                setError(i,'Key containing space must be wrapped by quotes');
                             break;
                         }
                         if('key'===type)
@@ -1199,10 +1206,22 @@ class JSONInput extends Component {
                         buffer.json += string;
                     break;
                     case 'number' : case 'primitive' :
-                        if(!followsSymbol(i,['[',':',','])){
-                            setError(i,type + ' can only follow \'[\' \':\' \',\' tokens');
-                            break;
+                        if(followsSymbol(i,['{'])){
+                            buffer.tokens_merge[i].type = 'key';
+                            type = buffer.tokens_merge[i].type;
+                            string = '"' + string + '"';;
                         }
+                        else
+                            if(typeFollowed(i)==='key'){
+                                buffer.tokens_merge[i].type = 'key';
+                                type = buffer.tokens_merge[i].type;
+                            }
+                            else
+                                if(!followsSymbol(i,['[',':',','])){
+                                    setError(i,type + ' can only follow \'[\' \':\' \',\' tokens');
+                                    break;
+                                }
+                        if(type!=='key')
                         if(!buffer2.isValue){
                             setError(i,'Unexpected ' + type + ' found at key position');
                             break;
