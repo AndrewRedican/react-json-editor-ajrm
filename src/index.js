@@ -503,7 +503,7 @@ class JSONInput extends Component {
             container = document.getElementById(contentID),
             data      = this.tokenize(container);
         if('onChange' in this.props) this.props.onChange({
-            plainText  : data.indentation,
+            plainText  : data.indented,
             markupText : data.markup,
             json       : data.json,
             jsObject   : data.jsObject,
@@ -511,7 +511,7 @@ class JSONInput extends Component {
             error      : data.error
         });
         this.setState({
-            plainText  : data.indentation,
+            plainText  : data.indented,
             markupText : data.markup,
             json       : data.json,
             jsObject   : data.jsObject,
@@ -1233,6 +1233,22 @@ class JSONInput extends Component {
                     break;
                 }
             }
+            let noEscapedSingleQuote = '';
+            for(var i = 0; i < buffer.json.length; i++){
+                let
+                    current = buffer.json.charAt(i),
+                    next    = '';
+                if(i + 1 < buffer.json.length){
+                    next = buffer.json.charAt(i+1);
+                    if(current==='\\' && next==="'"){
+                        noEscapedSingleQuote += next;
+                        i++;
+                        continue;
+                    }
+                }
+                noEscapedSingleQuote += current;
+            }
+            buffer.json = noEscapedSingleQuote;
             if(!error){
                 const maxIterations = Math.ceil(bracketList.length / 2);
                 let 
@@ -1264,7 +1280,7 @@ class JSONInput extends Component {
             }
             if(!error)
             if([undefined,''].indexOf(buffer.json)===-1)
-            try{ 
+            try{
                 buffer.jsObject = JSON.parse(buffer.json);
             }
             catch(err){
@@ -1292,7 +1308,6 @@ class JSONInput extends Component {
                 line = _line;
                 setError(tokenIndex,'Unexpected token \'' + token.string + '\' found');
             }
-            const colors = this.colors;
             let
                 _line   = 1,
                 _depth  = 0;
@@ -1511,11 +1526,54 @@ class JSONInput extends Component {
                         break;
                     default :
                         const C = token.charAt(0);
+                        function stripQuotesFromKey(text){
+                            if(text.length===0) return text;
+                            let wrappedInQuotes = false;
+                            for(var i = 0; i < 2; i++){
+                                if([text.charAt(0),text.charAt(text.length-1)].indexOf(['"',"'"][i])>-1){
+                                    wrappedInQuotes = true;
+                                    break; 
+                                }
+                            }
+                            if(wrappedInQuotes) text = text.slice(1, -1);
+                            const
+                                nonAlphaNumeric = text.replace(/\w/g,''),
+                                alphaNumeric    = text.replace(/\W+/g,''),
+                                mayRemoveQuotes = ((nonAlphaNumeric,text) => {
+                                    let numberAndLetter = false;
+                                    for(var i = 0; i < text.length; i++){
+                                        if(i===0) if(isNaN(text.charAt(i))) break;
+                                        if(isNaN(text.charAt(i))){
+                                            numberAndLetter = true;
+                                            break;
+                                        }
+                                    }
+                                    return !(nonAlphaNumeric.length > 0 || numberAndLetter);
+                                })(nonAlphaNumeric,text),
+                                hasQuotes = (string => { 
+                                    for(var i = 0; i < string.length; i++){
+                                        if(["'",'"'].indexOf(string.charAt(i))>-1) return true;
+                                    }
+                                    return false;
+                                })(nonAlphaNumeric);
+                            if(hasQuotes){
+                                let newText = '';
+                                text.split('').forEach( char => {
+                                    if(["'",'"'].indexOf(char)>-1) char = '\\' + char;
+                                    newText += char;
+                                });
+                                text = newText;
+                            }
+                            if(!mayRemoveQuotes)
+                                return "'" + text + "'";
+                            else
+                                return text;
+                        }
                         if('\'"'.indexOf(C) > -1){
                             if(buffer2.isValue) type = 'string'; else type = 'key';
                             string = token.slice(1, -1);
-                            if(type==='key')
-                            if(string.indexOf(' ') > -1) string = "'" + string + "'";
+                            if(type==='key') string = stripQuotesFromKey(string);
+                            //if(string.indexOf(' ') > -1) string = "'" + string + "'";
                             if(type==='string')
                             if(string.indexOf("'") > -1) string = '"' + string + '"';
                             else string = "'" + string + "'";
@@ -1573,7 +1631,6 @@ class JSONInput extends Component {
                     default : indentation += token.string; break;
                 }
             });
-            const colors = this.colors;
             let lines = 1;
             function indentII(number){ 
                 var space = []; 
