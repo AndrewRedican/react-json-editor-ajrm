@@ -41,9 +41,9 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.6] - July 11, 2018
-1. An issue where numbers could not be assigned as keys to an object unless wrapped within quotes has been fixed.
-2. An issue where HTML tags were removed from valid JSON strings has been fixed. See [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/19)
+## Latest Release Notes [v2.4.7] - July 15, 2018
+1. An issue where plainText propety from data returned by onChange was undefined has been fixed.
+2. An issue where certain key names that require to be wrapped by quotes did not have any has been fixed. See [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/21)
 
 ## Features
 
