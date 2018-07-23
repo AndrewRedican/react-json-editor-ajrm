@@ -1,4 +1,4 @@
-# react-json-editor-ajrm 
+# react-json-editor-ajrm ![Build Status](https://travis-ci.org/AndrewRedican/react-json-editor-ajrm.svg?branch=master)
 
 <p align="center"><img src=https://i.imgur.com/ewtebIW.gif><br /><br />A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!</p>
 
