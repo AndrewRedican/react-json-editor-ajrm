@@ -1,0 +1,238 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Basic Component Render 1`] = `
+<JSONInput
+  id="unique_string"
+  test={true}
+>
+  <div
+    id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-outer-box"
+    name="outer-box"
+    style={
+      Object {
+        "boxSizing": "border-box",
+        "display": "block",
+        "height": "610px",
+        "margin": 0,
+        "overflow": "none",
+        "position": "relative",
+        "width": "479px",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "height": "30px",
+          "opacity": 1,
+          "pointerEvents": "none",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": "translate(-25%,25%)",
+          "transitionDuration": "0.2s",
+          "transitionTimingFunction": "cubic-bezier(0, 1, 0.5, 1)",
+          "width": "30px",
+        }
+      }
+    >
+      <svg
+        height="30px"
+        viewBox="0 0 100 100"
+        width="30px"
+      >
+        <path
+          clipRule="evenodd"
+          d="M39.363,79L16,55.49l11.347-11.419L39.694,56.49L72.983,23L84,34.085L39.363,79z"
+          fill="green"
+          fillRule="evenodd"
+          opacity="0.85"
+        />
+      </svg>
+    </div>
+    <div
+      id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-container"
+      name="container"
+      onClick={[Function]}
+      style={
+        Object {
+          "boxSizing": "border-box",
+          "display": "block",
+          "fontFamily": "Roboto, sans-serif",
+          "height": "610px",
+          "margin": 0,
+          "overflow": "hidden",
+          "width": "479px",
+        }
+      }
+    >
+      <div
+        id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-warning-box"
+        name="warning-box"
+        onClick={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#1E1E1E",
+            "display": "block",
+            "height": "0px",
+            "margin": 0,
+            "overflow": "hidden",
+            "transitionDuration": "0.2s",
+            "transitionTimingFunction": "cubic-bezier(0, 1, 0.5, 1)",
+            "width": "100%",
+          }
+        }
+      >
+        <span
+          onClick={[Function]}
+          style={
+            Object {
+              "boxSizing": "border-box",
+              "display": "inline-block",
+              "height": "60px",
+              "margin": 0,
+              "overflow": "hidden",
+              "pointerEvents": "none",
+              "verticalAlign": "top",
+              "width": "60px",
+            }
+          }
+        >
+          <div
+            onClick={[Function]}
+            style={
+              Object {
+                "height": "60px",
+                "left": 0,
+                "margin": 0,
+                "pointerEvents": "none",
+                "position": "relative",
+                "top": 0,
+                "width": "60px",
+              }
+            }
+          >
+            <div
+              onClick={[Function]}
+              style={
+                Object {
+                  "left": "50%",
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "top": "50%",
+                  "transform": "translate(-50%, -50%)",
+                }
+              }
+            >
+              <svg
+                height="25px"
+                viewBox="0 0 100 100"
+                width="25px"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z"
+                  fill="red"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </span>
+        <span
+          onClick={[Function]}
+          style={
+            Object {
+              "display": "inline-block",
+              "height": "60px",
+              "margin": 0,
+              "overflow": "hidden",
+              "pointerEvents": "none",
+              "position": "absolute",
+              "transform": "",
+              "verticalAlign": "top",
+              "width": "calc(100% - 60px)",
+            }
+          }
+        />
+      </div>
+      <div
+        id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-body"
+        name="body"
+        onClick={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#1E1E1E",
+            "display": "flex",
+            "fontFamily": "Roboto Mono, Monaco, monospace",
+            "fontSize": "11px",
+            "height": "100%",
+            "margin": 0,
+            "overflow": "none",
+            "resize": "none",
+            "transitionDuration": "0.2s",
+            "transitionTimingFunction": "cubic-bezier(0, 1, 0.5, 1)",
+            "width": "",
+          }
+        }
+      >
+        <span
+          id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-labels"
+          name="labels"
+          onClick={[Function]}
+          style={
+            Object {
+              "boxSizing": "border-box",
+              "color": "#D4D4D4",
+              "display": "inline-block",
+              "height": "100%",
+              "margin": 0,
+              "overflow": "hidden",
+              "padding": "5px 0px 5px 10px",
+              "verticalAlign": "top",
+              "width": "44px",
+            }
+          }
+        />
+        <span
+          autoCapitalize="off"
+          autoComplete="off"
+          autoCorrect="off"
+          contentEditable={true}
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "",
+            }
+          }
+          id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-content-box"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
+          onScroll={[Function]}
+          spellCheck={false}
+          style={
+            Object {
+              "boxSizing": "border-box",
+              "color": "#D4D4D4",
+              "display": "inline-block",
+              "flex": 1,
+              "height": "100%",
+              "margin": 0,
+              "outline": "none",
+              "overflowX": "hidden",
+              "overflowY": "auto",
+              "padding": "5px",
+              "verticalAlign": "top",
+              "whiteSpace": "pre-line",
+              "width": "",
+              "wordWrap": "break-word",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+</JSONInput>
+`;

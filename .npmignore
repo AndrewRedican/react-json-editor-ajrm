@@ -4,4 +4,7 @@ webpack.config.js
 CONTRIBUTING.md
 ISSUE_TEMPLATE.md
 CODE_OF_CONDUCT.md
+/__snapshots__/
+test
+.travis.yml
 *.tgz

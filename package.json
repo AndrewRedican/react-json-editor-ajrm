@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "ISC",
@@ -10,8 +10,15 @@
   },
   "main": "dist/index.js",
   "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "prepublishOnly": "npm run build",
     "build": "node ./node_modules/webpack/bin/webpack.js"
+  },
+  "jest": {
+    "setupFiles": ["./test/jestsetup.js"],
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
   },
   "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
   "keywords": [
@@ -48,13 +55,19 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-jest": "^23.4.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.4",
+    "jest": "^23.4.1",
     "react": ">=16.2.0",
     "react-dom": ">=16.2.0",
+    "react-test-renderer": "^16.4.1",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "webpack": "^3.10.0"
   }
