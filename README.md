@@ -1,4 +1,4 @@
-# react-json-editor-ajrm
+# react-json-editor-ajrm ![Build Status](https://travis-ci.org/AndrewRedican/react-json-editor-ajrm.svg?branch=master)
 
 <p align="center"><img src=https://i.imgur.com/ewtebIW.gif><br /><br />A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!</p>
 
@@ -41,9 +41,18 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.7] - July 15, 2018
-1. An issue where plainText propety from data returned by onChange was undefined has been fixed.
-2. An issue where certain key names that require to be wrapped by quotes did not have any has been fixed. See [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/21)
+## Latest Release Notes [v2.4.8] - July 22, 2018
+1. An issue where quotes inside value strings were not escaped properly has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/21)
+2. An issue where empty strings were not accepted as valid key names has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/22)
+3. An issue where negative numbers were not displayed has been fixed.
+4. Added `modifyErrorText` property which allows the developer to plug in a custom function to modify error messages. See [feature request](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/23)
+5. An issue where percentage values were regarded as pixel values for `height` and `width` shorthand properties has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/18) 
+6. Added a testing framework to assure component quality.
+
+## Upcoming Features
+1. Core QA tests.
+2. Built-in localization support for warnings in different languages.
+3. Collapsible nodes to partially display contents of an object.
 
 ## Features
 
@@ -66,7 +75,8 @@
 | [width]()                     | A shorthand property to set a specific width for the entire component.                | string  | Optional  |
 | [onKeyPressUpdate]()          | Send `false` if you would like for component not to automatically update on key press.| boolean | Optional  |
 | [waitAfterKeyPress]()         | Amount of milliseconds to wait before re-rendering content after keypress. Value defaults to `1000` when not specified. In other words, component will update if there is no additional keystroke after the last one within 1 second. Less than `100` milliseconds does not makes a difference. | number  | Optional  |
-| [theme]()                     | Specify which [built-in theme](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes) to use.                                                                                                                                              | stirng  | Optional  |
+| [modifyErrorText]()           | A custom function to modify the component's original warning text. This function will receive a single parameter of type `string` and must equally return a `string`. | function | Optional |
+| [theme]()                     | Specify which [built-in theme](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes) to use. | string  | Optional  |
 | [colors]()                    | **Contains the following properties:**                                                | object  | Optional  |
 | colors.[default]()            | Hex color code for any symbols, like curly `braces`, and `comma`.                     | string  | Optional  |
 | colors.[string]()             | Hex color code for tokens identified as `string` values.                              | string  | Optional  |
@@ -129,6 +139,9 @@ You can check the source code here [react-json-editor-ajrm/src/](https://github.
 * [**React.js**](https://reactjs.org/)
 * [**Babel.js**](https://babeljs.io/) for transpiling
 * [**Webpack**](https://webpack.js.org/) for bundling npm module.
+* [**Enzyme**](http://airbnb.io/enzyme/) for react-specific testing utilities.
+* [**Jest**](https://jestjs.io/docs/en/tutorial-react) for unit testing, also react-specific tests.
+* [**Travis CI**](9https://travis-ci.org/) for continuous integration.
 
 ## Authors
 
