@@ -149,7 +149,6 @@ exports[`Basic Component Render 1`] = `
               "overflow": "hidden",
               "pointerEvents": "none",
               "position": "absolute",
-              "transform": "",
               "verticalAlign": "top",
               "width": "calc(100% - 60px)",
             }
