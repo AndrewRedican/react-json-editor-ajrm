@@ -4,7 +4,7 @@ import themes               from './themes';
 class JSONInput extends Component {
     constructor(props){
         super(props);
-        if(!('id' in this.props)) throw 'An \'id\' property must be specified. Must be unique';
+        if(!('id' in this.props)) throw 'An \'id\' property must be specified. Must be unique.';
         this.updateInternalProps = this.updateInternalProps .bind(this);
         this.randomString        = this.randomString        .bind(this);
         this.createMarkup        = this.createMarkup        .bind(this);
@@ -25,7 +25,7 @@ class JSONInput extends Component {
         this.onKeyDown           = this.onKeyDown           .bind(this);
         this.onPaste             = this.onPaste             .bind(this);
         this.stopEvent           = this.stopEvent           .bind(this);
-        this.uniqueID            = 'AJRM-JSON-EDITOR-' + this.randomString(10) + '-' + this.props.id;
+        this.uniqueID            = 'AJRM-JSON-EDITOR-' + ('test' in this.props ? '<RANDOM_NUMBER>' : this.randomString(10)) + '-' + this.props.id;
         this.contentID           = this.uniqueID + '-content-box';
         this.updateInternalProps();
         this.renderCount         = 1;
@@ -85,16 +85,10 @@ class JSONInput extends Component {
         this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
         const
-            totalHeight        = 'height' in this.props ? (parseInt(this.props.height.replace(/px/,'')) + 60) + 'px' : '610px',
-            totalWidth         = 'width' in this.props ?  parseInt(this.props.width.replace(/px/,'')) + 'px' : '479px',
-            bodyHeight         = (parseInt(totalHeight.replace(/px/,'')) - 60) + 'px',
-            bodyWidth          = (parseInt(totalWidth.replace(/px/,'')) - 44) + 'px',
-            messageWidth       = (parseInt(totalWidth.replace(/px/,'')) - 60) + 'px';
-        this.totalHeight       = totalHeight;
-        this.totalWidth        = totalWidth;
-        this.bodyHeight        = bodyHeight;
-        this.bodyWidth         = bodyWidth;
-        this.messageWidth      = messageWidth;
+            totalHeight  = (this.props.height||'610px'),
+            totalWidth   = (this.props.width||'479px');
+        this.totalHeight = totalHeight;
+        this.totalWidth  = totalWidth;
         if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
             if(!this.timer) this.timer = setInterval(this.scheduledUpdate,100);
         }
@@ -117,9 +111,6 @@ class JSONInput extends Component {
             confirmGood  = this.confirmGood,
             totalHeight  = this.totalHeight,
             totalWidth   = this.totalWidth,
-            bodyHeight   = this.bodyHeight,
-            bodyWidth    = this.bodyWidth,
-            messageWidth = this.messageWidth,
             hasError     = error ? 'token' in error : false;
         this.renderCount++;
         return (
@@ -191,7 +182,7 @@ class JSONInput extends Component {
                             display                  : 'block',
                             overflow                 : 'hidden',
                             height                   : hasError ? '60px' : '0px',
-                            width                    : totalWidth,
+                            width                    : '100%',
                             margin                   : 0,
                             backgroundColor          : colors.background_warning,
                             transitionDuration       : '0.2s',
@@ -254,7 +245,7 @@ class JSONInput extends Component {
                             style = {{
                                 display       : 'inline-block',
                                 height        : '60px',
-                                width         : messageWidth,
+                                width         : 'calc(100% - 60px)',
                                 margin        : 0,
                                 overflow      : 'hidden',
                                 verticalAlign : 'top',
@@ -270,10 +261,10 @@ class JSONInput extends Component {
                         name  = 'body'
                         id    = {uniqueID + '-body'}
                         style = {{
-                            display                  : 'block',
+                            display                  : 'flex',
                             overflow                 : 'none',
-                            height                   : hasError ? bodyHeight : totalHeight,
-                            width                    : totalWidth,
+                            height                   : hasError ? 'calc(100% - 60px)' : '100%',
+                            width                    : '',
                             margin                   : 0,
                             resize                   : 'none',
                             fontFamily               : 'Roboto Mono, Monaco, monospace',
@@ -285,40 +276,43 @@ class JSONInput extends Component {
                         }}
                         onClick = { this.onClick }
                     >
-                        <div
+                        <span
                             name  = 'labels'
                             id    = {uniqueID + '-labels'}
                             style = {{
-                                display   : 'inline-block',
-                                boxSizing : 'border-box',
-                                height    : '100%',
-                                width     : '44px',
-                                margin    : 0,
-                                padding   : '5px 0px 5px 10px',
-                                overflow  : 'hidden',
-                                color     : '#D4D4D4',
+                                display       : 'inline-block',
+                                boxSizing     : 'border-box',
+                                verticalAlign : 'top',
+                                height        : '100%',
+                                width         : '44px',
+                                margin        : 0,
+                                padding       : '5px 0px 5px 10px',
+                                overflow      : 'hidden',
+                                color         : '#D4D4D4',
                                 ...style.labelColumn
                             }}
                             onClick = { this.onClick }
                         >
-                        { this.renderLabels() }
-                        </div>
-                        <div
+                            {this.renderLabels()}
+                        </span>
+                        <span
                             id = {contentID}
                             contentEditable = { true }  
                             style = {{
-                                display    : 'inline-block',
-                                boxSizing  : 'border-box',
-                                height     : '100%',
-                                width      : bodyWidth,
-                                margin     : 0,
-                                padding    : '5px',
-                                overflowX  : 'hidden',
-                                overflowY  : 'auto',
-                                wordWrap   : 'break-word',
-                                whiteSpace : 'pre-line',
-                                color      : '#D4D4D4',
-                                outline    : 'none',
+                                display       : 'inline-block',
+                                boxSizing     : 'border-box',
+                                verticalAlign : 'top',
+                                height        : '100%',
+                                width         : '',
+                                flex          : 1,
+                                margin        : 0,
+                                padding       : '5px',
+                                overflowX     : 'hidden',
+                                overflowY     : 'auto',
+                                wordWrap      : 'break-word',
+                                whiteSpace    : 'pre-line',
+                                color         : '#D4D4D4',
+                                outline       : 'none',
                                 ...style.contentBox
                             }}
                             dangerouslySetInnerHTML = { this.createMarkup(markupText) }
@@ -340,7 +334,6 @@ class JSONInput extends Component {
     }
     renderErrorMessage(){
         const
-            messageWidth = this.messageWidth,
             error        = this.state.error,
             style        = this.style;
         if(!error) return void(0);
@@ -350,7 +343,7 @@ class JSONInput extends Component {
                     color          : 'red',
                     fontSize       : '12px',
                     position       : 'absolute',
-                    width          : messageWidth,
+                    width          : 'calc(100% - 60px)',
                     height         : '60px',
                     boxSizing      : 'border-box',
                     margin         : 0,
@@ -1155,12 +1148,6 @@ class JSONInput extends Component {
                             break;
                         }
                         if('key'===type)
-                        if(quotes.indexOf(firstChar)>-1)
-                        if(string.length<=2){
-                            setError(i,'Key cannot be an empty string');
-                            break;
-                        }
-                        if('key'===type)
                         if(quotes.indexOf(firstChar)===-1 && quotes.indexOf(lastChar)===-1)
                         for(var h = 0; h < string.length; h++){
                             if(error) break;
@@ -1223,7 +1210,8 @@ class JSONInput extends Component {
                                 }
                         if(type!=='key')
                         if(!buffer2.isValue){
-                            setError(i,'Unexpected ' + type + ' found at key position');
+                            buffer.tokens_merge[i].type = 'key';
+                            type = buffer.tokens_merge[i].type;
                             break;
                         }
                         if(type==='primitive')
@@ -1384,6 +1372,14 @@ class JSONInput extends Component {
                 if(_line < _line_fallback) _line = _line_fallback;
             }
             buffer.tokens_merge.forEach( function(token) { buffer.indented += token.string; });
+            if(error){
+                function isFunction(functionToCheck) {
+                    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+                }
+                if('modifyErrorText' in this.props)
+                if(isFunction(this.props.modifyErrorText))
+                error.reason = this.props.modifyErrorText(error.reason);
+            }
             return {
                 tokens   : buffer.tokens_merge,
                 noSpaces : buffer.tokens_plainText,
@@ -1528,6 +1524,7 @@ class JSONInput extends Component {
                         const C = token.charAt(0);
                         function stripQuotesFromKey(text){
                             if(text.length===0) return text;
+                            if(['""',"''"].indexOf(text)>-1) return "''";
                             let wrappedInQuotes = false;
                             for(var i = 0; i < 2; i++){
                                 if([text.charAt(0),text.charAt(text.length-1)].indexOf(['"',"'"][i])>-1){
@@ -1535,7 +1532,7 @@ class JSONInput extends Component {
                                     break; 
                                 }
                             }
-                            if(wrappedInQuotes) text = text.slice(1, -1);
+                            if(wrappedInQuotes && text.length >= 2) text = text.slice(1, -1);
                             const
                                 nonAlphaNumeric = text.replace(/\w/g,''),
                                 alphaNumeric    = text.replace(/\W+/g,''),
@@ -1571,19 +1568,22 @@ class JSONInput extends Component {
                         }
                         if('\'"'.indexOf(C) > -1){
                             if(buffer2.isValue) type = 'string'; else type = 'key';
-                            string = token.slice(1, -1);
-                            if(type==='key') string = stripQuotesFromKey(string);
-                            //if(string.indexOf(' ') > -1) string = "'" + string + "'";
-                            if(type==='string')
-                            if(string.indexOf("'") > -1) string = '"' + string + '"';
-                            else string = "'" + string + "'";
+                            if(type==='key') string = stripQuotesFromKey(token);
+                            if(type==='string'){
+                                string = '';
+                                token.slice(1, -1).split('').forEach( char => {
+                                    if('\'\"'.indexOf(char)>-1) char = '\\' + char;
+                                    string += char;
+                                });
+                                string = "'" + string + "'";
+                            }
                             value = string;
                             break;
                         }
-                        if('0123456789'.indexOf(C) > -1){
-                            type = 'number'; 
+                        if(!isNaN(token)){
+                            type   = 'number'; 
                             string = token;
-                            value = Number(token);
+                            value  = Number(token);
                             break;
                         }
                         if(token.length > 0)
