@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import themes               from './themes';
+import { format }           from "./locale";
 
 class JSONInput extends Component {
     constructor(props){
@@ -334,6 +335,7 @@ class JSONInput extends Component {
     }
     renderErrorMessage(){
         const
+            locale       = this.props.locale,
             error        = this.state.error,
             style        = this.style;
         if(!error) return void(0);
@@ -356,7 +358,7 @@ class JSONInput extends Component {
                     ...style.errorMessage
                 }}
             >
-            { error.reason + ' at line ' + error.line }
+            { format(locale.format, error) }
             </p>
         );
     }
@@ -595,6 +597,7 @@ class JSONInput extends Component {
     }
     tokenize(something){
         if(typeof something !== 'object') return console.error('tokenize() expects object type properties only. Got \'' + typeof something + '\' type instead.');
+        const { locale } = this.props;
         const newSpan = this.newSpan;
         /**
          *     DOM NODE || ONBLUR OR UPDATE
@@ -1032,81 +1035,109 @@ class JSONInput extends Component {
                     case 'linebreak' : line++; break;
                     case 'symbol' :
                         switch(string){
-                            case '{' : case '[' : 
+                            case '{' : 
+                            case '[' : 
                                 found = followsSymbol(i,['}',']']);
                                 if(found){
-                                    setError(i,'\'' + buffer.tokens_merge[found].string + '\' token cannot be followed by \'' + string + '\' token');
+                                    setError(i,format(locale.invalidToken.sequence, {
+                                        firstToken: buffer.tokens_merge[found].string,
+                                        secondToken: string
+                                    }));
                                     break;
                                 }
                                 if(string==='['&&i>0)
                                 if(!followsSymbol(i,[':','[',','])){
-                                    setError(i,'\'[\' token can only follow \':\', \'[\', and \',\' tokens');
+                                    setError(i,format(locale.invalidToken.whitelist, {
+                                        firstToken: "[",
+                                        secondToken: [":", "[", ","]
+                                    }));
                                     break;
                                 }
                                 if(string==='{')
                                 if(followsSymbol(i,['{'])){
-                                    setError(i,'\'{\' token cannot follow another \'{\' token');
+                                    setError(i,format(locale.invalidToken.double, {
+                                        token: "{"
+                                    }));
                                     break;
                                 }
                                 buffer2.brackets.push(string);
                                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1]==='[';
                                 bracketList.push({ i : i, line : line, string : string });
-                            break;
-                            case '}' : case ']' :
+                                break;
+                            case '}' : 
+                            case ']' :
                                 if(string==='}')
                                 if(buffer2.brackets[buffer2.brackets.length-1]!=='{'){
-                                    setError(i,'Missing \'{\' open curly brace');
+                                    setError(i,format(locale.brace.missingOpenCurly));
                                     break;
                                 }
                                 if(string==='}')
                                 if(followsSymbol(i,[','])){
-                                    setError(i,'\'}\' token cannot follow a comma');
+                                    setError(i,format(locale.invalidToken.sequence, {
+                                        firstToken: ",",
+                                        secondToken: "}"
+                                    }));
                                     break;
                                 }
                                 if(string===']')
                                 if(buffer2.brackets[buffer2.brackets.length-1]!=='['){
-                                    setError(i,'Missing \'[\' open brace');
+                                    setError(i,format(locale.brace.missingOpenSquare));
                                     break;
                                 }
                                 if(string===']')
                                 if(followsSymbol(i,[':'])){
-                                    setError(i,'\']\' token cannot follow a colon');
+                                    setError(i,format(locale.invalidToken.sequence, {
+                                        firstToken: ":",
+                                        secondToken: "]"
+                                    }));
                                     break;
                                 }
                                 buffer2.brackets.pop();
                                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1]==='[';
                                 bracketList.push({ i : i, line : line, string : string });
-                            break;
+                                break;
                             case ',' :
                                 found = followsSymbol(i,['{']);
                                 if(found){
                                     if(followedBySymbol(i,['}'])){
-                                        setError(i,'Comma can only be wrapped by brackets');
+                                        setError(i,format(locale.brace.cannotWrap, {
+                                            token: ",",
+                                            brace: "{}"
+                                        }));
                                         break;
                                     }
-                                    setError(i,'Comma cannot follow \'{\' token');
+                                    setError(i,format(locale.invalidToken.sequence, {
+                                        firstToken: "{",
+                                        secondToken: ","
+                                    }));
                                     break;
                                 }
                                 if(followedBySymbol(i,['}',',',']'])){
-                                    setError(i,'Values are always specified. Comma cannot be followed by \'}\', \']\' tokens or another comma');
+                                    setError(i,format(locale.noTrailingOrLeadingComma));
                                     break;
                                 }
                                 found = typeFollowed(i);
                                 switch(found){
-                                    case 'key' : case 'colon' :
-                                        setError(i,'Comma cannot follow ' + found);
+                                    case 'key' : 
+                                    case 'colon' :
+                                        setError(i,format(locale.invalidToken.sequence, {
+                                            firstToken: found,
+                                            secondToken: ","
+                                        }));
                                         break;
-                                    break;
                                     case 'symbol' :
                                         if(followsSymbol(i,['{'])){
-                                            setError(i,'Comma cannot follow \'{\' token');
+                                            setError(i,format(locale.invalidToken.sequence, {
+                                                firstToken: "{",
+                                                secondToken: ","
+                                            }));
                                             break;
                                         }
-                                    break;
+                                        break;
                                     default : break;
                                 }
                                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1]==='[';
-                            break;
+                                break;
                             default : break;
                         }
                         buffer.json += string;
@@ -1114,43 +1145,59 @@ class JSONInput extends Component {
                     case 'colon' :
                         found = followsSymbol(i,['[']);
                         if(found&&followedBySymbol(i,[']'])){
-                            setError(i,'Colon can only be wrapped by curly brackets');
+                            setError(i,format(locale.brace.cannotWrap, {
+                                token: ":",
+                                brace: "[]"
+                            }));
                             break;
                         }
                         if(found){
-                            setError(i,'Colon cannot follow \'[\' token');
+                            setError(i,format(locale.invalidToken.sequence, {
+                                firstToken: "[",
+                                secondToken: ":"
+                            }));
                             break;
                         }
                         if(typeFollowed(i)!=='key'){
-                            setError(i,'Colon can only follow key');
+                            setError(i,format(locale.invalidToken.whitelist, {
+                                firstToken: ":",
+                                secondToken: "key"
+                            }));
                             break;
                         }
                         buffer2.isValue = true;
                         buffer.json += string;
-                    break;
-                    case 'key' : case 'string' :
+                        break;
+                    case 'key' : 
+                    case 'string' :
                         let
                             firstChar     = string.charAt(0),
                             lastChar      = string.charAt(string.length - 1),
                             quote_primary = quotes.indexOf(firstChar);
                         if(quotes.indexOf(firstChar)===-1)
                         if(quotes.indexOf(lastChar)!==-1){
-                            setError(i,'Missing opening ' + lastChar + ' quote on ' + type);
+                            setError(i,format(locale.string.missingOpen, {
+                                quote: firstChar
+                            }));
                             break;
                         }
                         if(quotes.indexOf(lastChar)===-1)
                         if(quotes.indexOf(firstChar)!==-1){
-                            setError(i,'Missing closing ' + firstChar + ' quote on ' + type);
+                            setError(i,format(locale.string.missingClose, {
+                                quote: firstChar,
+                            }));
                             break;
                         }
                         if(quotes.indexOf(firstChar)>-1)
                         if(firstChar!==lastChar){
-                            setError(i,'Missing closing ' + firstChar + ' quote on ' + type);
+                            setError(i,format(locale.string.missingClose, {
+                                quote: firstChar,
+                            }));
                             break;
                         }
                         if('string'===type)
                         if(quotes.indexOf(firstChar)===-1 && quotes.indexOf(lastChar)===-1){
-                            setError(i,'String must be wrapped by quotes');
+                            setError(i,format(locale.string.mustBeWrappedByQuotes));
                             break;
                         }
                         if('key'===type)
@@ -1159,7 +1206,9 @@ class JSONInput extends Component {
                             if(error) break;
                             const c = string.charAt(h);
                             if(alphanumeric.indexOf(c)===-1){
-                                setError(i,'Non-alphanemeric token \'' + c + '\' is not allowed outside string notation');
+                                setError(i,format(locale.string.nonAlphanumeric, {
+                                    token: c,
+                                }));
                                 break;
                             }
                         }
@@ -1170,30 +1219,36 @@ class JSONInput extends Component {
                             if(i>0)
                             if(!isNaN(buffer.tokens_merge[i-1])){
                                 buffer.tokens_merge[i-1] += buffer.tokens_merge[i];
-                                setError(i,'Key beginning with number and containing letters must be wrapped by quotes');
+                                setError(i,format(locale.key.numberAndLetterMissingQuotes));
                                 break;
                             }
-                                setError(i,'Key containing space must be wrapped by quotes');
+                            setError(i,format(locale.key.spaceMissingQuotes));
                             break;
                         }
                         if('key'===type)
                         if(!followsSymbol(i,['{',','])){
-                            setError(i,'Key can only follow \'{\' or \',\' tokens');
+                            setError(i,format(locale.invalidToken.whitelist, {
+                                firstToken: type,
+                                secondToken: ["{", ","]
+                            }));
                             break;
                         }
                         if('string'===type)
                         if(!followsSymbol(i,['[',':',','])){
-                            setError(i,type + ' can only follow \'[\' \':\' \',\' tokens');
+                            setError(i,format(locale.invalidToken.whitelist, {
+                                firstToken: type,
+                                secondToken: ["[", ":", ","]
+                            }));
                             break;
                         }
                         if('key'===type)
                         if(buffer2.isValue){
-                            setError(i,'Unexpected key found at value position');
+                            setError(i,format(locale.string.unexpectedKey));
                             break;
                         }
                         if('string'===type)
                         if(!buffer2.isValue){
-                            setError(i,'Unexpected string found at key position');
+                            setError(i,format(locale.key.unexpectedString));
                             break;
                         }
                         buffer.json += string;
@@ -1211,7 +1266,10 @@ class JSONInput extends Component {
                             }
                             else
                                 if(!followsSymbol(i,['[',':',','])){
-                                    setError(i,type + ' can only follow \'[\' \':\' \',\' tokens');
+                                    setError(i,format(locale.invalidToken.whitelist, {
+                                        firstToken: type,
+                                        secondToken: ["[", ":", ","]
+                                    }));
                                     break;
                                 }
                         if(type!=='key')
@@ -1222,7 +1280,10 @@ class JSONInput extends Component {
                         }
                         if(type==='primitive')
                         if(string==='undefined')
-                        setError(i,'\'undefined\' token is not accepted. Use \'null\' token instead');
+                        setError(i,format(locale.invalidToken.useInstead, {
+                            badToken: "undefined",
+                            goodToken: "null"
+                        }));
                         buffer.json += string;
                     break;
                 }
@@ -1269,7 +1330,10 @@ class JSONInput extends Component {
                         _tokenPosition      = bracketList[0].i,
                         _closingBracketType = _tokenString==='['?']':'}';
                     line = bracketList[0].line;
-                    setError(_tokenPosition,'\'' + _tokenString + '\' token is missing closing \'' + _closingBracketType + '\' token');
+                    setError(_tokenPosition,format(locale.brace.missingClose, {
+                        open: _tokenString,
+                        close: _closingBracketType
+                    }));
                 }
             }
             if(!error)
@@ -1300,7 +1364,9 @@ class JSONInput extends Component {
                     if(!buffer.tokens_merge[tokenIndex+1]) exitWhile = true;
                 }
                 line = _line;
-                setError(tokenIndex,'Unexpected token \'' + token.string + '\' found');
+                setError(_tokenPosition,format(locale.token.unexpected, {
+                    token: token.string
+                }));
             }
             let
                 _line   = 1,
