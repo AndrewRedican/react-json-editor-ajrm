@@ -9,6 +9,9 @@
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
   },
   "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",

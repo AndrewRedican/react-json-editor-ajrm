@@ -5,7 +5,9 @@ import ReactDOM             from 'react-dom';
  * Import RJEA component
  */
 import JSONInput          from 'react-json-editor-ajrm'; // Using distribution version in node_modules 
+import locale             from 'react-json-editor-ajrm/locale/en';
 //import JSONInput          from '../../src/index'; // Using source code
+//import locale             from '../../src/locale/en';
 
 /**
  * Import some data. This is a sample object, which will be passed down to JSONInput placeholder properperties.
@@ -28,6 +30,7 @@ class App extends Component {
                     id          = 'unique_string' //an id is required
                     placeholder = {sampleData}    //data to display
                     theme       = 'light_mitsuketa_tribute'
+                    locale      = {locale}
                     colors      = {{
                         string : '#DAA520' // overrides theme colors with whatever color value you want
                     }}
