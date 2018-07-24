@@ -1364,7 +1364,7 @@ class JSONInput extends Component {
                     if(!buffer.tokens_merge[tokenIndex+1]) exitWhile = true;
                 }
                 line = _line;
-                setError(_tokenPosition,format(locale.token.unexpected, {
+                setError(tokenIndex,format(locale.invalidToken.unexpected, {
                     token: token.string
                 }));
             }
