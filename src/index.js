@@ -629,6 +629,10 @@ class JSONInput extends Component {
                             type   : child.attributes.type.textContent
                         };  
                         buffer.tokens_unknown.push(info);
+                    break;
+                    case 'DIV' :
+                        buffer.tokens_unknown.push({ string : child.textContent, type : 'unknown' });
+                    break;
                     case 'BR' :
                         if(child.textContent==='')
                         buffer.tokens_unknown.push({ string : '\n', type : 'unknown' });
@@ -639,7 +643,9 @@ class JSONInput extends Component {
                     case 'FONT' :
                         buffer.tokens_unknown.push({ string : child.textContent, type : 'unknown' });
                     break;
-                    default : break;
+                    default :
+                        console.error('Unrecognized node:',{child})
+                    break;
                 }
             });
             function quarkize(text,prefix=''){
