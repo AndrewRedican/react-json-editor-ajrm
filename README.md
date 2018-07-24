@@ -41,13 +41,8 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.8] - July 22, 2018
-1. An issue where quotes inside value strings were not escaped properly has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/21)
-2. An issue where empty strings were not accepted as valid key names has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/22)
-3. An issue where negative numbers were not displayed has been fixed.
-4. Added `modifyErrorText` property which allows the developer to plug in a custom function to modify error messages. See [feature request](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/23)
-5. An issue where percentage values were regarded as pixel values for `height` and `width` shorthand properties has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/18) 
-6. Added a testing framework to assure component quality.
+## Latest Release Notes [v2.4.9] - July 24, 2018
+1. An issue where inserting a new line directly would cause for content not to render correctly has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/25)
 
 ## Upcoming Features
 1. Core QA tests.
