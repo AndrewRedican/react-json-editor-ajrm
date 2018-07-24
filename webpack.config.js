@@ -1,10 +1,11 @@
 const
     webpack        = require('webpack'),
     UglifyJSPlugin = require('uglifyjs-webpack-plugin'),
+    CopyPlugin     = require("copy-webpack-plugin"),
     pkg            = require('./package.json'),
     path           = require('path'),
     libraryName    = pkg.name;
-
+    
 module.exports = {
     entry : [
         './src/index.js'
@@ -19,7 +20,13 @@ module.exports = {
     },
     plugins : [
         new webpack.DefinePlugin({ 'process.env.NODE_ENV': 'true' }),
-        new UglifyJSPlugin()
+        new UglifyJSPlugin(),
+        new CopyPlugin([{
+            from: "./src/locale/*.js",
+            ignore: ["index.js"],
+            to: "./locale/[name].[ext]",
+            toType: 'template'
+        }], { force: true, debug: "debug" })
     ],
     node: {
         fs  : 'empty',
