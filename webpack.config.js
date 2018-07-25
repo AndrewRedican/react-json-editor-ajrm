@@ -26,7 +26,7 @@ module.exports = {
             ignore: ["index.js"],
             to: "./locale/[name].[ext]",
             toType: 'template'
-        }], { force: true, debug: "debug" })
+        }], { force: true, debug: 'warning' })
     ],
     node: {
         fs  : 'empty',
@@ -53,15 +53,11 @@ module.exports = {
     externals: {
         react: {
             commonjs  : 'react',
-            commonjs2 : 'react',
-            amd       : 'React',
-            root      : 'React'
+            commonjs2 : 'react'
         },
         'react-dom': {
             commonjs  : 'react-dom',
-            commonjs2 : 'react-dom',
-            amd       : 'ReactDOM',
-            root      : 'ReactDOM'
+            commonjs2 : 'react-dom'
         }
     }
 }
