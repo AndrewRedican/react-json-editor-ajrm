@@ -20,8 +20,12 @@
     "build": "node ./node_modules/webpack/bin/webpack.js"
   },
   "jest": {
-    "setupFiles": ["./test/jestsetup.js"],
-    "snapshotSerializers": ["enzyme-to-json/serializer"]
+    "setupFiles": [
+      "./test/jestsetup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
   "keywords": [
