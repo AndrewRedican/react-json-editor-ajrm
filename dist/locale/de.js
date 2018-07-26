@@ -8,32 +8,28 @@ module.exports = {
     unexpected: "Unerwartetes '{token}' Zeichen gefunden"
   },
   brace: {
-    /*missingOpenCurly: "Fehlende '{' geöffnete geschweifte Klammer",
-    missingOpenSquare: "Fehlende '[' geöffnete eckige Klammer",
-    missingClose: "Geöffneter '{open}' Klammer fehlt schließende '{close}' Klammer",
-    cannotWrap: "'{token}' Zeichen kann nicht von '{brace}' Klammern umschlossen werden"*/
     curly: {
-      missingOpen: "Missing '{' open curly brace",
-      missingClose: "Open '{' curly brace is missing closing '}' curly brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
+      missingOpen: "Fehlende '{' geöffnete geschweifte Klammer",
+      missingClose: "Geöffneter '{' geschweifte Klammer fehlt schließende '}' geschweifte Klammer",
+      cannotWrap: "'{token}' Zeichen kann nicht von '{}' geschweiften Klammern umschlossen werden"
     },
     square: { 
-      missingOpen: "Missing '[' open square brace", 
-      missingClose: "Open '[' square brace is missing closing ']' square brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
+      missingOpen: "Fehlende '[' geöffnete eckige Klammer", 
+      missingClose: "Geöffneter '[' eckige Klammer fehlt schließende ']' eckige Klammer",
+      cannotWrap: "'{token}' Zeichen kann nicht von '[]' eckigen Klammern umschlossen werden"
     }
   },
   string: {
-    missingOpen: "Fehlende '{quote}' Anführungszeichen um String zu starten",
-    missingClose: "Fehlende '{quote}' Anführungszeichen um String zu schließen",
-    mustBeWrappedByQuotes: "Strings müssen von Anführungszeichen umschlossen sein",
-    nonAlphanumeric: "Nicht-Alphanumerische Zeichen '{token}' sind nicht außerhalb der String Notation erlaubt",
-    unexpectedKey: "Unerwarteter Key in String gefunden"
+    missingOpen: "Fehlendes/Ungültiges '{quote}' Zeichen um Zeichenkette zu starten",
+    missingClose: "Fehlendes/Ungültiges '{quote}' Zeichen um Zeichenkette zu schließen",
+    mustBeWrappedByQuotes: "Zeichenketten müssen von Anführungszeichen umschlossen sein",
+    nonAlphanumeric: "Nicht-Alphanumerische Zeichen '{token}' sind nicht außerhalb der Zeichenketten-Notation erlaubt",
+    unexpectedKey: "Unerwarteter Schlüssel in Zeichenkette gefunden"
   },
   key: {
-    numberAndLetterMissingQuotes: "Keys welche mit Zahlen anfangen und andere Alphanumerische Zeichen beinhalten müssen von Anführungszeichen umschlossen sein",
-    spaceMissingQuotes: "Keys mit Leerzeichen müssen von Anführungszeichen umschlossen sein",
-    unexpectedString: "Unerwarteter String in Key gefunden"
+    numberAndLetterMissingQuotes: "Schlüssel welche mit Zahlen anfangen und andere Alphanumerische Zeichen beinhalten müssen von Anführungszeichen umschlossen sein",
+    spaceMissingQuotes: "Schlüssel mit Leerzeichen müssen von Anführungszeichen umschlossen sein",
+    unexpectedString: "Unerwartete Zeichenkette in Schlüssel gefunden"
   },
   noTrailingOrLeadingComma: "Anführende oder Anschließende Kommas sind in Arrays und Objekten nicht erlaubt"
 };

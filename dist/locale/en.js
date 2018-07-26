@@ -10,18 +10,18 @@ module.exports = {
   brace: {
     curly: {
       missingOpen: "Missing '{' open curly brace",
-      missingClose: "Open '{open}' curly brace is missing closing '{close}' curly brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '{brace}' curly braces"
+      missingClose: "Open '{' curly brace is missing closing '}' curly brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
     },
     square: { 
       missingOpen: "Missing '[' open square brace", 
-      missingClose: "Open '{open}' square brace is missing closing '{close}' square brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '{brace}' square braces"
+      missingClose: "Open '[' square brace is missing closing ']' square brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
     }
   },
   string: {
-    missingOpen: "Missing opening string '{quote}' quote",
-    missingClose: "Missing closing string '{quote}' quote",
+    missingOpen: "Missing/invalid opening string '{quote}' token",
+    missingClose: "Missing/invalid closing string '{quote}' token",
     mustBeWrappedByQuotes: "Strings must be wrapped by quotes",
     nonAlphanumeric: "Non-alphanemeric token '{token}' is not allowed outside string notation",
     unexpectedKey: "Unexpected key found at string position"

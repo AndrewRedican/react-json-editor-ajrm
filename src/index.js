@@ -1328,7 +1328,7 @@ class JSONInput extends Component {
                         _tokenPosition      = bracketList[0].i,
                         _closingBracketType = _tokenString==='['?']':'}';
                     line = bracketList[0].line;
-                    setError(_tokenPosition,format(locale.brace[_closingBracketType === '[' ? 'square' : 'curly'].missingClose));
+                    setError(_tokenPosition,format(locale.brace[_closingBracketType === ']' ? 'square' : 'curly'].missingClose));
                 }
             }
             if(!error)
