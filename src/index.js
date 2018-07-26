@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import themes               from './themes';
 import { format }           from "./locale";
+import defaultLocale        from "./locale/en";
 
 class JSONInput extends Component {
     constructor(props){
@@ -335,9 +336,9 @@ class JSONInput extends Component {
     }
     renderErrorMessage(){
         const
-            locale       = this.props.locale,
-            error        = this.state.error,
-            style        = this.style;
+            locale = this.props.locale || defaultLocale,
+            error  = this.state.error,
+            style  = this.style;
         if(!error) return void(0);
         return (
             <p
@@ -597,7 +598,7 @@ class JSONInput extends Component {
     }
     tokenize(something){
         if(typeof something !== 'object') return console.error('tokenize() expects object type properties only. Got \'' + typeof something + '\' type instead.');
-        const { locale } = this.props;
+        const locale = this.props.locale || defaultLocale;
         const newSpan = this.newSpan;
         /**
          *     DOM NODE || ONBLUR OR UPDATE
