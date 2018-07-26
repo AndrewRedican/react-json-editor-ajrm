@@ -73,6 +73,7 @@
 | [width]()                     | A shorthand property to set a specific width for the entire component.                | string  | Optional  |
 | [onKeyPressUpdate]()          | Send `false` if you would like for component not to automatically update on key press.| boolean | Optional  |
 | [waitAfterKeyPress]()         | Amount of milliseconds to wait before re-rendering content after keypress. Value defaults to `1000` when not specified. In other words, component will update if there is no additional keystroke after the last one within 1 second. Less than `100` milliseconds does not makes a difference. | number  | Optional  |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'` | object  | Optional - Recommended to specify  |
 | [modifyErrorText]()           | A custom function to modify the component's original warning text. This function will receive a single parameter of type `string` and must equally return a `string`. | function | Optional |
 | [theme]()                     | Specify which [built-in theme](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes) to use. | string  | Optional  |
 | [colors]()                    | **Contains the following properties:**                                                | object  | Optional  |
