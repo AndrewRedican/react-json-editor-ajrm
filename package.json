@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "prepublishOnly": "npm run build",
-    "build": "node ./node_modules/webpack/bin/webpack.js"
+    "build": "node ./node_modules/webpack/bin/webpack.js",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "jest": {
     "setupFiles": [
@@ -61,6 +63,7 @@
     "react-dom": ">=16.2.0"
   },
   "devDependencies": {
+    "all-contributors-cli": "^5.3.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^23.4.0",
     "babel-loader": "^7.1.2",

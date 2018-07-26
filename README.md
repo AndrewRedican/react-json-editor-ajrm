@@ -143,13 +143,6 @@ You can check the source code here [react-json-editor-ajrm/src/](https://github.
 * [**Jest**](https://jestjs.io/docs/en/tutorial-react) for unit testing, also react-specific tests.
 * [**Travis CI**](https://travis-ci.org/) for continuous integration.
 
-<!-- ALL-CONTRIBUTORS-LIST: START - Do not remove or modify this section -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-## Authors
-
-* **Andrew Redican** [andrewredican](https://github.com/andrewredican)
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.

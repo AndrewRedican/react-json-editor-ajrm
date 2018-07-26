@@ -10,19 +10,19 @@
   "commit": true,
   "contributors": [
     {
-      "login": "PatrickSachs",
-      "name": "Patrick Sachs",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/7840502?v=4",
-      "profile": "https://patrick-sachs.de/",
+      "login": "AndrewRedican",
+      "name": "Andrew Redican",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24832471?v=4",
+      "profile": "https://github.com/AndrewRedican",
       "contributions": [
         "code"
       ]
     },
     {
-      "login": "AndrewRedican",
-      "name": "Andrew Redican",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/24832471?v=4",
-      "profile": "https://github.com/AndrewRedican",
+      "login": "PatrickSachs",
+      "name": "Patrick Sachs",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7840502?v=4",
+      "profile": "https://patrick-sachs.de/",
       "contributions": [
         "code"
       ]
