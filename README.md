@@ -141,7 +141,7 @@ You can check the source code here [react-json-editor-ajrm/src/](https://github.
 * [**Webpack**](https://webpack.js.org/) for bundling npm module.
 * [**Enzyme**](http://airbnb.io/enzyme/) for react-specific testing utilities.
 * [**Jest**](https://jestjs.io/docs/en/tutorial-react) for unit testing, also react-specific tests.
-* [**Travis CI**](9https://travis-ci.org/) for continuous integration.
+* [**Travis CI**](https://travis-ci.org/) for continuous integration.
 
 <!-- ALL-CONTRIBUTORS-LIST: START - Do not remove or modify this section -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
