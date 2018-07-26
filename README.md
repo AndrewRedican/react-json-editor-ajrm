@@ -45,13 +45,13 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.9] - July 24, 2018
-1. An issue where inserting a new line directly would cause for content not to render correctly has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/25)
+## Latest Spotlight Release Notes [v2.5.0] - July 26, 2018
+1. Added locale support for `English`, `German`, and `Spanish`.
+2. An issue where the distribution version was bundled with multiple casing of a peer depency has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/17).
 
 ## Upcoming Features
 1. Core QA tests.
-2. Built-in localization support for warnings in different languages.
-3. Collapsible nodes to partially display contents of an object.
+2. Collapsible nodes to partially display contents of an object.
 
 ## Features
 
@@ -66,7 +66,7 @@
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()                        | A unique id to identify component.                                                    | string  | Mandatory |
-| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'` | object  | Mandatory  |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted.            | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
 | [onChange]()                  | Whenever `onBlur` or `onKeyPress` events take place, it will return content values.   | object  | Optional  |
