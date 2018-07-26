@@ -1068,7 +1068,7 @@ class JSONInput extends Component {
                             case ']' :
                                 if(string==='}')
                                 if(buffer2.brackets[buffer2.brackets.length-1]!=='{'){
-                                    setError(i,format(locale.brace.missingOpenCurly));
+                                    setError(i,format(locale.brace.curly.missingOpen));
                                     break;
                                 }
                                 if(string==='}')
@@ -1081,7 +1081,7 @@ class JSONInput extends Component {
                                 }
                                 if(string===']')
                                 if(buffer2.brackets[buffer2.brackets.length-1]!=='['){
-                                    setError(i,format(locale.brace.missingOpenSquare));
+                                    setError(i,format(locale.brace.square.missingOpen));
                                     break;
                                 }
                                 if(string===']')
@@ -1100,9 +1100,8 @@ class JSONInput extends Component {
                                 found = followsSymbol(i,['{']);
                                 if(found){
                                     if(followedBySymbol(i,['}'])){
-                                        setError(i,format(locale.brace.cannotWrap, {
-                                            token: ",",
-                                            brace: "{}"
+                                        setError(i,format(locale.brace.curly.cannotWrap, {
+                                            token: ","
                                         }));
                                         break;
                                     }
@@ -1145,9 +1144,8 @@ class JSONInput extends Component {
                     case 'colon' :
                         found = followsSymbol(i,['[']);
                         if(found&&followedBySymbol(i,[']'])){
-                            setError(i,format(locale.brace.cannotWrap, {
-                                token: ":",
-                                brace: "[]"
+                            setError(i,format(locale.brace.square.cannotWrap, {
+                                token: ":"
                             }));
                             break;
                         }
@@ -1330,10 +1328,7 @@ class JSONInput extends Component {
                         _tokenPosition      = bracketList[0].i,
                         _closingBracketType = _tokenString==='['?']':'}';
                     line = bracketList[0].line;
-                    setError(_tokenPosition,format(locale.brace.missingClose, {
-                        open: _tokenString,
-                        close: _closingBracketType
-                    }));
+                    setError(_tokenPosition,format(locale.brace[_closingBracketType === '[' ? 'square' : 'curly'].missingClose));
                 }
             }
             if(!error)

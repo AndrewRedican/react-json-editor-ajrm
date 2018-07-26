@@ -8,10 +8,16 @@ module.exports = {
     unexpected: "Unexpected '{token}' token found"
   },
   brace: {
-    missingOpenCurly: "Missing '{' open curly brace",
-    missingOpenSquare: "Missing '[' open brace",
-    missingClose: "Open '{open}' brace is missing closing '{close}' brace",
-    cannotWrap: "'{token}' token cannot be wrapped in '{brace}' braces"
+    curly: {
+      missingOpen: "Missing '{' open curly brace",
+      missingClose: "Open '{open}' curly brace is missing closing '{close}' curly brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '{brace}' curly braces"
+    },
+    square: { 
+      missingOpen: "Missing '[' open square brace", 
+      missingClose: "Open '{open}' square brace is missing closing '{close}' square brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '{brace}' square braces"
+    }
   },
   string: {
     missingOpen: "Missing opening string '{quote}' quote",

@@ -8,10 +8,20 @@ module.exports = {
     unexpected: "Unerwartetes '{token}' Zeichen gefunden"
   },
   brace: {
-    missingOpenCurly: "Fehlende '{' geöffnete geschweifte Klammer",
+    /*missingOpenCurly: "Fehlende '{' geöffnete geschweifte Klammer",
     missingOpenSquare: "Fehlende '[' geöffnete eckige Klammer",
     missingClose: "Geöffneter '{open}' Klammer fehlt schließende '{close}' Klammer",
-    cannotWrap: "'{token}' Zeichen kann nicht von '{brace}' Klammern umschlossen werden"
+    cannotWrap: "'{token}' Zeichen kann nicht von '{brace}' Klammern umschlossen werden"*/
+    curly: {
+      missingOpen: "Missing '{' open curly brace",
+      missingClose: "Open '{' curly brace is missing closing '}' curly brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
+    },
+    square: { 
+      missingOpen: "Missing '[' open square brace", 
+      missingClose: "Open '[' square brace is missing closing ']' square brace",
+      cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
+    }
   },
   string: {
     missingOpen: "Fehlende '{quote}' Anführungszeichen um String zu starten",
