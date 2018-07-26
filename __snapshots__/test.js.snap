@@ -3,6 +3,43 @@
 exports[`Basic Component Render 1`] = `
 <JSONInput
   id="unique_string"
+  locale={
+    Object {
+      "brace": Object {
+        "curly": Object {
+          "cannotWrap": "'{token}' token cannot be wrapped in '{}' curly braces",
+          "missingClose": "Open '{' curly brace is missing closing '}' curly brace",
+          "missingOpen": "Missing '{' open curly brace",
+        },
+        "square": Object {
+          "cannotWrap": "'{token}' token cannot be wrapped in '[]' square braces",
+          "missingClose": "Open '[' square brace is missing closing ']' square brace",
+          "missingOpen": "Missing '[' open square brace",
+        },
+      },
+      "format": "{reason} at line {line}",
+      "invalidToken": Object {
+        "double": "'{token}' token cannot be followed by another '{token}' token",
+        "sequence": "'{firstToken}' token cannot be followed by a '{secondToken}' token",
+        "unexpected": "Unexpected '{token}' token found",
+        "useInstead": "'{badToken}' token is not accepted. Use '{goodToken}' instead",
+        "whitelist": "'{firstToken}' token can only follow '{secondToken}' token",
+      },
+      "key": Object {
+        "numberAndLetterMissingQuotes": "Key beginning with number and containing letters must be wrapped by quotes",
+        "spaceMissingQuotes": "Key containing space must be wrapped by quotes",
+        "unexpectedString": "Unexpected string found at key position",
+      },
+      "noTrailingOrLeadingComma": "Trailing or leading commas in arrays and objects are not permitted",
+      "string": Object {
+        "missingClose": "Missing/invalid closing string '{quote}' token",
+        "missingOpen": "Missing/invalid opening string '{quote}' token",
+        "mustBeWrappedByQuotes": "Strings must be wrapped by quotes",
+        "nonAlphanumeric": "Non-alphanemeric token '{token}' is not allowed outside string notation",
+        "unexpectedKey": "Unexpected key found at string position",
+      },
+    }
+  }
   test={true}
 >
   <div
