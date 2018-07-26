@@ -1,0 +1,42 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [2.5.0] - 2018-07-26
+### Added
+- CHANGELOG.md @AndrewRedican.
+- Locale Support System @PatrickSachs.
+- German translation for warnings @PatrickSachs.
+- Spanish translation for warnings @AndrewRedican.
+- Contributors list @AndrewRedican.
+
+### Changed
+- Some original warning texts in English @PatrickSachs.
+
+### Fixed
+- React depency module casing warning due to webpack's bundle configuation of external peer dependencies @AndrewRedican.
+
+## [2.4.9] - 2018-07-24
+### Added
+- `modifyErrorText` property to customize warnings @AndrewRedican.
+
+### Fixed
+- Shorthand properties `width` and `height` not properly working with percentages @AndrewRedican.
+
+...
+
+## [2.3.3] - 2018-05-25
+### Added
+- Re-render on KeyPress feature @AndrewRedican.
+
+## [2.2.2] - 2018-05-14
+### Added
+- Added more customization options @AndrewRedican.
+
+## [2.0.3] - 2018-05-09
+### Added
+- New logic for syntax recognition and rendering by @AndrewRedican.

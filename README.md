@@ -1,4 +1,5 @@
 # react-json-editor-ajrm ![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.org/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo})
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 
 
@@ -44,13 +45,13 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Release Notes [v2.4.9] - July 24, 2018
-1. An issue where inserting a new line directly would cause for content not to render correctly has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/25)
+## Latest Spotlight Release Notes [v2.5.0] - July 26, 2018
+1. Added locale support for `English`, `German`, and `Spanish`.
+2. An issue where the distribution version was bundled with multiple casing of a peer depency has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/17).
 
 ## Upcoming Features
 1. Core QA tests.
-2. Built-in localization support for warnings in different languages.
-3. Collapsible nodes to partially display contents of an object.
+2. Collapsible nodes to partially display contents of an object.
 
 ## Features
 
@@ -65,6 +66,7 @@
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()                        | A unique id to identify component.                                                    | string  | Mandatory |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted.            | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
 | [onChange]()                  | Whenever `onBlur` or `onKeyPress` events take place, it will return content values.   | object  | Optional  |
@@ -139,12 +141,20 @@ You can check the source code here [react-json-editor-ajrm/src/](https://github.
 * [**Webpack**](https://webpack.js.org/) for bundling npm module.
 * [**Enzyme**](http://airbnb.io/enzyme/) for react-specific testing utilities.
 * [**Jest**](https://jestjs.io/docs/en/tutorial-react) for unit testing, also react-specific tests.
-* [**Travis CI**](9https://travis-ci.org/) for continuous integration.
-
-## Authors
-
-* **Andrew Redican** [andrewredican](https://github.com/andrewredican)
+* [**Travis CI**](https://travis-ci.org/) for continuous integration.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") | [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") |
+| :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

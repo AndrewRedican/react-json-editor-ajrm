@@ -1,6 +1,6 @@
 import React     from "react";
 import JSONInput from './src/index';
-
+import locale    from './src/locale/en'
 
 
 /**
@@ -14,10 +14,15 @@ beforeAll(() => {
 
 /**
  * Render Component and Attach to DOM
+ * Only use required properties
  */
 test('Basic Component Render', () => {
     let wrapper = mount(
-        <JSONInput test id = 'unique_string'/>,
+        <JSONInput
+            test
+            id     = 'unique_string'
+            locale = {locale}
+        />,
         { attachTo: window.domNode }
     );
     expect(wrapper).toMatchSnapshot();

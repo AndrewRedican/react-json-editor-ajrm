@@ -14,8 +14,8 @@ Until our slack channel is set up, feel free to use the [issue tracker](https://
 # Your First Contribution
 Unsure where to begin contributing to RJEA? You can start by looking through these beginner and help-wanted issues:
 
-* [Beginner issues]() - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues]() - issues which should be a bit more involved than beginner issues.
+* [Beginner issues](https://github.com/AndrewRedican/react-json-editor-ajrm/labels/beginner) - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues](https://github.com/AndrewRedican/react-json-editor-ajrm/labels/help%20wanted) - issues which should be a bit more involved than beginner issues.
 
 Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 

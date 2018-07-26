@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.4.9",
+  "version": "2.5.0",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "ISC",
@@ -9,16 +9,25 @@
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
   },
   "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "prepublishOnly": "npm run build",
-    "build": "node ./node_modules/webpack/bin/webpack.js"
+    "build": "node ./node_modules/webpack/bin/webpack.js",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "jest": {
-    "setupFiles": ["./test/jestsetup.js"],
-    "snapshotSerializers": ["enzyme-to-json/serializer"]
+    "setupFiles": [
+      "./test/jestsetup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
   "keywords": [
@@ -54,6 +63,7 @@
     "react-dom": ">=16.2.0"
   },
   "devDependencies": {
+    "all-contributors-cli": "^5.3.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^23.4.0",
     "babel-loader": "^7.1.2",
@@ -61,6 +71,7 @@
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",

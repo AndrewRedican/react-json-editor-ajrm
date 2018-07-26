@@ -1,0 +1,31 @@
+{
+  "projectName": "react-json-editor-ajrm",
+  "projectOwner": "AndrewRedican",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "AndrewRedican",
+      "name": "Andrew Redican",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24832471?v=4",
+      "profile": "https://github.com/AndrewRedican",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "PatrickSachs",
+      "name": "Patrick Sachs",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7840502?v=4",
+      "profile": "https://patrick-sachs.de/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
+}

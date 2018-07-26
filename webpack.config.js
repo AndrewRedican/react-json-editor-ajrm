@@ -1,10 +1,11 @@
 const
     webpack        = require('webpack'),
     UglifyJSPlugin = require('uglifyjs-webpack-plugin'),
+    CopyPlugin     = require("copy-webpack-plugin"),
     pkg            = require('./package.json'),
     path           = require('path'),
     libraryName    = pkg.name;
-
+    
 module.exports = {
     entry : [
         './src/index.js'
@@ -19,7 +20,13 @@ module.exports = {
     },
     plugins : [
         new webpack.DefinePlugin({ 'process.env.NODE_ENV': 'true' }),
-        new UglifyJSPlugin()
+        new UglifyJSPlugin(),
+        new CopyPlugin([{
+            from: "./src/locale/*.js",
+            ignore: ["index.js"],
+            to: "./locale/[name].[ext]",
+            toType: 'template'
+        }], { force: true, debug: 'warning' })
     ],
     node: {
         fs  : 'empty',
@@ -46,15 +53,11 @@ module.exports = {
     externals: {
         react: {
             commonjs  : 'react',
-            commonjs2 : 'react',
-            amd       : 'React',
-            root      : 'React'
+            commonjs2 : 'react'
         },
         'react-dom': {
             commonjs  : 'react-dom',
-            commonjs2 : 'react-dom',
-            amd       : 'ReactDOM',
-            root      : 'ReactDOM'
+            commonjs2 : 'react-dom'
         }
     }
 }
