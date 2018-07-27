@@ -5,7 +5,7 @@ import ReactDOM             from 'react-dom';
  * Import RJEA component
  */
 import JSONInput          from 'react-json-editor-ajrm'; // Using distribution version in node_modules 
-import locale             from 'react-json-editor-ajrm/locale/en'; 
+import locale             from 'react-json-editor-ajrm/dist/locale/en';
 //import JSONInput        from '../../src/index'; // Using source code
 //import locale           from '../../src/locale/en'; 
 

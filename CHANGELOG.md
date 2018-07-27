@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.1] - 2018-07-27
+### Changed
+- Documentation and example/src/index.js with correct locale import statement @AndrewRedican.
+
 ## [2.5.0] - 2018-07-26
 ### Added
 - CHANGELOG.md @AndrewRedican.

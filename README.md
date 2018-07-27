@@ -19,11 +19,13 @@
 
 ```
     import JSONInput from 'react-json-editor-ajrm';
+    import locale    from 'react-json-editor-ajrm/dist/locale/en';
 
     <JSONInput
         id          = 'a_unique_id'
         placeholder = { sampleObject }
         colors      = { darktheme }
+        locale      = { locale }
         height      = '550px'
     />
 ```
@@ -46,13 +48,12 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Spotlight Release Notes [v2.5.0] - July 26, 2018
-1. Added locale support for `English`, `German`, and `Spanish`.
-2. An issue where the distribution version was bundled with multiple casing of a peer depency has been fixed. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/17).
+## Latest Spotlight Release Notes [v2.5.1] - July 27, 2018
+1. Updated documentation with proper locale import statements.
 
 ## Upcoming Features
-1. Core QA tests.
-2. Collapsible nodes to partially display contents of an object.
+1. Collapsible nodes to partially display contents of an object.
+2. Additional QA tests.
 
 ## Features
 
@@ -61,13 +62,14 @@
 3. You can customize color palette as you please.
 4. Accepts a javascript object in `placeholder` property to display after component mounts. 
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
+6. Locale support for `English`, `German`, and `Spanish`.
 
 ## Component Properties
 
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()                        | A unique id to identify component.                                                    | string  | Mandatory |
-| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/dist/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted.            | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
 | [onChange]()                  | Whenever `onBlur` or `onKeyPress` events take place, it will return content values.   | object  | Optional  |
