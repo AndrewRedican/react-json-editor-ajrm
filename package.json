@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/AndrewRedican/react-json-editor-ajrm#readme",
   "bugs": {
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
@@ -77,8 +77,6 @@
     "@babel/preset-env": "^7.0.0-beta.55",
     "@babel/preset-react": "^7.0.0-beta.55",
     "@babel/runtime": "^7.0.0-beta.55",
-    "@mdx-js/loader": "^0.15.0-1",
-    "@mdx-js/mdx": "^0.15.0-1",
     "babel-loader": "^8.0.0-beta.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",

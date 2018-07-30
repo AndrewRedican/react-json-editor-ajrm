@@ -39,9 +39,9 @@ async function prepend(file, string) {
 }
 
 async function addLicense(packageData) {
-  const license = `/** @license react-json-editor-ajrm v${packageData.version}
+  const license = `/** @license ${packageData.name} v${packageData.version}
  *
- * This source code is licensed under the MIT license found in the
+ * This source code is licensed under the ${packageData.license} license found in the
  * LICENSE file in the root directory of this source tree.
  */
 `;
