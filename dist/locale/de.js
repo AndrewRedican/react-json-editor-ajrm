@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} in Zeile {line}",
   invalidToken: {
     sequence: "'{firstToken}' Zeichen kann nicht von einem '{secondToken}' Zeichen gefolgt werden",
@@ -13,8 +13,8 @@ module.exports = {
       missingClose: "Geöffneter '{' geschweifte Klammer fehlt schließende '}' geschweifte Klammer",
       cannotWrap: "'{token}' Zeichen kann nicht von '{}' geschweiften Klammern umschlossen werden"
     },
-    square: { 
-      missingOpen: "Fehlende '[' geöffnete eckige Klammer", 
+    square: {
+      missingOpen: "Fehlende '[' geöffnete eckige Klammer",
       missingClose: "Geöffneter '[' eckige Klammer fehlt schließende ']' eckige Klammer",
       cannotWrap: "'{token}' Zeichen kann nicht von '[]' eckigen Klammern umschlossen werden"
     }

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} at line {line}",
   invalidToken: {
     sequence: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
@@ -13,8 +13,8 @@ module.exports = {
       missingClose: "Open '{' curly brace is missing closing '}' curly brace",
       cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
     },
-    square: { 
-      missingOpen: "Missing '[' open square brace", 
+    square: {
+      missingOpen: "Missing '[' open square brace",
       missingClose: "Open '[' square brace is missing closing ']' square brace",
       cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
     }

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} en la línea {line}",
   invalidToken: {
     sequence: "La ficha '{firstToken}' no puede ser seguida por la ficha '{secondToken}'",
@@ -13,8 +13,8 @@ module.exports = {
       missingClose: "Llave de apertura '{' carece de una llave de cierre '}'",
       cannotWrap: "La ficha '{token}' no puede ser envuelta por llaves '{}'"
     },
-    square: { 
-      missingOpen: "Falta corchete de apertura '['", 
+    square: {
+      missingOpen: "Falta corchete de apertura '['",
       missingClose: "Corchete de apertura '[' carece de un corchete de cierre ']'",
       cannotWrap: "La ficha '{token}' no puede ser envuelta por corchetes '[]'"
     }
