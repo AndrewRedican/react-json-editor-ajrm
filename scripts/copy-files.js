@@ -22,7 +22,7 @@ async function createPackageFile() {
   const newPackageData = {
     ...packageDataOther,
     main: './index.js',
-    module: './index.es.js',
+    module: './es/index.js',
     private: false,
   };
   const distPath = path.resolve(__dirname, '../dist/package.json');
@@ -48,7 +48,7 @@ async function addLicense(packageData) {
   await Promise.all(
     [
       '../dist/index.js',
-      '../dist/index.es.js',
+      '../dist/es/index.js',
     ].map(file => prepend(path.resolve(__dirname, file), license)),
   );
 }

@@ -1,12 +1,11 @@
 const { BABEL_ENV } = process.env;
-let defaultPresets;
 
 console.log("Running Babel ...", { BABEL_ENV });
 
-if (BABEL_ENV === 'es') {
-  defaultPresets = [];
-} else {
-  defaultPresets = [
+const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV.substring("modules:".length) : "es";
+
+module.exports = {
+  presets: [
     [
       '@babel/preset-env',
       {
@@ -18,16 +17,11 @@ if (BABEL_ENV === 'es') {
           safari: 10,
           node: '6.11',
         },
-        modules: (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV.substring("modules:".length) : false,
+        modules: moduleSystem === "es" ? false : moduleSystem,
       },
     ],
-  ];
-}
-
-module.exports = {
-  presets: defaultPresets.concat([
     '@babel/preset-react'
-  ]),
+  ],
   plugins: [
     '@babel/plugin-transform-object-assign',
     '@babel/plugin-proposal-object-rest-spread',
