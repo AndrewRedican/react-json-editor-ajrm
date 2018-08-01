@@ -33,7 +33,7 @@
     ],
     "testPathIgnorePatterns": [],
     "transform": {
-      ".js$": "babel-jest"
+      "^.+\\.js$": "<rootDir>/test/jest.transform.js"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!@enzyme|(?!enzyme-adapter-react-16)|jsdom)"
