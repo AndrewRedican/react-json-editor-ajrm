@@ -1,6 +1,14 @@
 {
     "presets": ["@babel/preset-react", "@babel/preset-env"],
     "plugins": [
-        "@babel/plugin-proposal-object-rest-spread"
+        "@babel/plugin-transform-modules-commonjs",
+        "@babel/plugin-proposal-object-rest-spread",
+        "babel-plugin-extensible-destructuring",
+        ["@babel/plugin-transform-runtime",{
+            "helpers": true,
+            "polyfill": false,
+            "useBuiltIns": true,
+            "useESModules": true
+        }]
     ]
 }
