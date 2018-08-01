@@ -16,15 +16,15 @@
   "scripts": {
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest",
+    "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
+    "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
     "test:release": "npm run build && npm pack ./dist",
     "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files",
     "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
     "build:copy-files": "node ./scripts/copy-files.js",
-    "release": "npm run build && npm publish build"
+    "release": "npm run build && npm publish ./dist"
   },
   "jest": {
     "verbose": true,
