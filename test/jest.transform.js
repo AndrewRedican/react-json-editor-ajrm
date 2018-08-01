@@ -8,10 +8,10 @@ module.exports = require('babel-jest').createTransformer({
         '@babel/plugin-proposal-object-rest-spread',
         'babel-plugin-extensible-destructuring',
         ['@babel/plugin-transform-runtime',{
-            helpers      : true,
-            polyfill     : true,
-            useBuiltIns  : false,
-            useESModules : false
+            helpers: true,
+            polyfill: true,
+            useBuiltIns: false,
+            useESModules: false
         }]
     ]
   });

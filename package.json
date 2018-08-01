@@ -40,7 +40,7 @@
     ],
     "testURL": "http://localhost",
     "setupFiles": [
-      "./test/jestsetup.js"
+      "./test/jest.setup.js"
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

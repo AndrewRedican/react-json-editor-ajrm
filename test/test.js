@@ -1,6 +1,6 @@
 import React     from "react";
-import JSONInput from './src';
-import locale    from './src/locale/en'
+import JSONInput from '../src';
+import locale    from '../src/locale/en'
 
 
 /**
