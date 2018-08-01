@@ -24,7 +24,7 @@
     "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
     "build:copy-files": "node ./scripts/copy-files.js",
-    "release": "npm run build && npm publish build"
+    "release": "npm run build && npm publish ./dist"
   },
   "jest": {
     "verbose": true,
