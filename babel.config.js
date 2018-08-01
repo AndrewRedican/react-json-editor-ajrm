@@ -43,6 +43,7 @@ module.exports = {
   plugins: [
     '@babel/plugin-transform-object-assign',
     '@babel/plugin-proposal-object-rest-spread',
+    'babel-plugin-extensible-destructuring',
     ['@babel/plugin-transform-runtime', transformOptions]
   ],
   env: {
