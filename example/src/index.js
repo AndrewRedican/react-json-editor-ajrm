@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
+import "./index.css";
 
+// todo: use the imported version in prod, source in dev.
 /** 
  * Import RJEA component
  */
-import JSONInput          from 'react-json-editor-ajrm'; // Using distribution version in node_modules 
-import locale             from 'react-json-editor-ajrm/dist/locale/en';
-//import JSONInput        from '../../src/index'; // Using source code
-//import locale           from '../../src/locale/en'; 
+
+//Using distribution version in node_modules 
+//import JSONInput  from 'react-json-editor-ajrm'; 
+//import locale     from 'react-json-editor-ajrm/locale/en';
+
+//Using distribution version from project
+//import JSONInput  from '../../dist';
+//import locale     from '../../dist/locale/en';
+
+//Using source code
+import JSONInput  from '../../src';
+import locale     from '../../src/locale/en'; 
 
 /**
  * Import some data. This is a sample object, which will be passed down to JSONInput placeholder properperties.
  * You can use placeholder to show data once, after component has mounted.
  */
-import sampleData           from './sampledata';
+import sampleData  from './sampledata';
 
 
 class App extends Component {
@@ -27,8 +37,8 @@ class App extends Component {
         return(
             <div style = {{ maxWidth: '1400px', maxHeight: '100%' }} >
                 <JSONInput
-                    id          = 'unique_string' //an id is required
-                    placeholder = {sampleData}    //data to display
+                    id          = 'unique_string' // an id is required
+                    placeholder = {sampleData}    // data to display
                     theme       = 'light_mitsuketa_tribute'
                     locale      = {locale}
                     colors      = {{

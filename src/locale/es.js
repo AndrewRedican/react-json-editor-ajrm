@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} en la línea {line}",
   invalidToken: {
     sequence: "La ficha '{firstToken}' no puede ser seguida por la ficha '{secondToken}'",

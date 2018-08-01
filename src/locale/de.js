@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} in Zeile {line}",
   invalidToken: {
     sequence: "'{firstToken}' Zeichen kann nicht von einem '{secondToken}' Zeichen gefolgt werden",

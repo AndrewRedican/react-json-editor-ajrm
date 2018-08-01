@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   format: "{reason} at line {line}",
   invalidToken: {
     sequence: "'{firstToken}' token cannot be followed by a '{secondToken}' token",

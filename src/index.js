@@ -1747,4 +1747,4 @@ class JSONInput extends Component {
     }
 }
 
-module.exports = exports = JSONInput;
+export default JSONInput;
