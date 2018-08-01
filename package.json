@@ -31,13 +31,9 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
     ],
-    "testPathIgnorePatterns": [],
     "transform": {
       "^.+\\.js$": "<rootDir>/test/jest.transform.js"
     },
-    "transformIgnorePatterns": [
-      "node_modules/(?!@enzyme|(?!enzyme-adapter-react-16)|jsdom)"
-    ],
     "moduleFileExtensions": [
       "js",
       "jsx"
@@ -95,7 +91,6 @@
     "@babel/runtime": "^7.0.0-beta.55",
     "all-contributors-cli": "^5.3.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0-beta.4",
     "babel-plugin-extensible-destructuring": "^4.2.2",
     "babel-plugin-module-resolver": "^3.1.1",
