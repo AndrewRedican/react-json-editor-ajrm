@@ -27,6 +27,18 @@
     "release": "npm run build && npm publish build"
   },
   "jest": {
+    "verbose": true,
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "testURL": "http://localhost",
     "setupFiles": [
       "./test/jestsetup.js"
     ],
