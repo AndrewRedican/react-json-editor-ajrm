@@ -6,12 +6,6 @@ import locale_distribution    from '../dist/locale/en';
 import testSyntaxLogic        from './testSyntaxLogic';
 
 const 
-    sampleData = {
-        basic : {
-            hello : 'world',
-            foo   : 'bar'
-        }
-    },
     sampleFunctions = {
         getResults : function(data){
             console.log(data);
@@ -57,9 +51,7 @@ test('All Component Properties Render [SOURCE]', () => {
             test
             id                = 'unique_string'
             locale            = {locale}
-            placeholder       = {{
-                ...sampleData.basic
-            }}
+            placeholder       = {[0,1,2,3,4]}
             viewOnly          = {true}
             onChange          = {sampleFunctions.getResults}
             confirmGood       = {false}
@@ -93,7 +85,8 @@ test('All Component Properties Render [DISTRIBUTION]', () => {
             id                = 'unique_string'
             locale            = {locale_distribution}
             placeholder       = {{
-                ...sampleData.basic
+                hello : 'world',
+                foo   : 'bar'
             }}
             viewOnly          = {false}
             onChange          = {sampleFunctions.getResults}
@@ -121,6 +114,22 @@ test('All Component Properties Render [DISTRIBUTION]', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
+sampleData = {
+    basic : {
+        hello : 'world',
+        foo   : 'bar'
+    },
+    common : {
+        strings : [
+            'xyz',
+            'This is a test',
+            '+_)(*&^%$#@!~\'\\/|}{":?/.,\';][=-`"'
+        ],
+        numbers : [ 0, 1, -100, -7.5, 500, 1.823 ],
+        primitives : [false,true]
+    }
+};
+
 testSyntaxLogic('JS','Basic Sample',sampleData.basic,{
     jsObject : { ...sampleData.basic },
     json     : `{"hello":"world","foo":"bar"}`,
@@ -139,15 +148,57 @@ testSyntaxLogic('JS','Basic Sample',sampleData.basic,{
     ]
 });
 
+testSyntaxLogic('JS','Common Sample',sampleData.common,{
+    jsObject : { ...sampleData.common },
+    json     : `{"strings":["xyz","This is a test","+_)(*&^%$#@!~'\\\\/|}{\\":?/.,';][=-\`\\""],"numbers":[0,1,-100,-7.5,500,1.823],"primitives":[false,true]}`,
+    lines    : 20,
+    noSpaces : `{strings:['xyz','This is a test','+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-\`\\\"'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true]}`,
+    tokens   : [
+        { depth : 1, string: "{",                type: "symbol",    value: "{"         },
+        { depth : 1, string: "strings",          type: "key",       value: "strings"    },
+        { depth : 1, string: ":",                type: "symbol",    value: ":"          }, 
+        { depth : 2, string: "[",                type: "symbol",    value: "["          }, 
+        { depth : 2, string: "'xyz'",            type: "string",    value: "'xyz'"      }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "'This is a test'", type: "string",    value: "'This is a test'"}, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "'+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-`\\\"'", type: "string", value: "'+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-`\\\"'"}, 
+        { depth : 1, string: "]",                type: "symbol",    value: "]"          }, 
+        { depth : 1, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 1, string: "numbers",          type: "key",       value: "numbers"    }, 
+        { depth : 1, string: ":",                type: "symbol",    value: ":"          }, 
+        { depth : 2, string: "[",                type: "symbol",    value: "["          }, 
+        { depth : 2, string: "0",                type: "number",    value: 0            }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "1",                type: "number",    value: 1            }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "-100",             type: "number",    value: -100         }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "-7.5",             type: "number",    value: -7.5         }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "500",              type: "number",    value: 500          }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "1.823",            type: "number",    value: 1.823        }, 
+        { depth : 1, string: "]",                type: "symbol",    value: "]"          }, 
+        { depth : 1, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 1, string: "primitives",       type: "key",       value: "primitives" }, 
+        { depth : 1, string: ":",                type: "symbol",    value: ":"          }, 
+        { depth : 2, string: "[",                type: "symbol",    value: "["          }, 
+        { depth : 2, string: "false",            type: "primitive", value: false        }, 
+        { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
+        { depth : 2, string: "true",             type: "primitive", value: true         }, 
+        { depth : 1, string: "]",                type: "symbol",    value: "]"          },
+        { depth : 0, string: "}",                type: "symbol",    value: "}"          }
+    ]
+});
+
 /**
- * CORE TESTS TO ADD:
+ * TODO - Add missing Syntax Logic validations:
+ * 1. Primitive words as key names
+ * 2. Special characters in keys. I.e. @#$%    L32423    ""
+ * 3. Quotes characters and nested. I.e.   "" ''  ``
+ * 4. Escape character. I.e \
+ * 5. Html Tags and stand alone reserved words I.e. <pre> <div>  <> >< <br/>
  * 
- * 1. Pass common valid javascript object to placeholder property
- * 2. Pass rare valid javascript object top placeholder property. Shound include:
- *      + Quotes on key names and values
- *      + Other non-alphanumeical characters on key names
- *      + Html markup on key names and values
- * 3. Test error messages are displayed correctly
- * 4. Test user-triggered events
- * 5. Test onChange results for different sets of data
+ * 6. Provide invalid information, validate warnings
  **/
