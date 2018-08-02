@@ -83,7 +83,7 @@ function testSyntaxLogic(language='JS',scope,input,output){
             results        = wrapper.instance().tokenize(createElementFromHTML(markup)),
             trimmedResults = trimMarkupBasedResults(results),
             trimmeOutput   = removeKeys(output,['depth','value']);
-
+        if(results.error) console.log({ error : results.error });
         expect(trimmedResults).toEqual(trimmeOutput);
     });
 
