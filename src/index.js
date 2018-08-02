@@ -1444,7 +1444,10 @@ class JSONInput extends Component {
                 _line_fallback++;
                 if(_line < _line_fallback) _line = _line_fallback;
             }
-            buffer.tokens_merge.forEach( function(token) { buffer.indented += token.string; });
+            buffer.tokens_merge.forEach( function(token) { 
+                buffer.indented += token.string;
+                if(['space','linebreak'].indexOf(token.type)===-1) buffer.tokens_plainText += token.string;
+            });
             if(error){
                 function isFunction(functionToCheck) {
                     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
