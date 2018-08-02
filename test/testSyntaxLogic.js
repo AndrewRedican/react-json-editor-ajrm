@@ -81,9 +81,10 @@ function testSyntaxLogic(language='JS',scope,input,output){
                 { attachTo: window.domNode }
             ),
             results        = wrapper.instance().tokenize(createElementFromHTML(markup)),
-            trimmedResults = trimMarkupBasedResults(results);
+            trimmedResults = trimMarkupBasedResults(results),
+            trimmeOutput   = removeKeys(output,['depth','value']);
 
-        expect(trimmedResults).toEqual(output);
+        expect(trimmedResults).toEqual(trimmeOutput);
     });
 
 };
