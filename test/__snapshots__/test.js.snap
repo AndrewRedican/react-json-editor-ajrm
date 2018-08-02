@@ -400,10 +400,13 @@ exports[`All Component Properties Render [SOURCE] 1`] = `
   onChange={[Function]}
   onKeyPressUpdate={true}
   placeholder={
-    Object {
-      "foo": "bar",
-      "hello": "world",
-    }
+    Array [
+      0,
+      1,
+      2,
+      3,
+      4,
+    ]
   }
   style={
     Object {
@@ -625,6 +628,39 @@ exports[`All Component Properties Render [SOURCE] 1`] = `
           >
             4
           </div>
+          <div
+            id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-5"
+            key="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-5"
+            style={
+              Object {
+                "color": "#D4D4D4",
+              }
+            }
+          >
+            5
+          </div>
+          <div
+            id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-6"
+            key="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-6"
+            style={
+              Object {
+                "color": "#D4D4D4",
+              }
+            }
+          >
+            6
+          </div>
+          <div
+            id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-7"
+            key="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-line-7"
+            style={
+              Object {
+                "color": "#D4D4D4",
+              }
+            }
+          >
+            7
+          </div>
         </span>
         <span
           autoCapitalize="off"
@@ -633,7 +669,7 @@ exports[`All Component Properties Render [SOURCE] 1`] = `
           contentEditable={true}
           dangerouslySetInnerHTML={
             Object {
-              "__html": "<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-0-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-0-rc-2\\" type=\\"symbol\\" value=\\"{\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">{</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-1-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-1-rc-2\\" type=\\"key\\" value=\\"hello\\" depth=\\"1\\" style=\\"color:#9CDCFE\\">hello</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-2-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-2-rc-2\\" type=\\"symbol\\" value=\\":\\" depth=\\"1\\" style=\\"color:#49B8F7\\">:</span> <span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-3-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-3-rc-2\\" type=\\"string\\" value=\\"'world'\\" depth=\\"1\\" style=\\"color:#E25E29\\">'world'</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-4-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-4-rc-2\\" type=\\"symbol\\" value=\\",\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">,</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-5-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-5-rc-2\\" type=\\"key\\" value=\\"foo\\" depth=\\"1\\" style=\\"color:#9CDCFE\\">foo</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-6-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-6-rc-2\\" type=\\"symbol\\" value=\\":\\" depth=\\"1\\" style=\\"color:#49B8F7\\">:</span> <span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-7-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-7-rc-2\\" type=\\"string\\" value=\\"'bar'\\" depth=\\"1\\" style=\\"color:#E25E29\\">'bar'</span><br><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-8-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-8-rc-2\\" type=\\"symbol\\" value=\\"}\\" depth=\\"0\\" style=\\"color:#D4D4D4\\">}</span>",
+              "__html": "<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-0-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-0-rc-2\\" type=\\"symbol\\" value=\\"[\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">[</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-1-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-1-rc-2\\" type=\\"number\\" value=\\"0\\" depth=\\"1\\" style=\\"color:#B5CE9F\\">0</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-2-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-2-rc-2\\" type=\\"symbol\\" value=\\",\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">,</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-3-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-3-rc-2\\" type=\\"number\\" value=\\"1\\" depth=\\"1\\" style=\\"color:#B5CE9F\\">1</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-4-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-4-rc-2\\" type=\\"symbol\\" value=\\",\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">,</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-5-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-5-rc-2\\" type=\\"number\\" value=\\"2\\" depth=\\"1\\" style=\\"color:#B5CE9F\\">2</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-6-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-6-rc-2\\" type=\\"symbol\\" value=\\",\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">,</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-7-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-7-rc-2\\" type=\\"number\\" value=\\"3\\" depth=\\"1\\" style=\\"color:#B5CE9F\\">3</span><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-8-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-8-rc-2\\" type=\\"symbol\\" value=\\",\\" depth=\\"1\\" style=\\"color:#D4D4D4\\">,</span><br>&nbsp;&nbsp;<span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-9-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-9-rc-2\\" type=\\"number\\" value=\\"4\\" depth=\\"1\\" style=\\"color:#B5CE9F\\">4</span><br><span id=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-10-rc-2\\" key=\\"AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-token-10-rc-2\\" type=\\"symbol\\" value=\\"]\\" depth=\\"0\\" style=\\"color:#D4D4D4\\">]</span>",
             }
           }
           id="AJRM-JSON-EDITOR-<RANDOM_NUMBER>-unique_string-content-box"
