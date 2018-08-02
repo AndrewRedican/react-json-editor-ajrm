@@ -3,6 +3,7 @@ import JSONInput              from '../src';
 import locale                 from '../src/locale/en'
 import JSONInput_Distribution from '../dist';
 import locale_distribution    from '../dist/locale/en';
+import testSyntaxLogic        from './testSyntaxLogic';
 
 const 
     sampleData = {
@@ -120,6 +121,24 @@ test('All Component Properties Render [DISTRIBUTION]', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
+testSyntaxLogic('JS','Basic Sample',sampleData.basic,{
+    jsObject : { ...sampleData.basic },
+    json     : `{"hello":"world","foo":"bar"}`,
+    lines    : 5,
+    noSpaces : `{hello:'world',foo:'bar'}`,
+    tokens   : [
+        { depth: 1, string: '{',       type: 'symbol', value: '{'       },
+        { depth: 1, string: 'hello',   type: 'key',    value: 'hello'   },
+        { depth: 1, string: ':',       type: 'symbol', value: ':'       },
+        { depth: 1, string: "'world'", type: 'string', value: "'world'" },
+        { depth: 1, string: ',',       type: 'symbol', value: ','       },
+        { depth: 1, string: 'foo',     type: 'key',    value: 'foo'     },
+        { depth: 1, string: ':',       type: 'symbol', value: ':'       },
+        { depth: 1, string: "'bar'",   type: 'string', value: "'bar'"   },
+        { depth: 0, string: '}',       type: 'symbol', value: '}'       }
+    ]
+});
+
 /**
  * CORE TESTS TO ADD:
  * 
@@ -131,4 +150,4 @@ test('All Component Properties Render [DISTRIBUTION]', () => {
  * 3. Test error messages are displayed correctly
  * 4. Test user-triggered events
  * 5. Test onChange results for different sets of data
- */
+ **/
