@@ -439,8 +439,9 @@ class JSONInput extends Component {
             return false;
         };
         let 
-            selection = window.getSelection(),
-            charCount = -1,
+            selection      = window.getSelection(),
+            charCount      = -1,
+            linebreakCount = 0,
             node;
         if (selection.focusNode)
         if (isChildOf(selection.focusNode)) {
@@ -450,6 +451,7 @@ class JSONInput extends Component {
                 if (node.id === contentID) break;
                 if (node.previousSibling) {
                     node = node.previousSibling;
+                    if(node.nodeName==='BR') linebreakCount++;
                     charCount += node.textContent.length;
                 } else {
                     node = node.parentNode;
@@ -457,7 +459,7 @@ class JSONInput extends Component {
                 }
             }
         }
-        return charCount;
+        return charCount + linebreakCount;
     }
     setCursorPosition(nextPosition) {
         if([false,null,undefined].indexOf(nextPosition)>-1) return;
