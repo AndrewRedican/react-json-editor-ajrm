@@ -123,7 +123,7 @@ sampleData = {
         strings : [
             'xyz',
             'This is a test',
-            '+_)(*&^%$#@!~\'\\/|}{":?/.,\';][=-`"'
+            '+_)(*&^%$#@!~/|}{:?/.,;][=-`'
         ],
         numbers : [ 0, 1, -100, -7.5, 500, 1.823 ],
         primitives : [false,true]
@@ -150,9 +150,9 @@ testSyntaxLogic('JS','Basic Sample',sampleData.basic,{
 
 testSyntaxLogic('JS','Common Sample',sampleData.common,{
     jsObject : { ...sampleData.common },
-    json     : `{"strings":["xyz","This is a test","+_)(*&^%$#@!~'\\\\/|}{\\":?/.,';][=-\`\\""],"numbers":[0,1,-100,-7.5,500,1.823],"primitives":[false,true]}`,
+    json     : "{\"strings\":[\"xyz\",\"This is a test\",\"+_)(*&^%$#@!~/|}{:?/.,;][=-`\"],\"numbers\":[0,1,-100,-7.5,500,1.823],\"primitives\":[false,true]}",
     lines    : 20,
-    noSpaces : `{strings:['xyz','This is a test','+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-\`\\\"'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true]}`,
+    noSpaces : "{strings:['xyz','This is a test','+_)(*&^%$#@!~/|}{:?/.,;][=-`'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true]}",
     tokens   : [
         { depth : 1, string: "{",                type: "symbol",    value: "{"         },
         { depth : 1, string: "strings",          type: "key",       value: "strings"    },
@@ -160,9 +160,9 @@ testSyntaxLogic('JS','Common Sample',sampleData.common,{
         { depth : 2, string: "[",                type: "symbol",    value: "["          }, 
         { depth : 2, string: "'xyz'",            type: "string",    value: "'xyz'"      }, 
         { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
-        { depth : 2, string: "'This is a test'", type: "string",    value: "'This is a test'"}, 
+        { depth : 2, string: "'This is a test'", type: "string",    value: "'This is a test'" }, 
         { depth : 2, string: ",",                type: "symbol",    value: ","          }, 
-        { depth : 2, string: "'+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-`\\\"'", type: "string", value: "'+_)(*&^%$#@!~\\'\\/|}{\\\":?/.,\\';][=-`\\\"'"}, 
+        { depth : 2, string: "'+_)(*&^%$#@!~/|}{:?/.,;][=-`'", type: "string", value: "'+_)(*&^%$#@!~/|}{:?/.,;][=-`'" }, 
         { depth : 1, string: "]",                type: "symbol",    value: "]"          }, 
         { depth : 1, string: ",",                type: "symbol",    value: ","          }, 
         { depth : 1, string: "numbers",          type: "key",       value: "numbers"    }, 
