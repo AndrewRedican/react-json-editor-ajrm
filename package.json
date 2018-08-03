@@ -17,7 +17,7 @@
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "test": "npm run test:start && npm run test:clear",
-    "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest",
+    "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --updateSnapshot",
     "test:clear": "del-cli test/__snapshots__",
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
