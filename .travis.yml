@@ -9,5 +9,7 @@ branches:
     - master
 notifications:
   email: false
+env:
+  - DIST_TESTS_DISABLED=true
 script:
   - npm run test

@@ -33,6 +33,7 @@ test('Basic Component Render [SOURCE]', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
+if(!process.env.DIST_TESTS_DISABLED)
 test('Basic Component Render [DISTRIBUTION]', () => {
     let wrapper = mount(
         <JSONInput_Distribution
@@ -78,6 +79,7 @@ test('All Component Properties Render [SOURCE]', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
+if(!process.env.DIST_TESTS_DISABLED)
 test('All Component Properties Render [DISTRIBUTION]', () => {
     let wrapper = mount(
         <JSONInput_Distribution
