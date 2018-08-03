@@ -1,5 +1,6 @@
 /node_modules/
 /dist/
+/test/__snapshots__/
 /example/node_modules/
 /example/dist/
 *.tgz
