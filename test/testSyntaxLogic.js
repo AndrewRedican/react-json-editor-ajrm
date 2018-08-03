@@ -41,9 +41,7 @@ function testSyntaxLogic(language='JS',scope,input,output){
             ),
             results        = wrapper.instance().tokenize(input),
             trimmedResults = removeKeys(results,['indented','markup']);
-
         markup = results.markup;
-
         expect(trimmedResults).toEqual(output);
     }); 
 
