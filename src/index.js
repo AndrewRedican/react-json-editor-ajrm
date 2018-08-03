@@ -1261,7 +1261,7 @@ class JSONInput extends Component {
                         if(followsSymbol(i,['{'])){
                             buffer.tokens_merge[i].type = 'key';
                             type = buffer.tokens_merge[i].type;
-                            string = '"' + string + '"';;
+                            string = '"' + string + '"';
                         }
                         else
                             if(typeFollowed(i)==='key'){
@@ -1280,14 +1280,14 @@ class JSONInput extends Component {
                         if(!buffer2.isValue){
                             buffer.tokens_merge[i].type = 'key';
                             type = buffer.tokens_merge[i].type;
-                            break;
+                            string = '"' + string + '"';
                         }
                         if(type==='primitive')
                         if(string==='undefined')
-                        setError(i,format(locale.invalidToken.useInstead, {
-                            badToken: "undefined",
-                            goodToken: "null"
-                        }));
+                            setError(i,format(locale.invalidToken.useInstead, {
+                                badToken: "undefined",
+                                goodToken: "null"
+                            }));
                         buffer.json += string;
                     break;
                 }
