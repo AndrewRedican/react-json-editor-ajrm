@@ -1,4 +1,5 @@
 /node_modules/
+/dist/
 /example/node_modules/
 /example/dist/
 *.tgz
