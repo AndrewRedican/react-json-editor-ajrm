@@ -429,7 +429,13 @@ class JSONInput extends Component {
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     }    
-    getCursorPosition(){
+    getCursorPosition(countBR){
+        /**
+         * Need to deprecate countBR
+         * It is used to differenciate between good markup render, and aux render when error found
+         * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
+         * Find a way to consolidate render styles
+         */
         const contentID = this.contentID;
         function isChildOf(node) {
             while (node !== null) {
@@ -451,7 +457,7 @@ class JSONInput extends Component {
                 if (node.id === contentID) break;
                 if (node.previousSibling) {
                     node = node.previousSibling;
-                    if(node.nodeName==='BR') linebreakCount++;
+                    if(countBR) if(node.nodeName==='BR') linebreakCount++;
                     charCount += node.textContent.length;
                 } else {
                     node = node.parentNode;
@@ -498,7 +504,6 @@ class JSONInput extends Component {
         else document.getElementById(contentID).focus();
     }
     update(cursorOffset=0,updateCursorPosition=true){
-        let cursorPosition = this.getCursorPosition() + cursorOffset;
         const
             contentID  = this.contentID,
             container = document.getElementById(contentID),
@@ -511,6 +516,7 @@ class JSONInput extends Component {
             lines      : data.lines,
             error      : data.error
         });
+        let cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
         this.setState({
             plainText  : data.indented,
             markupText : data.markup,
