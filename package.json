@@ -16,7 +16,9 @@
   "scripts": {
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest",
+    "test": "npm run test:start && npm run test:clear",
+    "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest",
+    "test:clear": "del-cli test/__snapshots__",
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
     "test:release": "npm run build && npm pack ./dist",
@@ -96,6 +98,7 @@
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "cross-env": "^5.2.0",
+    "del-cli": "^1.1.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",
