@@ -429,7 +429,13 @@ class JSONInput extends Component {
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     }    
-    getCursorPosition(){
+    getCursorPosition(countBR){
+        /**
+         * Need to deprecate countBR
+         * It is used to differenciate between good markup render, and aux render when error found
+         * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
+         * Find a way to consolidate render styles
+         */
         const contentID = this.contentID;
         function isChildOf(node) {
             while (node !== null) {
@@ -439,8 +445,9 @@ class JSONInput extends Component {
             return false;
         };
         let 
-            selection = window.getSelection(),
-            charCount = -1,
+            selection      = window.getSelection(),
+            charCount      = -1,
+            linebreakCount = 0,
             node;
         if (selection.focusNode)
         if (isChildOf(selection.focusNode)) {
@@ -450,6 +457,7 @@ class JSONInput extends Component {
                 if (node.id === contentID) break;
                 if (node.previousSibling) {
                     node = node.previousSibling;
+                    if(countBR) if(node.nodeName==='BR') linebreakCount++;
                     charCount += node.textContent.length;
                 } else {
                     node = node.parentNode;
@@ -457,7 +465,7 @@ class JSONInput extends Component {
                 }
             }
         }
-        return charCount;
+        return charCount + linebreakCount;
     }
     setCursorPosition(nextPosition) {
         if([false,null,undefined].indexOf(nextPosition)>-1) return;
@@ -496,7 +504,6 @@ class JSONInput extends Component {
         else document.getElementById(contentID).focus();
     }
     update(cursorOffset=0,updateCursorPosition=true){
-        let cursorPosition = this.getCursorPosition() + cursorOffset;
         const
             contentID  = this.contentID,
             container = document.getElementById(contentID),
@@ -509,6 +516,7 @@ class JSONInput extends Component {
             lines      : data.lines,
             error      : data.error
         });
+        let cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
         this.setState({
             plainText  : data.indented,
             markupText : data.markup,
@@ -1259,7 +1267,7 @@ class JSONInput extends Component {
                         if(followsSymbol(i,['{'])){
                             buffer.tokens_merge[i].type = 'key';
                             type = buffer.tokens_merge[i].type;
-                            string = '"' + string + '"';;
+                            string = '"' + string + '"';
                         }
                         else
                             if(typeFollowed(i)==='key'){
@@ -1278,14 +1286,14 @@ class JSONInput extends Component {
                         if(!buffer2.isValue){
                             buffer.tokens_merge[i].type = 'key';
                             type = buffer.tokens_merge[i].type;
-                            break;
+                            string = '"' + string + '"';
                         }
                         if(type==='primitive')
                         if(string==='undefined')
-                        setError(i,format(locale.invalidToken.useInstead, {
-                            badToken: "undefined",
-                            goodToken: "null"
-                        }));
+                            setError(i,format(locale.invalidToken.useInstead, {
+                                badToken: "undefined",
+                                goodToken: "null"
+                            }));
                         buffer.json += string;
                     break;
                 }
@@ -1442,7 +1450,10 @@ class JSONInput extends Component {
                 _line_fallback++;
                 if(_line < _line_fallback) _line = _line_fallback;
             }
-            buffer.tokens_merge.forEach( function(token) { buffer.indented += token.string; });
+            buffer.tokens_merge.forEach( function(token) { 
+                buffer.indented += token.string;
+                if(['space','linebreak'].indexOf(token.type)===-1) buffer.tokens_plainText += token.string;
+            });
             if(error){
                 function isFunction(functionToCheck) {
                     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';

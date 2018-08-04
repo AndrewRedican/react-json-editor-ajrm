@@ -1,3 +1,3 @@
-const babel = require("../babel.config");
+let babel = require('../babel.config');
 
 module.exports = require('babel-jest').createTransformer(babel);

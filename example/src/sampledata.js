@@ -65,7 +65,7 @@ const sampleData = {
             date_created : 15120765766312,
             date_signed : false,
             date_approved: false,
-            answers: [false,false,false,false,false]
+            answers: [0, 1, 2, 3, 4]
         }
     }
 };
