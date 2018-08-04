@@ -18,10 +18,10 @@ function createElementFromHTML(htmlString='') {
 };
 
 function testSyntaxLogic(language='JS',scope,input,output){
-    err.isNotType(arguments,'language',language,'string');
-    err.isNotType(arguments,'scope',scope,'string');
-    err.isNotType(arguments,'output',output,'object');
-    err.isUndefined(arguments,'input',input);
+    err.isNotType('language',language,'string');
+    err.isNotType('scope',scope,'string');
+    err.isNotType('output',output,'object');
+    err.isUndefined('input',input);
 
     const uniqueID = 'unique_string';
     let markup; 

@@ -2,7 +2,7 @@ import testSyntaxLogic from './testSyntaxLogic';
 import sampleData from "./../sampleData";
 
 function run() {
-  testSyntaxLogic('JS', 'Basic Sample', sampleData.basic, {
+  testSyntaxLogic(4, 'Basic Sample', sampleData.basic, {
     jsObject: { ...sampleData.basic },
     json: `{"hello":"world","foo":"bar"}`,
     lines: 5,
