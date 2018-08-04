@@ -5,12 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.5.2] - 2018-08-04
 ### Changed
 - Switched build system from webpack to babel @PatrickSachs.
 - Overhauled test structure & system @AndrewRedican.
+- `locale` import statement made shorter @PatrickSachs.
 
 ### Added
 - New build output: `/build/es` using the latest ES features @PatrickSachs.
+- New syntax logic tests @AndrewRedican.
+- New locale tests @PatrickSachs.
 
 ## [2.5.1] - 2018-07-27
 ### Changed
