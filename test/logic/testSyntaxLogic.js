@@ -1,7 +1,7 @@
 import React                  from "react";
-import JSONInput              from '../src';
-import locale                 from '../src/locale/en'
-import err                    from './err';
+import JSONInput              from '../../src';
+import locale                 from '../../src/locale/en'
+import err                    from './../err';
 import { deepRemoveAll_Key }  from 'mitsuketa';
 
 function removeKeys(identity={},keys=[]){
