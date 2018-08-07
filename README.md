@@ -19,7 +19,7 @@
 
 ```
     import JSONInput from 'react-json-editor-ajrm';
-    import locale    from 'react-json-editor-ajrm/dist/locale/en';
+    import locale    from 'react-json-editor-ajrm/locale/en';
 
     <JSONInput
         id          = 'a_unique_id'
@@ -72,7 +72,7 @@
 | Name   | Description | Type   | Required |
 | ------ |-------------| :-----:| :-----:  |
 | [id]()                        | A unique id to identify component.                                                    | string  | Mandatory |
-| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/dist/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support) | object  | Mandatory  |
 | [placeholder]()               | Send a valid javascript object to be shown once when component is mounted.            | object  | Optional  |
 | [viewOnly]()                  | Send `true` if you would like for content shown not to be editable.                   | boolean | Optional  |
 | [onChange]()                  | Whenever `onBlur` or `onKeyPress` events take place, it will return content values.   | object  | Optional  |
