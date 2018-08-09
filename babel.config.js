@@ -27,12 +27,10 @@ const presets = moduleSystem === "es"
 const transformOptions = moduleSystem === "es"
   ? {
     helpers: true,
-    corejs2: false,
     useESModules: true
   }
   : {
     helpers: true,
-    corejs2: 2,
     useESModules: false
   };
 
