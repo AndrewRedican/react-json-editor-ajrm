@@ -48,11 +48,8 @@
 5. Open `http://localhost:8080` in the web browser
 
 
-## Latest Spotlight Release Notes [v2.5.2] - August 4, 2018
-1. Added a new build output: `/build/es` using the latest ES features.
-2. `Locale` import statements have changed. See [documentation](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
-3. An [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/29) where cursor selection moved from its original position has been fixed. 
-4. [Other changes](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#252---2018-08-04)
+## Latest Spotlight Release Notes [v2.5.3] - August 13, 2018
+1. Added `@babel/runtime` dependency to solve this [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/37)
 
 ## Upcoming Features
 1. Collapsible nodes to partially display contents of an object.

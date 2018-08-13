@@ -27,14 +27,10 @@ const presets = moduleSystem === "es"
 const transformOptions = moduleSystem === "es"
   ? {
     helpers: true,
-    polyfill: false,
-    useBuiltIns: true,
     useESModules: true
   }
   : {
     helpers: true,
-    polyfill: true,
-    useBuiltIns: false,
     useESModules: false
   };
 

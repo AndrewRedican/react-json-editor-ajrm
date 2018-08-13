@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.3] - 2018-08-13
+### Added
+- `@babel/runtime` as dependency
+
 ## [2.5.2] - 2018-08-04
 ### Changed
 - Switched build system from webpack to babel @PatrickSachs.
