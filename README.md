@@ -156,7 +156,7 @@ Thanks goes to these wonderful people :smile::
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") |
+| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") [🌍](#translation-AndrewRedican "Translation") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") |
 | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
