@@ -15,7 +15,10 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/24832471?v=4",
       "profile": "https://github.com/AndrewRedican",
       "contributions": [
-        "code"
+        "talk",
+        "code",
+        "translation",
+        "test"
       ]
     },
     {
@@ -24,7 +27,18 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/7840502?v=4",
       "profile": "https://patrick-sachs.de/",
       "contributions": [
-        "code"
+        "code",
+        "translation",
+        "test"
+      ]
+    },
+    {
+      "login": "AllanKDeveloper",
+      "name": "Allan Kehl",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/37770361?v=4",
+      "profile": "https://allankehl.com",
+      "contributions": [
+        "translation"
       ]
     }
   ]
