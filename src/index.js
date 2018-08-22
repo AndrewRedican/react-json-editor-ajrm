@@ -554,6 +554,7 @@ class JSONInput extends Component {
             case 'Tab':
                 this.stopEvent(event);
                 document.execCommand("insertText", false, "  ");
+                this.setUpdateTime();
                 break;
             case 'Backspace' : case 'Delete'     :
             case 'ArrowLeft' : case 'ArrowRight' :
