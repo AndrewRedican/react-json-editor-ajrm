@@ -551,6 +551,10 @@ class JSONInput extends Component {
     onKeyDown(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
         switch(event.key){
+            case 'Tab':
+                this.stopEvent(event);
+                document.execCommand("insertText", false, "  ");
+                break;
             case 'Backspace' : case 'Delete'     :
             case 'ArrowLeft' : case 'ArrowRight' :
             case 'ArrowUp'   : case 'ArrowDown'  :
