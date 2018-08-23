@@ -1,5 +1,5 @@
 # react-json-editor-ajrm
-![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
+![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 
 
 
@@ -92,14 +92,14 @@
 | colors.[background]()         | Hex color code for component's background.                                            | string  | Optional  |
 | colors.[background_warning]() | Hex color code for warning message displaying at the top in component.                | string  | Optional  |
 | [style]()                     | **Contains the following properties:**                                                | object  | Optional  |
-| style.[outerBox]()            | Property to modify the default style of the outside container div of component.       | string  | Optional  |
-| style.[container]()           | Property to modify the default style of the `container` of component.                 | string  | Optional  |
-| style.[warningBox]()          | Property to modify the default style of the container div of the warning message.     | string  | Optional  |
-| style.[errorMessage]()        | Property to modify the default style of the warning message.                          | string  | Optional  |
-| style.[body]()                | Property to modify the default style of the container div of row labels and code.     | string  | Optional  |
-| style.[labelColumn]()         | Property to modify the default style of the container div of row labels.              | string  | Optional  |
-| style.[labels]()              | Property to modify the default style of each row label.                               | string  | Optional  |
-| style.[contentBox]()          | Property to modify the default style of the container div of the code.                | string  | Optional  |
+| style.[outerBox]()            | Property to modify the default style of the outside container div of component.       | object  | Optional  |
+| style.[container]()           | Property to modify the default style of the `container` of component.                 | object  | Optional  |
+| style.[warningBox]()          | Property to modify the default style of the container div of the warning message.     | object  | Optional  |
+| style.[errorMessage]()        | Property to modify the default style of the warning message.                          | object  | Optional  |
+| style.[body]()                | Property to modify the default style of the container div of row labels and code.     | object  | Optional  |
+| style.[labelColumn]()         | Property to modify the default style of the container div of row labels.              | object  | Optional  |
+| style.[labels]()              | Property to modify the default style of each row label.                               | object  | Optional  |
+| style.[contentBox]()          | Property to modify the default style of the container div of the code.                | object  | Optional  |
 
 ## Component Sections
 
@@ -156,8 +156,8 @@ Thanks goes to these wonderful people :smile::
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[📢](#talk-AndrewRedican "Talks") [💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") [🌍](#translation-AndrewRedican "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") [🌍](#translation-PatrickSachs "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Tests") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") |
-| :---: | :---: | :---: |
+| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[📢](#talk-AndrewRedican "Talks") [💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") [🌍](#translation-AndrewRedican "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") [🌍](#translation-PatrickSachs "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Tests") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") | [<img src="https://avatars3.githubusercontent.com/u/426051?v=4" width="100px;"/><br /><sub><b>esbenvb</b></sub>](https://github.com/esbenvb)<br />[📖](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=esbenvb "Documentation") |
+| :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
