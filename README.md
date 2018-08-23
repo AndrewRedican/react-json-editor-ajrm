@@ -92,14 +92,14 @@
 | colors.[background]()         | Hex color code for component's background.                                            | string  | Optional  |
 | colors.[background_warning]() | Hex color code for warning message displaying at the top in component.                | string  | Optional  |
 | [style]()                     | **Contains the following properties:**                                                | object  | Optional  |
-| style.[outerBox]()            | Property to modify the default style of the outside container div of component.       | string  | Optional  |
-| style.[container]()           | Property to modify the default style of the `container` of component.                 | string  | Optional  |
-| style.[warningBox]()          | Property to modify the default style of the container div of the warning message.     | string  | Optional  |
-| style.[errorMessage]()        | Property to modify the default style of the warning message.                          | string  | Optional  |
-| style.[body]()                | Property to modify the default style of the container div of row labels and code.     | string  | Optional  |
-| style.[labelColumn]()         | Property to modify the default style of the container div of row labels.              | string  | Optional  |
-| style.[labels]()              | Property to modify the default style of each row label.                               | string  | Optional  |
-| style.[contentBox]()          | Property to modify the default style of the container div of the code.                | string  | Optional  |
+| style.[outerBox]()            | Property to modify the default style of the outside container div of component.       | object  | Optional  |
+| style.[container]()           | Property to modify the default style of the `container` of component.                 | object  | Optional  |
+| style.[warningBox]()          | Property to modify the default style of the container div of the warning message.     | object  | Optional  |
+| style.[errorMessage]()        | Property to modify the default style of the warning message.                          | object  | Optional  |
+| style.[body]()                | Property to modify the default style of the container div of row labels and code.     | object  | Optional  |
+| style.[labelColumn]()         | Property to modify the default style of the container div of row labels.              | object  | Optional  |
+| style.[labels]()              | Property to modify the default style of each row label.                               | object  | Optional  |
+| style.[contentBox]()          | Property to modify the default style of the container div of the code.                | object  | Optional  |
 
 ## Component Sections
 
