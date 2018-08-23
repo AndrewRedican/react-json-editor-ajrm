@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Portuguese translation for warnings @AllanKDeveloper.
+- Pressing the "Tab" key in the editor no longer switches focus @PatrickSachs @ankitr.
 
 ## [2.5.3] - 2018-08-13
 ### Added
