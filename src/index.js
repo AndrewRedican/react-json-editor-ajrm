@@ -1227,6 +1227,13 @@ class JSONInput extends Component {
                                 break;
                             }
                         }
+                        if('key'===type)
+                        if(followedBySymbol(i,['}',']']))
+                        setError(i,format('Key can only be followed by a colon', {
+                            /**
+                             * options
+                             */
+                        }));
                         if(firstChar==="'") string = '"' + string.slice(1,-1) + '"';
                         else if (firstChar!=='"') string = '"' + string + '"';
                         if('key'===type)
