@@ -1229,10 +1229,9 @@ class JSONInput extends Component {
                         }
                         if('key'===type)
                         if(followedBySymbol(i,['}',']']))
-                        setError(i,format('Key can only be followed by a colon', {
-                            /**
-                             * options
-                             */
+                        setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                            firstType : locale.types.key,
+                            secondType : locale.types.colon
                         }));
                         if(firstChar==="'") string = '"' + string.slice(1,-1) + '"';
                         else if (firstChar!=='"') string = '"' + string + '"';
