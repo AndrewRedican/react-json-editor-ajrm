@@ -1227,6 +1227,12 @@ class JSONInput extends Component {
                                 break;
                             }
                         }
+                        if('key'===type)
+                        if(followedBySymbol(i,['}',']']))
+                        setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                            firstType : locale.types.key,
+                            secondType : locale.types.colon
+                        }));
                         if(firstChar==="'") string = '"' + string.slice(1,-1) + '"';
                         else if (firstChar!=='"') string = '"' + string + '"';
                         if('key'===type)

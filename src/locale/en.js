@@ -1,7 +1,21 @@
 export default {
   format: "{reason} at line {line}",
+  types: {
+    colon: "colon",
+    key: "key",
+    value: "value",
+    number: "number",
+    string: "string"
+  },
   invalidToken: {
-    sequence: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
+    sequence: {
+      prohibited: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
+      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token"
+    },
+    typesSequence: {
+      prohibited: "A {firstType} cannot be followed by a {secondType}.",
+      permitted: "A {firstType} can only be followed by a {secondType}."
+    },
     double: "'{token}' token cannot be followed by another '{token}' token",
     whitelist: "'{firstToken}' token can only follow '{secondToken}' token",
     useInstead: "'{badToken}' token is not accepted. Use '{goodToken}' instead",
