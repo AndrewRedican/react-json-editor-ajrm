@@ -35,9 +35,6 @@ import locale from "react-json-editor-ajrm/locale/en";
 import sampleData from "./sampledata";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     /**
      * Rendering this JSONInput component with some properties
