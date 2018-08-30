@@ -1,6 +1,6 @@
 # react-json-editor-ajrm
 
-![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 
 <p align="center"><img src=https://i.imgur.com/ewtebIW.gif><br /><br />A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!</p>
 
@@ -27,7 +27,7 @@
     />
 ```
 
-*Hint*: There are two different import root paths: 'react-json-editor-ajrm' and 'react-json-editor-ajrm/es'. The first contains ES5 code, the second ES6. If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
+*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains ES5 code, the second ES6. If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
 
 ## Examples
 
@@ -167,9 +167,8 @@ Thanks goes to these wonderful people :smile::
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[📢](#talk-AndrewRedican "Talks") [💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") [🌍](#translation-AndrewRedican "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") [🌍](#translation-PatrickSachs "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Tests") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") | [<img src="https://avatars3.githubusercontent.com/u/426051?v=4" width="100px;"/><br /><sub><b>esbenvb</b></sub>](https://github.com/esbenvb)<br />[📖](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=esbenvb "Documentation") |
-| :---: | :---: | :---: | :---: |
-
+| [<img src="https://avatars2.githubusercontent.com/u/24832471?v=4" width="100px;"/><br /><sub><b>Andrew Redican</b></sub>](https://github.com/AndrewRedican)<br />[📢](#talk-AndrewRedican "Talks") [💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Code") [🌍](#translation-AndrewRedican "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7840502?v=4" width="100px;"/><br /><sub><b>Patrick Sachs</b></sub>](https://patrick-sachs.de/)<br />[💻](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Code") [🌍](#translation-PatrickSachs "Translation") [⚠️](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs "Tests") | [<img src="https://avatars3.githubusercontent.com/u/37770361?v=4" width="100px;"/><br /><sub><b>Allan Kehl</b></sub>](https://allankehl.com)<br />[🌍](#translation-AllanKDeveloper "Translation") | [<img src="https://avatars3.githubusercontent.com/u/426051?v=4" width="100px;"/><br /><sub><b>esbenvb</b></sub>](https://github.com/esbenvb)<br />[📖](https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=esbenvb "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/5831420?v=4" width="100px;"/><br /><sub><b>Markus Petrykowski</b></sub>](http://markus-petrykowski.de)<br />[💡](#example-PetrykowskiM "Examples") |
+| :---: | :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

@@ -49,6 +49,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "PetrykowskiM",
+      "name": "Markus Petrykowski",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/5831420?v=4",
+      "profile": "http://markus-petrykowski.de",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }
