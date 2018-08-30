@@ -27,6 +27,8 @@
     />
 ```
 
+*Hint*: There are two different import root paths: 'react-json-editor-ajrm' and 'react-json-editor-ajrm/es'. The first contains ES5 code, the second ES6. If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
+
 ## Examples
 
 The `./examples` folder contains two examples:
