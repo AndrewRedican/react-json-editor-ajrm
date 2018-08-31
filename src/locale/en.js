@@ -1,11 +1,49 @@
 export default {
   format: "{reason} at line {line}",
+  symbols: {
+
+    colon: "colon",           // :
+    comma: "comma",           // ,  ،  、
+    semicolon: "semicolon",   // ;
+    slash: "slash",           // /  relevant for comment syntax support
+    backslash: "backslash",   // \  relevant for escaping character
+    brackets: {
+      round: "round brackets",   // ( )
+      square: "square brackets", // [ ]
+      curly: "curly brackets",   // { }
+      angle: "angle brackets"    // < >
+    },
+    period: "period",            // . Also known as full point, full stop, or dot
+    /**
+     * See https://en.wikipedia.org/wiki/Quotation_mark
+     * Should we accept different forms of ' and " quotes to identify string literals: ‘ ’  “ ”  
+     */
+    quotes: {
+      single: "single quote", 
+      double: "double quote",
+      grave: " grave accent" // ` used on Javascript ES6 Syntax for String Templates
+    },
+    space: "space",           //       
+    ampersand: "ampersand",   //	&
+    asterisk: "asterisk",     //	*  relevant for some comment sytanx
+    at: "at sign",            //	@  multiple uses in other coding languages including certain data types
+    equals: "equals sign",    //	=
+    hash: "hash",             //	#
+    percent: "percent",       //	% 
+    plus: "plus",             //	+
+    minus: "minus",           //	−
+    dash: "dash",
+    hyphen: "hyphen",
+    tilde: "tilde",           //	~
+    underscore: "underscore", //	_
+    bar: "vertical bar",      //	|
+  },
   types: {
-    colon: "colon",
     key: "key",
     value: "value",
     number: "number",
-    string: "string"
+    string: "string",
+    //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     sequence: {
