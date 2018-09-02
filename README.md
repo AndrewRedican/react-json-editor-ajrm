@@ -27,7 +27,7 @@
     />
 ```
 
-*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains ES5 code, the second ES6. If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
+*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains polyfilled ES5 code, the second unpolyfilled ES6. If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
 
 ## Examples
 
@@ -39,10 +39,10 @@ The `./examples` folder contains two examples:
 ## Testing right away!
 
 1. Fork and/or clone this Github repository
-2. Go to [react-json-editor-ajrm/example/](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
+2. Go to an example project under [react-json-editor-ajrm/example](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
 
 ```
-    $ cd path/to/repo/react-json-editor-ajrm/example
+    $ cd path/to/repo/react-json-editor-ajrm/example/webpack-project
 ```
 
 3. Install example project dependencies:
@@ -145,14 +145,10 @@ Whenever RJEA re-renders its content, any function passed onto `onChange` proper
 
 RJEA supports built-in theme. Here is the [list](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes).
 
-The [distribution version](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/dist/index.js) of this component has been transpiled down to `ES5`, then `minified` and `uglified` for maximum compatability and performance.
-You can check the source code here [react-json-editor-ajrm/src/](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/src):
-
 ## Built With
 
 - [**React.js**](https://reactjs.org/)
-- [**Babel.js**](https://babeljs.io/) for transpiling
-- [**Webpack**](https://webpack.js.org/) for bundling npm module.
+- [**Babel.js**](https://babeljs.io/) for transpiling.
 - [**Enzyme**](http://airbnb.io/enzyme/) for react-specific testing utilities.
 - [**Jest**](https://jestjs.io/docs/en/tutorial-react) for unit testing, also react-specific tests.
 - [**Travis CI**](https://travis-ci.org/) for continuous integration.
