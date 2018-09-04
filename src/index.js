@@ -549,8 +549,9 @@ class JSONInput extends Component {
         this.setUpdateTime();
     }
     onKeyDown(event){
-        const ctrlOrMetaKey = event.ctrlKey || event.metaKey;
-        if (!ctrlOrMetaKey && ('viewOnly' in this.props && this.props.viewOnly)) {
+        const isNotCopyEvent = !((event.ctrlKey || event.metaKey) && event.key === 'c')
+
+        if(isNotCopyEvent && ('viewOnly' in this.props && this.props.viewOnly)) {
             this.stopEvent(event)
         }
 
