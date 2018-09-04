@@ -549,7 +549,11 @@ class JSONInput extends Component {
         this.setUpdateTime();
     }
     onKeyDown(event){
-        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        const ctrlOrMetaKey = event.ctrlKey || event.metaKey;
+        if (!ctrlOrMetaKey && ('viewOnly' in this.props && this.props.viewOnly)) {
+            this.stopEvent(event)
+        }
+
         switch(event.key){
             case 'Tab':
                 this.stopEvent(event);
