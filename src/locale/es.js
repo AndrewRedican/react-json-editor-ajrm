@@ -47,12 +47,12 @@ export default {
   },
   invalidToken: {
     sequence: {
-      prohibited: "La ficha '{firstToken}' no puede ser seguida por una ficha '{secondToken}'",
-      permitted: "'La ficha {firstToken}' solo puede ser seguida por ficha(s) '{secondToken}'"
+      prohibited: "La ficha '{firstToken}' no puede ser seguida por fichas '{secondToken}'",
+      permitted: "'La ficha {firstToken}' solo puede ser seguida por fichas '{secondToken}'"
     },
     typesSequence: {
-      prohibited: "El tipo de dato {firstType} no puede ser seguido por tipo de dato {secondType}.",
-      permitted: "El tipo de dato {firstType} solo puede ser seguido por tipo de dato {secondType}."
+      prohibited: "{firstType} no puede ser seguido por {secondType}.",
+      permitted: "{firstType} solo puede ser seguido por {secondType}."
     },
     double: "'La ficha {token}' no puede ser seguida por otra ficha '{token}'",
     whitelist: "La ficha '{firstToken}' solamente puede seguir las fichas '{secondToken}'",

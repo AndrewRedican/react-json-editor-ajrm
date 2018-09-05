@@ -48,8 +48,8 @@ export default {
  },
   invalidToken: {
     sequence: {
-      prohibited: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
-      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token"
+      prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
+      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },
     typesSequence: {
       prohibited: "A {firstType} cannot be followed by a {secondType}.",
