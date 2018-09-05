@@ -1,5 +1,52 @@
 export default {
   format: "{reason} na linha {line}",
+  //Requires Translation - Delete Me After This is Done
+  symbols: {
+    colon: "colon",
+    comma: "comma",
+    semicolon: "semicolon",
+    slash: "slash",
+    backslash: "backslash",
+    brackets: {
+      round: "round brackets",
+      square: "square brackets",
+      curly: "curly brackets",
+      angle: "angle brackets"
+    },
+    period: "period",
+    quotes: {
+      single: "single quote",
+      double: "double quote",
+      grave: "grave accent"
+    },
+    space: "space",   
+    ampersand: "ampersand",
+    asterisk: "asterisk",
+    at: "at sign",
+    equals: "equals sign",
+    hash: "hash",
+    percent: "percent",
+    plus: "plus",
+    minus: "minus",
+    dash: "dash",
+    hyphen: "hyphen",
+    tilde: "tilde",
+    underscore: "underscore",
+    bar: "vertical bar",
+  },
+  types: {
+      key: "key",
+      value: "value",
+      number: "number",
+      string: "string",
+      primitive: "primitive",
+      boolean: "boolean",
+      character: "character",
+      integer: "integer",
+      array: "array",
+      float: "float"
+  },
+  // ^------ End of Section. Delete Me Later
   invalidToken: {
     sequence: "O token '{firstToken}' não pode ser seguido por um token '{secondToken}'",
     double: "O token '{token}' não pode ser seguido por outro token '{token}'",

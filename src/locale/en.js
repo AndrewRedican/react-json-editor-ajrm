@@ -1,5 +1,51 @@
 export default {
   format: "{reason} at line {line}",
+  symbols: {
+    colon: "colon",           // :
+    comma: "comma",           // ,  ،  、
+    semicolon: "semicolon",   // ;
+    slash: "slash",           // /  relevant for comment syntax support
+    backslash: "backslash",   // \  relevant for escaping character
+    brackets: {
+      round: "round brackets",   // ( )
+      square: "square brackets", // [ ]
+      curly: "curly brackets",   // { }
+      angle: "angle brackets"    // < >
+    },
+    period: "period",            // . Also known as full point, full stop, or dot
+    quotes: {
+      single: "single quote", // '
+      double: "double quote", // "
+      grave: "grave accent"  // ` used on Javascript ES6 Syntax for String Templates
+    },
+    space: "space",           //       
+    ampersand: "ampersand",   //	&
+    asterisk: "asterisk",     //	*  relevant for some comment sytanx
+    at: "at sign",            //	@  multiple uses in other coding languages including certain data types
+    equals: "equals sign",    //	=
+    hash: "hash",             //	#
+    percent: "percent",       //	% 
+    plus: "plus",             //	+
+    minus: "minus",           //	−
+    dash: "dash",             //	−
+    hyphen: "hyphen",         //	−
+    tilde: "tilde",           //	~
+    underscore: "underscore", //	_
+    bar: "vertical bar",      //	|
+ },
+ types: {
+    key: "key",
+    value: "value",
+    number: "number",
+    string: "string",
+    primitive: "primitive",
+    boolean: "boolean",
+    character: "character",
+    integer: "integer",
+    array: "array",
+    float: "float"
+   //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
+ },
   invalidToken: {
     sequence: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
     double: "'{token}' token cannot be followed by another '{token}' token",
