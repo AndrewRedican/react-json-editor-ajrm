@@ -545,24 +545,35 @@ class JSONInput extends Component {
         event.stopPropagation();
     }
     onKeyPress(event){
-        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
-        this.setUpdateTime();
+        const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
+        if(this.props.viewOnly && !ctrlOrMetaIsPressed) this.stopEvent(event);
+        if (!ctrlOrMetaIsPressed) this.setUpdateTime();
     }
     onKeyDown(event){
-        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        const viewOnly = !!this.props.viewOnly;
+        const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
+
         switch(event.key){
             case 'Tab':
                 this.stopEvent(event);
+                if (viewOnly) break;
                 document.execCommand("insertText", false, "  ");
                 this.setUpdateTime();
                 break;
             case 'Backspace' : case 'Delete'     :
+                if (viewOnly) this.stopEvent(event);
+                this.setUpdateTime();
+                break;
             case 'ArrowLeft' : case 'ArrowRight' :
             case 'ArrowUp'   : case 'ArrowDown'  :
                 this.setUpdateTime();
-                return;
-            break;
-            default : break;
+                break;
+            case 'a'         : case 'c'          :
+                if (viewOnly && !ctrlOrMetaIsPressed) this.stopEvent(event);
+                break;
+            default : 
+                if (viewOnly) this.stopEvent(event);
+                break;
         }
     }
     onPaste(event){
