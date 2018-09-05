@@ -545,14 +545,12 @@ class JSONInput extends Component {
         event.stopPropagation();
     }
     onKeyPress(event){
-        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
         const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
-        if (!ctrlOrMetaIsPressed) {
-            this.setUpdateTime();
-        }
+        if(this.props.viewOnly && !ctrlOrMetaIsPressed) this.stopEvent(event);
+        if (!ctrlOrMetaIsPressed) this.setUpdateTime();
     }
     onKeyDown(event){
-        const viewOnly = ('viewOnly' in this.props && this.props.viewOnly);
+        const viewOnly = !!this.props.viewOnly;
         const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
 
         switch(event.key){
