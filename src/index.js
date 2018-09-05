@@ -1067,7 +1067,7 @@ class JSONInput extends Component {
                             case '[' : 
                                 found = followsSymbol(i,['}',']']);
                                 if(found){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.sequence.prohibited, {
                                         firstToken: buffer.tokens_merge[found].string,
                                         secondToken: string
                                     }));
@@ -1101,7 +1101,7 @@ class JSONInput extends Component {
                                 }
                                 if(string==='}')
                                 if(followsSymbol(i,[','])){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.sequence.prohibited, {
                                         firstToken: ",",
                                         secondToken: "}"
                                     }));
@@ -1114,7 +1114,7 @@ class JSONInput extends Component {
                                 }
                                 if(string===']')
                                 if(followsSymbol(i,[':'])){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.sequence.prohibited, {
                                         firstToken: ":",
                                         secondToken: "]"
                                     }));
@@ -1133,7 +1133,7 @@ class JSONInput extends Component {
                                         }));
                                         break;
                                     }
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.sequence.prohibited, {
                                         firstToken: "{",
                                         secondToken: ","
                                     }));
@@ -1147,14 +1147,14 @@ class JSONInput extends Component {
                                 switch(found){
                                     case 'key' : 
                                     case 'colon' :
-                                        setError(i,format(locale.invalidToken.sequence, {
+                                        setError(i,format(locale.invalidToken.sequence.prohibited, {
                                             firstToken: found,
                                             secondToken: ","
                                         }));
                                         break;
                                     case 'symbol' :
                                         if(followsSymbol(i,['{'])){
-                                            setError(i,format(locale.invalidToken.sequence, {
+                                            setError(i,format(locale.invalidToken.sequence.prohibited, {
                                                 firstToken: "{",
                                                 secondToken: ","
                                             }));
@@ -1178,7 +1178,7 @@ class JSONInput extends Component {
                             break;
                         }
                         if(found){
-                            setError(i,format(locale.invalidToken.sequence, {
+                            setError(i,format(locale.invalidToken.sequence.prohibited, {
                                 firstToken: "[",
                                 secondToken: ":"
                             }));
@@ -1188,6 +1188,13 @@ class JSONInput extends Component {
                             setError(i,format(locale.invalidToken.whitelist, {
                                 firstToken: ":",
                                 secondToken: "key"
+                            }));
+                            break;
+                        }
+                        if(followedBySymbol(i,['}',']'])){
+                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                                firstType: locale.symbols.colon,
+                                secondType: locale.types.value
                             }));
                             break;
                         }
@@ -1227,11 +1234,12 @@ class JSONInput extends Component {
                             break;
                         }
                         if('key'===type)
-                        if(followedBySymbol(i,['}',']']))
-                        setError(i,format(locale.invalidToken.typesSequence.permitted, {
-                            firstType: locale.types.key,
-                            secondType: locale.types.colon
-                        }));
+                        if(followedBySymbol(i,['}',']'])){
+                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                                firstType: locale.types.key,
+                                secondType: locale.symbols.colon
+                            }));
+                        }
                         if(quotes.indexOf(firstChar)===-1 && quotes.indexOf(lastChar)===-1)
                         for(var h = 0; h < string.length; h++){
                             if(error) break;
