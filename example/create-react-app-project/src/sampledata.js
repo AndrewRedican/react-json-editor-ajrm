@@ -9,7 +9,16 @@ const sampleData = {
       date_created: 151208443563,
       date_signed: 151208448055,
       date_approved: 151208471190,
-      answers: ["Yes", "No", "No", "Yes", "No"]
+      answers: [
+          {
+              Q1 : true,
+              Q2 : false
+          },
+          {
+              Q34 : 'This is an answer',
+              Q35 : false
+          }
+      ]
     },
     A2: {
       userID: "nancy_mccarty",
