@@ -46,7 +46,14 @@ export default {
       float: "número flotante"
   },
   invalidToken: {
-    sequence: "La ficha '{firstToken}' no puede ser seguida por la ficha '{secondToken}'",
+    sequence: {
+      prohibited: "La ficha '{firstToken}' no puede ser seguida por una ficha '{secondToken}'",
+      permitted: "'La ficha {firstToken}' solo puede ser seguida por ficha(s) '{secondToken}'"
+    },
+    typesSequence: {
+      prohibited: "El tipo de dato {firstType} no puede ser seguido por tipo de dato {secondType}.",
+      permitted: "El tipo de dato {firstType} solo puede ser seguido por tipo de dato {secondType}."
+    },
     double: "'La ficha {token}' no puede ser seguida por otra ficha '{token}'",
     whitelist: "La ficha '{firstToken}' solamente puede seguir las fichas '{secondToken}'",
     useInstead: "La ficha '{badToken}' no se permite. Utiliza '{goodToken}' en su lugar",

@@ -46,9 +46,18 @@ export default {
       array: "array",
       float: "float"
   },
-  // ^------ End of Section. Delete Me Later
+  // ^------ End of Section. Delete Me After Translation is Complete
   invalidToken: {
-    sequence: "'{firstToken}' Zeichen kann nicht von einem '{secondToken}' Zeichen gefolgt werden",
+    //Requires Translation - Delete Me After This is Done
+    sequence: {
+      prohibited: "'{firstToken}' token cannot be followed by a '{secondToken}' token",
+      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token"
+    },
+    typesSequence: {
+      prohibited: "A {firstType} cannot be followed by a {secondType}.",
+      permitted: "A {firstType} can only be followed by a {secondType}."
+    },
+    // ^------ End of Section. Delete Me After Translation
     double: "'{token}' Zeichen kann nicht von einem weiteren '{token}' Zeichen gefolgt werden",
     whitelist: "'{firstToken}' Zeichen kann nur '{secondToken}' Zeichen folgen",
     useInstead: "'{badToken}' Zeichen ist nicht akzeptiert. '{goodToken}' ist stattdessen zu verwenden",
