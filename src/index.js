@@ -546,7 +546,10 @@ class JSONInput extends Component {
     }
     onKeyPress(event){
         if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
-        this.setUpdateTime();
+        const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
+        if (!ctrlOrMetaIsPressed) {
+            this.setUpdateTime();
+        }
     }
     onKeyDown(event){
         const viewOnly = ('viewOnly' in this.props && this.props.viewOnly);
