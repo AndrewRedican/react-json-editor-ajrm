@@ -1150,11 +1150,11 @@ class JSONInput extends Component {
                                 }
                                 found = typeFollowed(i);
                                 switch(found){
-                                    case 'key' : 
+                                    case 'key' :
                                     case 'colon' :
                                         setError(i,format(locale.invalidToken.termSequence.prohibited, {
-                                            firstTerm: locale.types.key,
-                                            secondTerm: locale.symbols.colon
+                                            firstTerm: found==='key' ? locale.types.key : locale.symbols.colon,
+                                            secondTerm: locale.symbols.comma
                                         }));
                                         break;
                                     case 'symbol' :
