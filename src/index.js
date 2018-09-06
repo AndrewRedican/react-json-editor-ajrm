@@ -651,7 +651,8 @@ class JSONInput extends Component {
                 jsObject         : undefined,
                 markup           : ''
             }
-            children.forEach(function(child,i){
+            for(var i = 0; i < children.length; i++){
+                let child = children[i];
                 let info = {};
                 switch(child.nodeName){
                     case 'SPAN' :
@@ -678,7 +679,7 @@ class JSONInput extends Component {
                         console.error('Unrecognized node:',{child})
                     break;
                 }
-            });
+            }
             function quarkize(text,prefix=''){
                 let
                     buffer = {
@@ -762,9 +763,10 @@ class JSONInput extends Component {
                 finalPush();
                 return buffer.quarks;
             }
-            buffer.tokens_unknown.forEach( function(token,i) {
-                buffer.tokens_proto = buffer.tokens_proto.concat(quarkize(token.string,'proto'));      
-            });
+            for(var i = 0; i < buffer.tokens_unknown.length; i++){
+                let token = buffer.tokens_unknown[i];
+                buffer.tokens_proto = buffer.tokens_proto.concat(quarkize(token.string,'proto'));
+            }
             function validToken(string,type){
                 const quotes = '\'"';
                 let 
@@ -830,14 +832,16 @@ class JSONInput extends Component {
                 }
                 return true;
             }
-            buffer.tokens_proto.forEach( function(token,i) {
+            for(var i = 0; i < buffer.tokens_proto.length; i++){
+                let token = buffer.tokens_proto[i];
                 if(token.type.indexOf('proto')===-1){
                     if(!validToken(token.string,token.type)){
                         buffer.tokens_split = buffer.tokens_split.concat(quarkize(token.string,'split'));
                     } else buffer.tokens_split.push(token);
                 } else buffer.tokens_split.push(token);
-            });
-            buffer.tokens_split.forEach( function(token) {
+            }
+            for(var i = 0; i < buffer.tokens_split.length; i++){
+                let token = buffer.tokens_split[i];
                 let
                     type     = token.type,
                     string   = token.string,
@@ -856,7 +860,7 @@ class JSONInput extends Component {
                     fallback : fallback 
                 };
                 buffer.tokens_fallback.push(tokul);
-            });
+            }
             function tokenFollowed(){
                 const last = buffer.tokens_normalize.length - 1;
                 if(last<1) return false;
@@ -874,7 +878,8 @@ class JSONInput extends Component {
                 stringOpen : false,
                 isValue    : false
             };
-            buffer.tokens_fallback.forEach( function(token,i) {
+            for(var i = 0; i < buffer.tokens_fallback.length; i++){
+                let token = buffer.tokens_fallback[i];
                 const
                     type   = token.type,
                     string = token.string;
@@ -958,7 +963,7 @@ class JSONInput extends Component {
                     break;
                 }
                 buffer.tokens_normalize.push(normalToken);
-            });
+            }
             for(var i = 0; i < buffer.tokens_normalize.length; i++){
                 const token = buffer.tokens_normalize[i];
                 let mergedToken = {
@@ -1067,7 +1072,7 @@ class JSONInput extends Component {
                             case '[' : 
                                 found = followsSymbol(i,['}',']']);
                                 if(found){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                         firstToken: buffer.tokens_merge[found].string,
                                         secondToken: string
                                     }));
@@ -1075,7 +1080,7 @@ class JSONInput extends Component {
                                 }
                                 if(string==='['&&i>0)
                                 if(!followsSymbol(i,[':','[',','])){
-                                    setError(i,format(locale.invalidToken.whitelist, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.permitted, {
                                         firstToken: "[",
                                         secondToken: [":", "[", ","]
                                     }));
@@ -1101,7 +1106,7 @@ class JSONInput extends Component {
                                 }
                                 if(string==='}')
                                 if(followsSymbol(i,[','])){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                         firstToken: ",",
                                         secondToken: "}"
                                     }));
@@ -1114,7 +1119,7 @@ class JSONInput extends Component {
                                 }
                                 if(string===']')
                                 if(followsSymbol(i,[':'])){
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                         firstToken: ":",
                                         secondToken: "]"
                                     }));
@@ -1133,7 +1138,7 @@ class JSONInput extends Component {
                                         }));
                                         break;
                                     }
-                                    setError(i,format(locale.invalidToken.sequence, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                         firstToken: "{",
                                         secondToken: ","
                                     }));
@@ -1145,16 +1150,16 @@ class JSONInput extends Component {
                                 }
                                 found = typeFollowed(i);
                                 switch(found){
-                                    case 'key' : 
+                                    case 'key' :
                                     case 'colon' :
-                                        setError(i,format(locale.invalidToken.sequence, {
-                                            firstToken: found,
-                                            secondToken: ","
+                                        setError(i,format(locale.invalidToken.termSequence.prohibited, {
+                                            firstTerm: found==='key' ? locale.types.key : locale.symbols.colon,
+                                            secondTerm: locale.symbols.comma
                                         }));
                                         break;
                                     case 'symbol' :
                                         if(followsSymbol(i,['{'])){
-                                            setError(i,format(locale.invalidToken.sequence, {
+                                            setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                                 firstToken: "{",
                                                 secondToken: ","
                                             }));
@@ -1178,16 +1183,23 @@ class JSONInput extends Component {
                             break;
                         }
                         if(found){
-                            setError(i,format(locale.invalidToken.sequence, {
+                            setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
                                 firstToken: "[",
                                 secondToken: ":"
                             }));
                             break;
                         }
                         if(typeFollowed(i)!=='key'){
-                            setError(i,format(locale.invalidToken.whitelist, {
-                                firstToken: ":",
-                                secondToken: "key"
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
+                                firstTerm: locale.symbols.colon,
+                                secondTerm: locale.types.key
+                            }));
+                            break;
+                        }
+                        if(followedBySymbol(i,['}',']'])){
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
+                                firstTerm: locale.symbols.colon,
+                                secondTerm: locale.types.value
                             }));
                             break;
                         }
@@ -1227,6 +1239,12 @@ class JSONInput extends Component {
                             break;
                         }
                         if('key'===type)
+                        if(followedBySymbol(i,['}',']'])){
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
+                                firstTerm: locale.types.key,
+                                secondTerm: locale.symbols.colon
+                            }));
+                        }
                         if(quotes.indexOf(firstChar)===-1 && quotes.indexOf(lastChar)===-1)
                         for(var h = 0; h < string.length; h++){
                             if(error) break;
@@ -1253,7 +1271,7 @@ class JSONInput extends Component {
                         }
                         if('key'===type)
                         if(!followsSymbol(i,['{',','])){
-                            setError(i,format(locale.invalidToken.whitelist, {
+                            setError(i,format(locale.invalidToken.tokenSequence.permitted, {
                                 firstToken: type,
                                 secondToken: ["{", ","]
                             }));
@@ -1261,7 +1279,7 @@ class JSONInput extends Component {
                         }
                         if('string'===type)
                         if(!followsSymbol(i,['[',':',','])){
-                            setError(i,format(locale.invalidToken.whitelist, {
+                            setError(i,format(locale.invalidToken.tokenSequence.permitted, {
                                 firstToken: type,
                                 secondToken: ["[", ":", ","]
                             }));
@@ -1292,7 +1310,7 @@ class JSONInput extends Component {
                             }
                             else
                                 if(!followsSymbol(i,['[',':',','])){
-                                    setError(i,format(locale.invalidToken.whitelist, {
+                                    setError(i,format(locale.invalidToken.tokenSequence.permitted, {
                                         firstToken: type,
                                         secondToken: ["[", ":", ","]
                                     }));
@@ -1466,10 +1484,11 @@ class JSONInput extends Component {
                 _line_fallback++;
                 if(_line < _line_fallback) _line = _line_fallback;
             }
-            buffer.tokens_merge.forEach( function(token) { 
+            for(var i = 0; i < buffer.tokens_merge.length; i++){
+                let token = buffer.tokens_merge[i];
                 buffer.indented += token.string;
                 if(['space','linebreak'].indexOf(token.type)===-1) buffer.tokens_plainText += token.string;
-            });
+            }
             if(error){
                 function isFunction(functionToCheck) {
                     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
@@ -1653,10 +1672,12 @@ class JSONInput extends Component {
                                 })(nonAlphaNumeric);
                             if(hasQuotes){
                                 let newText = '';
-                                text.split('').forEach( char => {
+                                const charList = text.split('');
+                                for(var ii = 0; ii < charList.length; ii++){
+                                    let char = charList[ii];
                                     if(["'",'"'].indexOf(char)>-1) char = '\\' + char;
                                     newText += char;
-                                });
+                                }
                                 text = newText;
                             }
                             if(!mayRemoveQuotes)
@@ -1669,10 +1690,12 @@ class JSONInput extends Component {
                             if(type==='key') string = stripQuotesFromKey(token);
                             if(type==='string'){
                                 string = '';
-                                token.slice(1, -1).split('').forEach( char => {
+                                const charList2 = token.slice(1, -1).split('');
+                                for(var ii = 0; ii < charList2.length; ii++){
+                                    let char = charList2[ii];
                                     if('\'\"'.indexOf(char)>-1) char = '\\' + char;
                                     string += char;
-                                });
+                                }
                                 string = "'" + string + "'";
                             }
                             value = string;
@@ -1700,15 +1723,19 @@ class JSONInput extends Component {
                     depth  : buffer2.brackets.length
                 }
             });
-            let clean = ''; 
-            buffer2.tokens.forEach( token => { clean += token.string; });
+            let clean = '';
+            for(var i = 0; i < buffer2.tokens.length; i++){
+                let token = buffer2.tokens[i];
+                clean += token.string;
+            }
             function indent(number) { 
                 var space = [];
                 for (var i = 0; i < number * 2; i++) space.push(' ');
                 return (number > 0 ? '\n' : '') + space.join('');
             };
             let indentation = '';
-            buffer2.tokens.forEach( (token,i) => { 
+            for(var i = 0; i < buffer2.tokens.length; i++){
+                let token = buffer2.tokens[i];
                 switch(token.string){
                     case '[' : case '{' : 
                         const nextToken = i < (buffer2.tokens.length - 1) - 1 ? buffer2.tokens[i+1] : '';
@@ -1728,7 +1755,7 @@ class JSONInput extends Component {
                     case ',' : indentation += token.string + indent(token.depth); break;
                     default : indentation += token.string; break;
                 }
-            });
+            }
             let lines = 1;
             function indentII(number){ 
                 var space = []; 
@@ -1738,7 +1765,8 @@ class JSONInput extends Component {
             };
             let markup = ''; 
             const lastIndex = buffer2.tokens.length - 1;
-            buffer2.tokens.forEach( (token, i) => {
+            for(var i = 0; i < buffer2.tokens.length; i++){
+                let token =  buffer2.tokens[i];
                 let span = newSpan(i,token,token.depth);
                 switch(token.string){
                     case '{' : case '[' :
@@ -1759,7 +1787,7 @@ class JSONInput extends Component {
                     case ',' : markup += span + indentII(token.depth); break;
                     default  : markup += span; break;
                 }
-            });
+            }
             lines += 2;
             return {
                 tokens   : buffer2.tokens,

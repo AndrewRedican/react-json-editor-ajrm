@@ -1,9 +1,60 @@
 export default {
   format: "{reason} en la línea {line}",
+  symbols: {
+    colon: "dos puntos",
+    comma: "coma",
+    semicolon: "punto y coma",
+    slash: "barra oblicua",
+    backslash: "barra invertida",
+    brackets: {
+      round: "paréntesis",
+      square: "corchetes",
+      curly: "llaves",
+      angle: "paréntesis angulares"
+    },
+    period: "punto",
+    quotes: {
+      single: "comillas simples",
+      double: "comillas dobles",
+      grave: "acento grave"
+    },
+    space: "espacio",   
+    ampersand: "et",
+    asterisk: "asterisco",
+    at: "arroba",
+    equals: "signo igual",
+    hash: "almohadilla",
+    percent: "porcentaje",
+    plus: "signo más",
+    minus: "signo menos",
+    dash: "raya",
+    hyphen: "guion",
+    tilde: "tilde",
+    underscore: "guion bajo",
+    bar: "pleca",
+  },
+  types: {
+      key: "llave",
+      value: "valor",
+      number: "número",
+      string: "cedena",
+      primitive: "dato primitivo",
+      boolean: "booleano",
+      character: "carácter",
+      integer: "número entero",
+      array: "colección",
+      float: "número flotante"
+  },
   invalidToken: {
-    sequence: "La ficha '{firstToken}' no puede ser seguida por la ficha '{secondToken}'",
+    tokenSequence: {
+      prohibited: "La ficha '{firstToken}' no puede ser seguida por fichas '{secondToken}'",
+      permitted: "'La ficha {firstToken}' solo puede ser seguida por fichas '{secondToken}'"
+    },
+    termSequence: {
+      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
+      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
+    },
     double: "'La ficha {token}' no puede ser seguida por otra ficha '{token}'",
-    whitelist: "La ficha '{firstToken}' solamente puede seguir las fichas '{secondToken}'",
     useInstead: "La ficha '{badToken}' no se permite. Utiliza '{goodToken}' en su lugar",
     unexpected: "Ficha inesperada '{token}'"
   },

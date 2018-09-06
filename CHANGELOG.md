@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Additional terms for locale support, and spanish translation @AndrewRedican.
 - Portuguese translation for warnings @AllanKDeveloper.
+
+### Fixed
 - Pressing the "Tab" key in the editor no longer switches focus @PatrickSachs @ankitr.
 - Text can now be copied in `viewOnly` mode @rickbrunstedt.
+- Correct line is now provided for incomplete property/value assignment warning @AndrewRedican.
 
 ## [2.5.3] - 2018-08-13
 ### Added
