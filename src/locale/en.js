@@ -47,7 +47,7 @@ export default {
     //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
-    sequence: {
+    tokenSequence: {
       prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
       permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },

@@ -46,7 +46,7 @@ export default {
       float: "número flotante"
   },
   invalidToken: {
-    sequence: {
+    tokenSequence: {
       prohibited: "La ficha '{firstToken}' no puede ser seguida por fichas '{secondToken}'",
       permitted: "'La ficha {firstToken}' solo puede ser seguida por fichas '{secondToken}'"
     },

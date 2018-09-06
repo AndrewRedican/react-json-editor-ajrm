@@ -49,7 +49,7 @@ export default {
   // ^------ End of Section. Delete Me After Translation is Complete
   invalidToken: {
     //Requires Translation - Delete Me After This is Done
-    sequence: {
+    tokenSequence: {
       prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
       permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },
