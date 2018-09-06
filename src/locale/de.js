@@ -54,8 +54,8 @@ export default {
       permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },
     termSequence: {
-      prohibited: "A {firstType} cannot be followed by a {secondType}",
-      permitted: "A {firstType} can only be followed by a {secondType}"
+      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
+      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
     },
     // ^------ End of Section. Delete Me After Translation
     double: "'{token}' Zeichen kann nicht von einem weiteren '{token}' Zeichen gefolgt werden",

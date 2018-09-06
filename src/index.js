@@ -1186,15 +1186,15 @@ class JSONInput extends Component {
                         }
                         if(typeFollowed(i)!=='key'){
                             setError(i,format(locale.invalidToken.termSequence.permitted, {
-                                firstToken: locale.symbols.colon,
-                                secondToken: locale.types.key
+                                firstTerm: locale.symbols.colon,
+                                secondTerm: locale.types.key
                             }));
                             break;
                         }
                         if(followedBySymbol(i,['}',']'])){
                             setError(i,format(locale.invalidToken.termSequence.permitted, {
-                                firstType: locale.symbols.colon,
-                                secondType: locale.types.value
+                                firstTerm: locale.symbols.colon,
+                                secondTerm: locale.types.value
                             }));
                             break;
                         }
@@ -1236,8 +1236,8 @@ class JSONInput extends Component {
                         if('key'===type)
                         if(followedBySymbol(i,['}',']'])){
                             setError(i,format(locale.invalidToken.termSequence.permitted, {
-                                firstType: locale.types.key,
-                                secondType: locale.symbols.colon
+                                firstTerm: locale.types.key,
+                                secondTerm: locale.symbols.colon
                             }));
                         }
                         if(quotes.indexOf(firstChar)===-1 && quotes.indexOf(lastChar)===-1)

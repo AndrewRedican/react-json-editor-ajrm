@@ -52,8 +52,8 @@ export default {
       permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },
     termSequence: {
-      prohibited: "A {firstType} cannot be followed by a {secondType}",
-      permitted: "A {firstType} can only be followed by a {secondType}"
+      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
+      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
     },
     double: "'{token}' token cannot be followed by another '{token}' token",
     useInstead: "'{badToken}' token is not accepted. Use '{goodToken}' instead",
