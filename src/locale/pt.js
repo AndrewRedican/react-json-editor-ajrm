@@ -59,7 +59,6 @@ export default {
     },
     // ^------ End of Section. Delete Me After Translation is Complete
     double: "O token '{token}' não pode ser seguido por outro token '{token}'",
-    whitelist: "O token '{firstToken}' apenas pode seguir o token '{secondToken}'",
     useInstead: "O token '{badToken}' não é permitido. Use o token '{goodToken}' em seu lugar",
     unexpected: "O token '{token}' não foi encontrado"
   },

@@ -1075,7 +1075,7 @@ class JSONInput extends Component {
                                 }
                                 if(string==='['&&i>0)
                                 if(!followsSymbol(i,[':','[',','])){
-                                    setError(i,format(locale.invalidToken.whitelist, {
+                                    setError(i,format(locale.invalidToken.sequence.permitted, {
                                         firstToken: "[",
                                         secondToken: [":", "[", ","]
                                     }));
@@ -1185,9 +1185,9 @@ class JSONInput extends Component {
                             break;
                         }
                         if(typeFollowed(i)!=='key'){
-                            setError(i,format(locale.invalidToken.whitelist, {
-                                firstToken: ":",
-                                secondToken: "key"
+                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                                firstToken: locale.symbols.colon,
+                                secondToken: locale.types.key
                             }));
                             break;
                         }
@@ -1266,7 +1266,7 @@ class JSONInput extends Component {
                         }
                         if('key'===type)
                         if(!followsSymbol(i,['{',','])){
-                            setError(i,format(locale.invalidToken.whitelist, {
+                            setError(i,format(locale.invalidToken.sequence.permitted, {
                                 firstToken: type,
                                 secondToken: ["{", ","]
                             }));
@@ -1274,7 +1274,7 @@ class JSONInput extends Component {
                         }
                         if('string'===type)
                         if(!followsSymbol(i,['[',':',','])){
-                            setError(i,format(locale.invalidToken.whitelist, {
+                            setError(i,format(locale.invalidToken.sequence.permitted, {
                                 firstToken: type,
                                 secondToken: ["[", ":", ","]
                             }));
@@ -1305,7 +1305,7 @@ class JSONInput extends Component {
                             }
                             else
                                 if(!followsSymbol(i,['[',':',','])){
-                                    setError(i,format(locale.invalidToken.whitelist, {
+                                    setError(i,format(locale.invalidToken.sequence.permitted, {
                                         firstToken: type,
                                         secondToken: ["[", ":", ","]
                                     }));

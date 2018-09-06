@@ -59,7 +59,6 @@ export default {
     },
     // ^------ End of Section. Delete Me After Translation
     double: "'{token}' Zeichen kann nicht von einem weiteren '{token}' Zeichen gefolgt werden",
-    whitelist: "'{firstToken}' Zeichen kann nur '{secondToken}' Zeichen folgen",
     useInstead: "'{badToken}' Zeichen ist nicht akzeptiert. '{goodToken}' ist stattdessen zu verwenden",
     unexpected: "Unerwartetes '{token}' Zeichen gefunden"
   },

@@ -55,7 +55,6 @@ export default {
       permitted: "{firstType} solo puede ser seguido por {secondType}."
     },
     double: "'La ficha {token}' no puede ser seguida por otra ficha '{token}'",
-    whitelist: "La ficha '{firstToken}' solamente puede seguir las fichas '{secondToken}'",
     useInstead: "La ficha '{badToken}' no se permite. Utiliza '{goodToken}' en su lugar",
     unexpected: "Ficha inesperada '{token}'"
   },

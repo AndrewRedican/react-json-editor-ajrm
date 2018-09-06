@@ -32,20 +32,20 @@ export default {
     tilde: "tilde",           //	~
     underscore: "underscore", //	_
     bar: "vertical bar",      //	|
- },
- types: {
-    key: "key",
-    value: "value",
-    number: "number",
-    string: "string",
-    primitive: "primitive",
-    boolean: "boolean",
-    character: "character",
-    integer: "integer",
-    array: "array",
-    float: "float"
-   //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
- },
+  },
+  types: {
+      key: "key",
+      value: "value",
+      number: "number",
+      string: "string",
+      primitive: "primitive",
+      boolean: "boolean",
+      character: "character",
+      integer: "integer",
+      array: "array",
+      float: "float"
+    //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
+  },
   invalidToken: {
     sequence: {
       prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
@@ -56,7 +56,6 @@ export default {
       permitted: "A {firstType} can only be followed by a {secondType}."
     },
     double: "'{token}' token cannot be followed by another '{token}' token",
-    whitelist: "'{firstToken}' token can only follow '{secondToken}' token",
     useInstead: "'{badToken}' token is not accepted. Use '{goodToken}' instead",
     unexpected: "Unexpected '{token}' token found"
   },
