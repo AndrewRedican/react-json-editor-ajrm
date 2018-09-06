@@ -4,8 +4,8 @@
   "description": "A simple website to showcase react-json-editor-ajrm component",
   "author": "andrew.redican.mejia@gmail.com",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack"
+    "start": "cross-env NODE_ENV=development BABEL_ENV=modules:commonjs webpack-dev-server",
+    "build": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs webpack"
   },
   "dependencies": {
     "react": "^16.2.0",
