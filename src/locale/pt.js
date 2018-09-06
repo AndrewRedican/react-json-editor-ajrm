@@ -1,8 +1,7 @@
 export default {
   format: "{reason} na linha {line}",
-  //Requires Translation - Delete Me After This is Done
   symbols: {
-    colon: "dois-pontos",
+    colon: "dois pontos",
     comma: "vírgula",
     semicolon: "ponto e vírgula",
     slash: "barra",
@@ -15,49 +14,46 @@ export default {
     },
     period: "ponto",
     quotes: {
-      single: "single quote",
-      double: "double quote",
-      grave: "grave accent"
+      single: "aspas simples",
+      double: "aspas duplas",
+      grave: "acento agudo"
     },
     space: "espaço",   
-    ampersand: "ampersand",
+    ampersand: "e comercial",
     asterisk: "asterisco",
     at: "arroba",
     equals: "sinal de igual",
-    hash: "cerquilha",
+    hash: "jogo da velha",
     percent: "porcentagem",
     plus: "sinal de mais",
     minus: "sinal de menos",
-    dash: "meia-risca",
+    dash: "traço",
     hyphen: "hífen",
-    tilde: "til",
-    underscore: "traço inferior",
+    tilde: "acento til",
+    underscore: "travessão",
     bar: "barra vertical",
   },
   types: {
-      key: "key",
-      value: "value",
-      number: "number",
-      string: "string",
-      primitive: "primitive",
-      boolean: "boolean",
-      character: "character",
-      integer: "integer",
-      array: "array",
-      float: "float"
+      key: "chave",
+      value: "valor",
+      number: "número",
+      string: "sequência de caracteres",
+      primitive: "primitivo",
+      boolean: "booleano",
+      character: "caracter",
+      integer: "inteiro",
+      array: "vetor",
+      float: "decimal"
   },
-  // ^------ End of Section. Delete Me After Translation is Complete
   invalidToken: {
-    //Requires Translation - Delete Me After This is Done
     tokenSequence: {
-      prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
-      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
+      prohibited: "O token '{firstToken}' não pode ser seguido do token '{secondToken}'",
+      permitted: "O token '{firstToken}' apenas pode ser seguido pelo token '{secondToken}'"
     },
     termSequence: {
-      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
-      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
+      prohibited: "O termo '{firstTerm}' não pode ser seguido do termo '{secondTerm}'",
+      permitted: "O termo '{firstTerm}' apenas pode ser seguido pelo termo '{secondTerm}'"
     },
-    // ^------ End of Section. Delete Me After Translation is Complete
     double: "O token '{token}' não pode ser seguido por outro token '{token}'",
     useInstead: "O token '{badToken}' não é permitido. Use o token '{goodToken}' em seu lugar",
     unexpected: "O token '{token}' não foi encontrado"
