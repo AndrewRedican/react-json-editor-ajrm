@@ -1,6 +1,5 @@
 export default {
   format: "{reason} in Zeile {line}",
-  //Requires Translation - Delete Me After This is Done
   symbols: {
     colon: "Doppelpunkt",
     comma: "Komma",
@@ -8,16 +7,16 @@ export default {
     slash: "Schrägstrich",
     backslash: "Backslash",
     brackets: {
-      round: "Runde Klammern",
-      square: "Eckige Klammern",
-      curly: "Geschweifte",
-      angle: "Spitze Klammern"
+      round: "runde Klammern",
+      square: "eckige Klammern",
+      curly: "geschweifte Klammern",
+      angle: "spitze Klammern"
     },
     period: "Punkt",
     quotes: {
-      single: "single quote",
-      double: "double quote",
-      grave: "grave accent"
+      single: "einfache Anführungszeichen",
+      double: "doppelte Anführungszeichen",
+      grave: "Gravis-Akzente"
     },
     space: "Leerzeichen",   
     ampersand: "Et-Zeichen",
@@ -32,32 +31,29 @@ export default {
     hyphen: "Viertelgeviertstrich",
     tilde: "Tilde",
     underscore: "Unterstrich",
-    bar: "senkrechte Strich",
+    bar: "senkrechter Strich",
   },
   types: {
-      key: "die Zeichenerklärung",
-      value: "value",
-      number: "number",
-      string: "string",
-      primitive: "primitive",
-      boolean: "boolesch",
-      character: "das Schriftzeichen",
+      key: "Zeichenerklärung",
+      value: "Wert",
+      number: "Zahl",
+      string: "Zeichenkette",
+      primitive: "primitiver Wert",
+      boolean: "boolescher Wert",
+      character: "Schriftzeichen",
       integer: "ganze Zahl",
-      array: "array",
-      float: "float"
+      array: "Feld",  // <- This translation is the Java term, there is probably a better translation
+      float: "Kommazahl"
   },
-  // ^------ End of Section. Delete Me After Translation is Complete
   invalidToken: {
-    //Requires Translation - Delete Me After This is Done
     tokenSequence: {
-      prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
-      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
+      prohibited: "'{firstToken}' Zeichen kann nicht von '{secondToken}' Zeichen gefolgt werden",
+      permitted: "'{firstToken}' Zeichen kann nur von '{secondToken}' Zeichen gefolgt werden"
     },
     termSequence: {
-      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
-      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
+      prohibited: "'{firstTerm}' kann nicht nicht von '{secondTerm}' gefolgt werden",
+      permitted: "'{firstTerm}' kann nur von '{secondTerm}' gefolgt werden"
     },
-    // ^------ End of Section. Delete Me After Translation
     double: "'{token}' Zeichen kann nicht von einem weiteren '{token}' Zeichen gefolgt werden",
     useInstead: "'{badToken}' Zeichen ist nicht akzeptiert. '{goodToken}' ist stattdessen zu verwenden",
     unexpected: "Unerwartetes '{token}' Zeichen gefunden"
