@@ -51,8 +51,8 @@ export default {
       permitted: "'La ficha {firstToken}' solo puede ser seguida por fichas '{secondToken}'"
     },
     termSequence: {
-      prohibited: "{firstType} no puede ser seguido por {secondType}.",
-      permitted: "{firstType} solo puede ser seguido por {secondType}."
+      prohibited: "{firstType} no puede ser seguido por {secondType}",
+      permitted: "{firstType} solo puede ser seguido por {secondType}"
     },
     double: "'La ficha {token}' no puede ser seguida por otra ficha '{token}'",
     useInstead: "La ficha '{badToken}' no se permite. Utiliza '{goodToken}' en su lugar",
