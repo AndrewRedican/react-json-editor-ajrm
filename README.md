@@ -59,9 +59,11 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.3] - August 13, 2018
+## Latest Spotlight Release Notes [v2.5.4] - September 6, 2018
 
-1. Added `@babel/runtime` dependency to solve this [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/37)
+1. `Portuguese` locale is now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
+2. [IE11](https://en.wikipedia.org/wiki/Internet_Explorer_11) is now also supported.
+2. A good heap of issues were fixed. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#254---2018-09-06)
 
 ## Upcoming Features
 
