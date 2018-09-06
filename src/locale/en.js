@@ -16,7 +16,7 @@ export default {
     quotes: {
       single: "single quote", // '
       double: "double quote", // "
-      grave: "grave accent"  // ` used on Javascript ES6 Syntax for String Templates
+      grave: "grave accent"   // ` used on Javascript ES6 Syntax for String Templates
     },
     space: "space",           //       
     ampersand: "ampersand",   //	&
