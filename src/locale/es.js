@@ -50,7 +50,7 @@ export default {
       prohibited: "La ficha '{firstToken}' no puede ser seguida por fichas '{secondToken}'",
       permitted: "'La ficha {firstToken}' solo puede ser seguida por fichas '{secondToken}'"
     },
-    typesSequence: {
+    termSequence: {
       prohibited: "{firstType} no puede ser seguido por {secondType}.",
       permitted: "{firstType} solo puede ser seguido por {secondType}."
     },

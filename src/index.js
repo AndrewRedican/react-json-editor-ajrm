@@ -1185,14 +1185,14 @@ class JSONInput extends Component {
                             break;
                         }
                         if(typeFollowed(i)!=='key'){
-                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
                                 firstToken: locale.symbols.colon,
                                 secondToken: locale.types.key
                             }));
                             break;
                         }
                         if(followedBySymbol(i,['}',']'])){
-                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
                                 firstType: locale.symbols.colon,
                                 secondType: locale.types.value
                             }));
@@ -1235,7 +1235,7 @@ class JSONInput extends Component {
                         }
                         if('key'===type)
                         if(followedBySymbol(i,['}',']'])){
-                            setError(i,format(locale.invalidToken.typesSequence.permitted, {
+                            setError(i,format(locale.invalidToken.termSequence.permitted, {
                                 firstType: locale.types.key,
                                 secondType: locale.symbols.colon
                             }));

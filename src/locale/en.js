@@ -51,7 +51,7 @@ export default {
       prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
       permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
     },
-    typesSequence: {
+    termSequence: {
       prohibited: "A {firstType} cannot be followed by a {secondType}.",
       permitted: "A {firstType} can only be followed by a {secondType}."
     },
