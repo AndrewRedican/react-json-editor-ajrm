@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.5.4] - 2018-09-06
 ### Added
 - Additional terms for locale support, and spanish translation @AndrewRedican.
 - Portuguese translation for warnings @AllanKDeveloper.
+- IE 11 Support @PatrickSachs @AndrewRedican.
 
 ### Fixed
 - Pressing the "Tab" key in the editor no longer switches focus @PatrickSachs @ankitr.
