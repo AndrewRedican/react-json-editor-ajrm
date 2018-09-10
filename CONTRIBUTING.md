@@ -48,13 +48,16 @@ In order to determine whether you are dealing with a security issue, ask yoursel
 If you don’t want to use your personal contact information, set up a “security@” email address. Larger projects might have more formal processes for disclosing security, including encrypted communication. (Disclosure: I am not a security expert.)
 If the answer to either of those two questions are "yes", then you're probably dealing with a security issue. Note that even if you answer "no" to both questions, you may still be dealing with a security issue, so if you're unsure, just email us at andrew.redican.mejia@gmail.com.
 
-### When filing an issue, make sure to answer these five questions:
+### When filling an issue, make sure to answer these five questions:
 
-1. What version of node are you using (node version)?
-2. What operating system and processor architecture are you using?
-3. What did you do?
-4. What did you expect to see?
-5. What did you see instead?
+1. What version of node are you using (node version)? * REQUIRED
+2. What operating system and processor architecture are you using? * REQUIRED
+3. What did you do? * REQUIRED
+4. What did you expect to see? * REQUIRED
+5. What did you see instead? * REQUIRED
+
+#### All questions must be answered when submitting an issue.
+> Please make sure to provide as much detail as possible, including reproduction steps, and/or error logs. This will ensure that we get all the information we can to better solve your inquiry in the shortest amount of time. Any issues that do not meet this criteria will be closed automatically.
 
 # How to suggest a feature or enhancement
 If you find yourself wishing for a feature that doesn't exist in RJEA, you are probably not alone. There are bound to be others out there with similar needs. The proper way to do it is to open up a new issue [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues). Please make sure to check the list of existing feature requests to avoid duplication.
