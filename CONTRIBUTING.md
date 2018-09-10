@@ -56,8 +56,11 @@ If the answer to either of those two questions are "yes", then you're probably d
 4. What did you expect to see? * REQUIRED
 5. What did you see instead? * REQUIRED
 
-#### All questions must be answered when submitting an issue.
+#### Complete Issue Policy: All questions must be answered when submitting an issue.
 > Please make sure to provide as much detail as possible, including reproduction steps, and/or error logs. This will ensure that we get all the information we can to better solve your inquiry in the shortest amount of time. Any issues that do not meet this criteria will be closed automatically.
+
+### Timely Confirmation Policy: All answered inquiries must be confirmed in a timely manner.
+> Please make sure to provide confirmation to any answers / solutions provided to an issue or inquiry in a timely manner. We expect a confirmation within 48 hours time. A thumbs up reaction will do. We volunteer our time to review inquiries to the best of our abbility in a timely manner. We expect the same kind of courtesy from those that approach us with inquiries but most importantly this is done to prevent resolved issues to remain open and stack. Any issues we consider to be resolved but lack confirmation will be closed automatically.
 
 # How to suggest a feature or enhancement
 If you find yourself wishing for a feature that doesn't exist in RJEA, you are probably not alone. There are bound to be others out there with similar needs. The proper way to do it is to open up a new issue [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues). Please make sure to check the list of existing feature requests to avoid duplication.
