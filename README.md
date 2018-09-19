@@ -59,11 +59,11 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.4] - September 6, 2018
+## Latest Spotlight Release Notes [v2.5.5] - September 19, 2018
 
-1. `Portuguese` locale is now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
-2. [IE11](https://en.wikipedia.org/wiki/Internet_Explorer_11) is now also supported.
-2. A good heap of issues were fixed. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#254---2018-09-06)
+1. `Chinese` locale is now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
+2. Backslash-related syntax mistakes now have a specific warning. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/60)
+3. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#254---2018-09-19)
 
 ## Upcoming Features
 
@@ -77,7 +77,7 @@ The `./examples` folder contains two examples:
 3. You can customize color palette as you please.
 4. Accepts a javascript object in `placeholder` property to display after component mounts.
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
-6. Locale support for `English`, `German`, and `Spanish`.
+6. Locale support for `English`, `German`, `Spanish`, and `Chinese`.
 
 ## Component Properties
 

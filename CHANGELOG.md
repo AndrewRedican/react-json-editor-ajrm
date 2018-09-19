@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.5] - 2018-09-19
+### Added
+- Simplified Chinese translation for warnings @ADirtyCat.
+- Missing Portuguese terms translation for warnings @AllanKDeveloper.
+- Specfic backslash-related incorrect syntax warning @AndrewRedican.
+
 ## [2.5.4] - 2018-09-06
 ### Added
 - Additional terms for locale support, and spanish translation @AndrewRedican.
