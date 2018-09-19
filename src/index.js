@@ -1405,6 +1405,22 @@ class JSONInput extends Component {
                     if(!buffer.tokens_merge[tokenIndex+1]) exitWhile = true;
                 }
                 line = _line;
+                let backslashCount = 0;
+                for(let i = 0; i < token.string.length; i++){
+                    const char = token.string.charAt(i);
+                    if(char==='\\')
+                        backslashCount = backslashCount > 0 ? backslashCount + 1 : 1;
+                    else{
+                        if(backslashCount % 2 !== 0 || backslashCount === 0)
+                            if('\'"bfnrt'.indexOf(char)===-1){
+                                setError(tokenIndex,format(locale.invalidToken.unexpected, {
+                                    token: '\\'
+                                }));
+                            }
+                        backslashCount = 0;
+                    }
+                }
+                if(!error)
                 setError(tokenIndex,format(locale.invalidToken.unexpected, {
                     token: token.string
                 }));
