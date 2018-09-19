@@ -57,7 +57,7 @@ export default {
     },
     double: "符号'{token}' 不能位于另一个符号 '{token}' 之后",
     useInstead: "符号'{badToken}' 不被接受. 使用 '{goodToken}' 替代",
-    unexpected: "无法找到 '{token}' "
+    unexpected: "出乎意料的符号 '{token}' "
   },
   brace: {
     curly: {
