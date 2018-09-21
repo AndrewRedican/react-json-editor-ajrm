@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import themes               from './themes';
+import { identical }        from './mitsuketa';
 import { format }           from "./locale";
 import defaultLocale        from "./locale/en";
 
@@ -612,7 +613,8 @@ class JSONInput extends Component {
         const preText = this.state.preText;
         if(!('placeholder' in this.props))  return;
         const placeholder = this.props.placeholder;
-        if([preText,undefined,null].indexOf(placeholder)>-1) return;
+        if([undefined,null].indexOf(placeholder)>-1) return;
+        if(identical(placeholder,preText)) return;
         if(typeof placeholder !== 'object') return;
         const data = this.tokenize(placeholder);
         this.setState({
