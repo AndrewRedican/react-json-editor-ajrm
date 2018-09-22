@@ -48,32 +48,32 @@ export default {
   },
   invalidToken: {
     tokenSequence: {
-      prohibited: "符号'{firstToken}' 不能位于 符号'{secondToken}'之后",
-      permitted: "符号'{firstToken}' 只能位于 符号'{secondToken}'之后"
+      prohibited: "'{firstToken}' 不能位于 '{secondToken}'之后",
+      permitted: "'{firstToken}' 只能位于 '{secondToken}'之后"
     },
     termSequence: {
-      prohibited: "符号 {firstTerm} 不能位于符号{secondTerm} 之后",
-      permitted: "符号 {firstTerm} 只能位于符号{secondTerm} 之后"
+      prohibited: " {firstTerm} 不能位于{secondTerm} 之后",
+      permitted: " {firstTerm} 只能位于{secondTerm} 之后"
     },
-    double: "符号'{token}' 不能位于另一个符号 '{token}' 之后",
-    useInstead: "符号'{badToken}' 不被接受. 使用 '{goodToken}' 替代",
-    unexpected: "出乎意料的符号 '{token}' "
+    double: "'{token}' 不能位于另一个 '{token}' 之后",
+    useInstead: "'{badToken}' 不被接受. 使用 '{goodToken}' 替代",
+    unexpected: "出乎意料的 '{token}' "
   },
   brace: {
     curly: {
-      missingOpen: "无法找到符号 '{' ",
-      missingClose: "无法找到符号 '}' ",
-      cannotWrap: "符号'{token}' 无法被包含在 '{}' 符号中"
+      missingOpen: "无法找到 '{' ",
+      missingClose: "无法找到 '}' ",
+      cannotWrap: "'{token}' 无法被包含在 '{}' 中"
     },
     square: { 
       missingOpen: "无法找到 '[' ", 
       missingClose: "无法找到 ']' ",
-      cannotWrap: "符号'{token}' 无法被包含在 '[]' 符号中"
+      cannotWrap: "'{token}' 无法被包含在 '[]' 中"
     }
   },
   string: {
-    missingOpen: "无法找到/无效的 前缀符号 '{quote}' ",
-    missingClose: "无法找到/无效的 后缀符号 '{quote}' ",
+    missingOpen: "无法找到/无效的 前缀 '{quote}' ",
+    missingClose: "无法找到/无效的 后缀 '{quote}' ",
     mustBeWrappedByQuotes: "字符串必须用引号括起来",
     nonAlphanumeric: "非数字字符 '{token}' 无法使用外部字符串表示法",
     unexpectedKey: "在字符串位置找到意外键"
