@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import themes               from './themes';
 import { identical }        from './mitsuketa';
-import { format }           from "./locale";
-import defaultLocale        from "./locale/en";
+import err                  from './err';
+import { format }           from './locale';
+import defaultLocale        from './locale/en';
 
 class JSONInput extends Component {
     constructor(props){
@@ -33,13 +34,13 @@ class JSONInput extends Component {
         this.updateInternalProps();
         this.renderCount         = 1;
         this.state  = { 
-            preText     : '',
-            markupText  : '',
-            plainText   : '',
-            json        : '',
-            jsObject    : undefined,
-            lines       : false,
-            error       : false
+            prevPlaceholder : '',
+            markupText      : '',
+            plainText       : '',
+            json            : '',
+            jsObject        : undefined,
+            lines           : false,
+            error           : false
         };
         if (!this.props.locale) {
             console.warn("[react-json-editor-ajrm - Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
@@ -610,20 +611,38 @@ class JSONInput extends Component {
         if(this.timer) clearInterval(this.timer);
     }
     showPlaceholder(){
-        const preText = this.state.preText;
-        if(!('placeholder' in this.props))  return;
-        const placeholder = this.props.placeholder;
+
+        // Exit early if placeholder property has been not defined
+        if(!('placeholder' in this.props)) return;
+
+        const { placeholder } = this.props;
+        const { prevPlaceholder, jsObject } = this.state;
+
+        // Exit early if value for this.props.placeholder is not valid
         if([undefined,null].indexOf(placeholder)>-1) return;
-        if(identical(placeholder,preText)) return;
-        if(typeof placeholder !== 'object') return;
+
+        // If current content is the same as this.props.placeholder value then exit early
+        const samePlaceholderValue = identical(placeholder,prevPlaceholder);
+        if(jsObject){
+            if(identical(jsObject,prevPlaceholder))
+                if(samePlaceholderValue) return;
+        }
+        else
+            if(samePlaceholderValue) return;
+
+        // Throw error explaining placeholder's type must be object
+        err.isNotType('this.props.placeholder',placeholder,'object');
+
+        // Process placeholder value and update component state
         const data = this.tokenize(placeholder);
         this.setState({
-            preText    : placeholder,
-            plainText  : data.indentation,
-            markupText : data.markup,
-            lines      : data.lines, 
-            error      : data.error
+            prevPlaceholder : placeholder,
+            plainText       : data.indentation,
+            markupText      : data.markup,
+            lines           : data.lines, 
+            error           : data.error
         });
+
     }
     tokenize(something){
         if(typeof something !== 'object') return console.error('tokenize() expects object type properties only. Got \'' + typeof something + '\' type instead.');
