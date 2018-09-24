@@ -91,6 +91,7 @@ class JSONInput extends Component {
             };
         this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
+        this.followPlaceholder = 'followPlaceholder' in this.props ? this.props.followPlaceholder : true;
         const
             totalHeight  = (this.props.height||'610px'),
             totalWidth   = (this.props.width||'479px');
@@ -596,7 +597,8 @@ class JSONInput extends Component {
     }
     componentDidUpdate(){
         this.updateInternalProps();
-        this.showPlaceholder();
+        if(this.followPlaceholder)
+            this.showPlaceholder();
     }
     componentDidMount(){
         const contentID = this.contentID;
