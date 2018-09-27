@@ -617,17 +617,18 @@ class JSONInput extends Component {
 
         const { placeholder } = this.props;
         const { prevPlaceholder, jsObject } = this.state;
+        const { resetConfiguration } = this;
 
         if([undefined,null].indexOf(placeholder)>-1) return;
 
         const samePlaceholderValue = identical(placeholder,prevPlaceholder);
-        if(jsObject){
-            if(identical(jsObject,prevPlaceholder))
-                if(samePlaceholderValue) return;
+
+        if(!resetConfiguration){
+            if(samePlaceholderValue) return;
         }
         else
-            if(samePlaceholderValue) return;
-
+            if(samePlaceholderValue && identical(placeholder,jsObject)) return;
+        
         err.isNotType('this.props.placeholder',placeholder,'object');
 
         const data = this.tokenize(placeholder);
