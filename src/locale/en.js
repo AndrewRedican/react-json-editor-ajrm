@@ -24,7 +24,7 @@ export default {
     at: "at sign",            //	@  multiple uses in other coding languages including certain data types
     equals: "equals sign",    //	=
     hash: "hash",             //	#
-    percent: "percent",       //	% 
+    percent: "percent",       //	%
     plus: "plus",             //	+
     minus: "minus",           //	−
     dash: "dash",             //	−
@@ -65,8 +65,8 @@ export default {
       missingClose: "Open '{' curly brace is missing closing '}' curly brace",
       cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
     },
-    square: { 
-      missingOpen: "Missing '[' open square brace", 
+    square: {
+      missingOpen: "Missing '[' open square brace",
       missingClose: "Open '[' square brace is missing closing ']' square brace",
       cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
     }
@@ -75,7 +75,7 @@ export default {
     missingOpen: "Missing/invalid opening string '{quote}' token",
     missingClose: "Missing/invalid closing string '{quote}' token",
     mustBeWrappedByQuotes: "Strings must be wrapped by quotes",
-    nonAlphanumeric: "Non-alphanemeric token '{token}' is not allowed outside string notation",
+    nonAlphanumeric: "Non-alphanumeric token '{token}' is not allowed outside string notation",
     unexpectedKey: "Unexpected key found at string position"
   },
   key: {
