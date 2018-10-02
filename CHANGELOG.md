@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - French translation for warnings @cbonaudo.
-- Basha Indonesia translation for warnings @radityasurya.
+- Bahasa Indonesia translation for warnings @radityasurya.
 
 ## [2.5.5] - 2018-09-19
 ### Added
