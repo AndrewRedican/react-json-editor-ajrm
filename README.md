@@ -77,7 +77,7 @@ The `./examples` folder contains two examples:
 3. You can customize color palette as you please.
 4. Accepts a javascript object in `placeholder` property to display after component mounts.
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
-6. Locale support for `English`, `German`, `Spanish`, `Chinese` and `French`.
+6. Locale support for `English`, `German`, `Spanish`, `Chinese`, `French` and `Bahasa Indonesia`.
 
 ## Component Properties
 
