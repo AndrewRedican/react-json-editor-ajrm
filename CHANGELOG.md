@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Reset option @AndrewRedican.
 - Russian translation for warnings @askesis.
 - French translation for warnings @cbonaudo.
 - Bahasa Indonesia translation for warnings @radityasurya.
+
+### Fixed
+- Issue where component did not ccompare new and previous placeholder object correctly. 
 
 ## [2.5.5] - 2018-09-19
 ### Added
