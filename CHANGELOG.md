@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Russian translation for warnings @askesis.
 - French translation for warnings @cbonaudo.
 - Bahasa Indonesia translation for warnings @radityasurya.
 
