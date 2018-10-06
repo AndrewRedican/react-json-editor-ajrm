@@ -85,6 +85,24 @@
       "contributions": [
         "translation"
       ]
+    },
+    {
+      "login": "radityasurya",
+      "name": "Radit",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6660141?v=4",
+      "profile": "http://radityasurya.com",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "askesis",
+      "name": "asketes",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/23220242?v=4",
+      "profile": "https://github.com/askesis",
+      "contributions": [
+        "translation"
+      ]
     }
   ]
 }

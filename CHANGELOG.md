@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Russian translation for warnings @askesis.
+- French translation for warnings @cbonaudo.
+- Bahasa Indonesia translation for warnings @radityasurya.
 
 ## [2.5.5] - 2018-09-19
 ### Added
