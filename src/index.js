@@ -640,13 +640,12 @@ class JSONInput extends Component {
                  * any difference between placeholder and current value
                  * should trigger component re-render
                  */
-                const sameCurrentValue = identical(placeholder,jsObject);
-                componentShouldUpdate = !sameCurrentValue;
+                if(jsObject!==undefined) componentShouldUpdate = !identical(placeholder,jsObject);
             }
         }
 
         if(!componentShouldUpdate) return;
-            
+
         const data = this.tokenize(placeholder);
         this.setState({
             prevPlaceholder : placeholder,
