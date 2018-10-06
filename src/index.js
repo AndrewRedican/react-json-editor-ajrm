@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import themes               from './themes';
-import { identical }        from './mitsuketa';
-import err                  from './err';
-import { format }           from './locale';
-import defaultLocale        from './locale/en';
+import React, { Component }   from 'react';
+import themes                 from './themes';
+import { identical, getType } from './mitsuketa';
+import err                    from './err';
+import { format }             from './locale';
+import defaultLocale          from './locale/en';
 
 class JSONInput extends Component {
     constructor(props){
@@ -613,24 +613,40 @@ class JSONInput extends Component {
     }
     showPlaceholder(){
 
-        if(!('placeholder' in this.props)) return;
+        const placeholderDoesNotExist = !('placeholder' in this.props);
+        if(placeholderDoesNotExist) return;
 
         const { placeholder } = this.props;
+        
+        const placeholderHasEmptyValues = [undefined,null].indexOf(placeholder) > -1;
+        if(placeholderHasEmptyValues) return;
+
         const { prevPlaceholder, jsObject } = this.state;
         const { resetConfiguration } = this;
 
-        if([undefined,null].indexOf(placeholder)>-1) return;
+        const placeholderDataType = getType(placeholder);
+        const unexpectedDataType = ['object','array'].indexOf(placeholderDataType) === -1;
+        if(unexpectedDataType) err.throwError('showPlaceholder','placeholder','either an object or an array');
 
-        const samePlaceholderValue = identical(placeholder,prevPlaceholder);
-
-        if(!resetConfiguration){
-            if(samePlaceholderValue) return;
-        }
-        else
-            if(samePlaceholderValue && identical(placeholder,jsObject)) return;
+        const samePlaceholderValues = identical(placeholder,prevPlaceholder);
         
-        err.isNotType('this.props.placeholder',placeholder,'object');
+        // Component will always re-render when new placeholder value is any different from previous placeholder value. 
+        let componentShouldUpdate = !samePlaceholderValues;
 
+        if(!componentShouldUpdate){
+            if(resetConfiguration){
+                /**
+                 * If 'reset' property is set true or is truthy,
+                 * any difference between placeholder and current value
+                 * should trigger component re-render
+                 */
+                const sameCurrentValue = identical(placeholder,jsObject);
+                componentShouldUpdate = !sameCurrentValue;
+            }
+        }
+
+        if(!componentShouldUpdate) return;
+            
         const data = this.tokenize(placeholder);
         this.setState({
             prevPlaceholder : placeholder,
