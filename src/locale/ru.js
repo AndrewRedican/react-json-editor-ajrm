@@ -1,87 +1,87 @@
 export default {
-  format: "{reason} at line {line}",
+  format: "{reason} на строке {line}",
   symbols: {
-    colon: "colon",           // :
-    comma: "comma",           // ,  ،  、
-    semicolon: "semicolon",   // ;
-    slash: "slash",           // /  relevant for comment syntax support
-    backslash: "backslash",   // \  relevant for escaping character
+    colon: "двоеточие",           // :
+    comma: "запятая",           // ,  ،  、
+    semicolon: "точка с запятой",   // ;
+    slash: "косая черта",           // /  relevant for comment syntax support
+    backslash: "обратная косая черта",   // \  relevant for escaping character
     brackets: {
-      round: "round brackets",   // ( )
-      square: "square brackets", // [ ]
-      curly: "curly brackets",   // { }
-      angle: "angle brackets"    // < >
+      round: "круглые скобки",   // ( )
+      square: "квадратные скобки", // [ ]
+      curly: "фигурные скобки",   // { }
+      angle: "угловые скобки"    // < >
     },
-    period: "period",            // . Also known as full point, full stop, or dot
+    period: "точка",            // . Also known as full point, full stop, or dot
     quotes: {
-      single: "single quote", // '
-      double: "double quote", // "
-      grave: "grave accent"   // ` used on Javascript ES6 Syntax for String Templates
+      single: "одинарная кавычка", // '
+      double: "двойная кавычка", // "
+      grave: "косая кавычка"   // ` used on Javascript ES6 Syntax for String Templates
     },
-    space: "space",           //       
-    ampersand: "ampersand",   //	&
-    asterisk: "asterisk",     //	*  relevant for some comment sytanx
-    at: "at sign",            //	@  multiple uses in other coding languages including certain data types
-    equals: "equals sign",    //	=
-    hash: "hash",             //	#
-    percent: "percent",       //	%
-    plus: "plus",             //	+
-    minus: "minus",           //	−
-    dash: "dash",             //	−
-    hyphen: "hyphen",         //	−
-    tilde: "tilde",           //	~
-    underscore: "underscore", //	_
-    bar: "vertical bar",      //	|
+    space: "пробел",           //       
+    ampersand: "амперсанд",   //	&
+    asterisk: "астериск",     //	*  relevant for some comment sytanx
+    at: "коммерческое at ",            //	@  multiple uses in other coding languages including certain data types
+    equals: "знак равенства",    //	=
+    hash: "октоторп",             //	#
+    percent: "процент",       //	%
+    plus: "плюс",             //	+
+    minus: "минус",           //	−
+    dash: "тире",             //	−
+    hyphen: "дефис",         //	−
+    tilde: "тильда",           //	~
+    underscore: "нижнее подчеркивание", //	_
+    bar: "вертикальная черта",      //	|
   },
   types: {
-      key: "key",
-      value: "value",
-      number: "number",
-      string: "string",
-      primitive: "primitive",
-      boolean: "boolean",
-      character: "character",
-      integer: "integer",
-      array: "array",
-      float: "float"
+      key: "ключ",
+      value: "значение",
+      number: "число",
+      string: "строка",
+      primitive: "примитивный",
+      boolean: "логический",
+      character: "знак",
+      integer: "целое число",
+      array: "массив",
+      float: "число с плавающей точкой"
     //... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
-      prohibited: "'{firstToken}' token cannot be followed by '{secondToken}' token(s)",
-      permitted: "'{firstToken}' token can only be followed by '{secondToken}' token(s)"
+      prohibited: "'{firstToken}' знак не может следовать за '{secondToken}' знаком(-ами)",
+      permitted: "'{firstToken}' знак может следовать только за '{secondToken}' знаком(-ами)"
     },
     termSequence: {
-      prohibited: "A {firstTerm} cannot be followed by a {secondTerm}",
-      permitted: "A {firstTerm} can only be followed by a {secondTerm}"
+      prohibited: "{firstTerm} не может следовать за {secondTerm}",
+      permitted: "{firstTerm} может следовать только за {secondTerm}"
     },
-    double: "'{token}' token cannot be followed by another '{token}' token",
-    useInstead: "'{badToken}' token is not accepted. Use '{goodToken}' instead",
-    unexpected: "Unexpected '{token}' token found"
+    double: "'{token}' знак не может следовать за другим '{token}' знаком",
+    useInstead: "'{badToken}' знак не разрешен. Используйте '{goodToken}'",
+    unexpected: "Неожиданный '{token}' знак"
   },
   brace: {
     curly: {
-      missingOpen: "Missing '{' open curly brace",
-      missingClose: "Open '{' curly brace is missing closing '}' curly brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '{}' curly braces"
+      missingOpen: "Пропущена '{' открывающая фигурная скобка",
+      missingClose: "Открывающая '{' фигурная скобка не имеет закрывающей '}' фигурной скобки",
+      cannotWrap: "'{token}' не может быть обернут в '{}' фигурные скобки"
     },
     square: {
-      missingOpen: "Missing '[' open square brace",
-      missingClose: "Open '[' square brace is missing closing ']' square brace",
-      cannotWrap: "'{token}' token cannot be wrapped in '[]' square braces"
+      missingOpen: "Пропущена '[' открывающая квадратная скобка",
+      missingClose: "Открыавающая '[' квадратная скобка не имеет закрывающей ']' квадратной скобки",
+      cannotWrap: "'{token}' не может быть обернут в '[]' квадратные скобки"
     }
   },
   string: {
-    missingOpen: "Missing/invalid opening string '{quote}' token",
-    missingClose: "Missing/invalid closing string '{quote}' token",
-    mustBeWrappedByQuotes: "Strings must be wrapped by quotes",
-    nonAlphanumeric: "Non-alphanumeric token '{token}' is not allowed outside string notation",
-    unexpectedKey: "Unexpected key found at string position"
+    missingOpen: "Пропущенный/недопустимый '{quote}' знак начала строки",
+    missingClose: "Недостающий/недопустимый '{quote}' знак закрытия строки",
+    mustBeWrappedByQuotes: "Строки должны быть обернуты в кавычки",
+    nonAlphanumeric: "Не буквенно-численный знак '{token}' не разрешен вне строки",
+    unexpectedKey: "В качестве строки найден неожиданный ключ"
   },
   key: {
-    numberAndLetterMissingQuotes: "Key beginning with number and containing letters must be wrapped by quotes",
-    spaceMissingQuotes: "Key containing space must be wrapped by quotes",
-    unexpectedString: "Unexpected string found at key position"
+    numberAndLetterMissingQuotes: "Ключ, начинающийся с цифры и содержащий буквы, должен быть обернут в кавычки",
+    spaceMissingQuotes: "Ключ, содержащий пробел, должен быть обернут в кавычки",
+    unexpectedString: "В качестве ключа найдена неожиданная строка"
   },
-  noTrailingOrLeadingComma: "Trailing or leading commas in arrays and objects are not permitted"
+  noTrailingOrLeadingComma: "Начальные или конечные запятые в массивах и объектах не разрешены"
 };
