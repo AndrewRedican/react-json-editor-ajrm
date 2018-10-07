@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import themes               from './themes';
-import { identical }        from './mitsuketa';
-import err                  from './err';
-import { format }           from './locale';
-import defaultLocale        from './locale/en';
+import React, { Component }   from 'react';
+import themes                 from './themes';
+import { identical, getType } from './mitsuketa';
+import err                    from './err';
+import { format }             from './locale';
+import defaultLocale          from './locale/en';
 
 class JSONInput extends Component {
     constructor(props){
@@ -104,8 +104,9 @@ class JSONInput extends Component {
                 clearInterval(this.timer);
                 this.timer = false;
             }
-        this.updateTime        = false;
-        this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;
+        this.updateTime         = false;
+        this.waitAfterKeyPress  = 'waitAfterKeyPress' in this.props? this.props.waitAfterKeyPress : 1000;
+        this.resetConfiguration = 'reset' in this.props ? this.props.reset : false;
     }
     render(){
         const 
@@ -612,28 +613,39 @@ class JSONInput extends Component {
     }
     showPlaceholder(){
 
-        // Exit early if placeholder property has been not defined
-        if(!('placeholder' in this.props)) return;
+        const placeholderDoesNotExist = !('placeholder' in this.props);
+        if(placeholderDoesNotExist) return;
 
         const { placeholder } = this.props;
+        
+        const placeholderHasEmptyValues = [undefined,null].indexOf(placeholder) > -1;
+        if(placeholderHasEmptyValues) return;
+
         const { prevPlaceholder, jsObject } = this.state;
+        const { resetConfiguration } = this;
 
-        // Exit early if value for this.props.placeholder is not valid
-        if([undefined,null].indexOf(placeholder)>-1) return;
+        const placeholderDataType = getType(placeholder);
+        const unexpectedDataType = ['object','array'].indexOf(placeholderDataType) === -1;
+        if(unexpectedDataType) err.throwError('showPlaceholder','placeholder','either an object or an array');
 
-        // If current content is the same as this.props.placeholder value then exit early
-        const samePlaceholderValue = identical(placeholder,prevPlaceholder);
-        if(jsObject){
-            if(identical(jsObject,prevPlaceholder))
-                if(samePlaceholderValue) return;
+        const samePlaceholderValues = identical(placeholder,prevPlaceholder);
+        
+        // Component will always re-render when new placeholder value is any different from previous placeholder value. 
+        let componentShouldUpdate = !samePlaceholderValues;
+
+        if(!componentShouldUpdate){
+            if(resetConfiguration){
+                /**
+                 * If 'reset' property is set true or is truthy,
+                 * any difference between placeholder and current value
+                 * should trigger component re-render
+                 */
+                if(jsObject!==undefined) componentShouldUpdate = !identical(placeholder,jsObject);
+            }
         }
-        else
-            if(samePlaceholderValue) return;
 
-        // Throw error explaining placeholder's type must be object
-        err.isNotType('this.props.placeholder',placeholder,'object');
+        if(!componentShouldUpdate) return;
 
-        // Process placeholder value and update component state
         const data = this.tokenize(placeholder);
         this.setState({
             prevPlaceholder : placeholder,
