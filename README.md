@@ -59,11 +59,11 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.5] - September 19, 2018
+## Latest Spotlight Release Notes [v2.5.6] - October 7, 2018
 
-1. `Chinese` locale is now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
-2. Backslash-related syntax mistakes now have a specific warning. See [issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/60)
-3. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#254---2018-09-19)
+1. `Bahasa Indonesia`, `French`, and `Russian` locales are now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
+2. A new `reset` option is now provided to modify the component's default re-render behavior. See [pull request](https://github.com/AndrewRedican/react-json-editor-ajrm/pull/73)
+3. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#256---2018-10-07)
 
 ## Upcoming Features
 
