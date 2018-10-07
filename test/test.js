@@ -1,5 +1,6 @@
-import renderTest from "./render";
-import logicTest from "./logic";
+import renderTest from './render';
+import logicTest from './logic';
+import changeTest from './change';
 
 beforeAll(() => {
   const div = document.createElement('div');
@@ -9,3 +10,4 @@ beforeAll(() => {
 
 renderTest();
 logicTest();
+changeTest();
