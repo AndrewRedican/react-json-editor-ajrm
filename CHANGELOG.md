@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Bahasa Indonesia translation for warnings @radityasurya.
 
 ### Fixed
-- Issue where component did not ccompare new and previous placeholder object correctly. 
+- Issue where component did not compare new and previous `placeholder` object correctly. 
 
 ## [2.5.5] - 2018-09-19
 ### Added
