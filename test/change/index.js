@@ -6,8 +6,6 @@ function run() {
   test(`Update placeholder property value`, () => {
     let wrapper = mount(
       <JSONInput
-        test
-        id='unique_string'
         locale={locale}
         reset={false}
         placeholder={{ valueToChange : false }}

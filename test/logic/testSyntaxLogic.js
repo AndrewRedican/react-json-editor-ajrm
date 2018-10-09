@@ -23,7 +23,6 @@ function testSyntaxLogic(language='JS',scope,input,output){
     err.isNotType('output',output,'object');
     err.isUndefined('input',input);
 
-    const uniqueID = 'unique_string';
     let markup; 
 
 
@@ -33,8 +32,6 @@ function testSyntaxLogic(language='JS',scope,input,output){
         const
             wrapper = shallow(
                 <JSONInput
-                    test
-                    id     = {uniqueID}
                     locale = {locale}
                 />,
                 { attachTo: window.domNode }
@@ -72,8 +69,6 @@ function testSyntaxLogic(language='JS',scope,input,output){
         const
             wrapper = shallow(
                 <JSONInput
-                    test
-                    id     = {uniqueID}
                     locale = {locale}
                 />,
                 { attachTo: window.domNode }

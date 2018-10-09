@@ -8,7 +8,6 @@ import defaultLocale          from './locale/en';
 class JSONInput extends Component {
     constructor(props){
         super(props);
-        if(!('id' in this.props)) throw 'An \'id\' property must be specified. Must be unique.';
         this.updateInternalProps = this.updateInternalProps .bind(this);
         this.randomString        = this.randomString        .bind(this);
         this.createMarkup        = this.createMarkup        .bind(this);
@@ -29,8 +28,8 @@ class JSONInput extends Component {
         this.onKeyDown           = this.onKeyDown           .bind(this);
         this.onPaste             = this.onPaste             .bind(this);
         this.stopEvent           = this.stopEvent           .bind(this);
-        this.uniqueID            = 'AJRM-JSON-EDITOR-' + ('test' in this.props ? '<RANDOM_NUMBER>' : this.randomString(10)) + '-' + this.props.id;
-        this.contentID           = this.uniqueID + '-content-box';
+        this.refContent     = React.createRef();
+        this.refLabels      = React.createRef();
         this.updateInternalProps();
         this.renderCount         = 1;
         this.state  = { 
@@ -44,6 +43,9 @@ class JSONInput extends Component {
         };
         if (!this.props.locale) {
             console.warn("[react-json-editor-ajrm - Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
+        }
+        if (this.props.id) {
+            console.warn("[react-json-editor-ajrm - Deprecation Warning] The editor no longer requires an ID to be set. This also means that you can no longer get its DOM node by using `document.getElementById`. Please use refs instead.");
         }
     }
     updateInternalProps(){
@@ -112,8 +114,6 @@ class JSONInput extends Component {
         const 
             markupText   = this.state.markupText,
             error        = this.state.error,
-            uniqueID     = this.uniqueID,
-            contentID    = this.contentID,
             colors       = this.colors,
             style        = this.style,
             confirmGood  = this.confirmGood,
@@ -124,7 +124,6 @@ class JSONInput extends Component {
         return (
             <div
                 name  = 'outer-box'
-                id    = {uniqueID + '-outer-box'}
                 style = {{
                     display    : 'block',
                     overflow   : 'none',
@@ -170,7 +169,6 @@ class JSONInput extends Component {
                 }
                 <div
                     name  = 'container'
-                    id    = {uniqueID + '-container'}
                     style = {{
                         display    : 'block',
                         height     : totalHeight,
@@ -185,7 +183,6 @@ class JSONInput extends Component {
                 >
                     <div
                         name  = 'warning-box'
-                        id    = {uniqueID + '-warning-box'}
                         style = {{
                             display                  : 'block',
                             overflow                 : 'hidden',
@@ -267,7 +264,6 @@ class JSONInput extends Component {
                     </div>
                     <div
                         name  = 'body'
-                        id    = {uniqueID + '-body'}
                         style = {{
                             display                  : 'flex',
                             overflow                 : 'none',
@@ -286,7 +282,7 @@ class JSONInput extends Component {
                     >
                         <span
                             name  = 'labels'
-                            id    = {uniqueID + '-labels'}
+                            ref   = {ref => this.refLabels = ref}
                             style = {{
                                 display       : 'inline-block',
                                 boxSizing     : 'border-box',
@@ -304,7 +300,7 @@ class JSONInput extends Component {
                             {this.renderLabels()}
                         </span>
                         <span
-                            id = {contentID}
+                            ref             = {ref => this.refContent = ref}
                             contentEditable = { true }  
                             style = {{
                                 display       : 'inline-block',
@@ -371,7 +367,6 @@ class JSONInput extends Component {
     }
     renderLabels(){
         const
-            uniqueID  = this.uniqueID + '-line-',
             colors    = this.colors,
             style     = this.style,
             errorLine = this.state.error ? this.state.error.line : -1,
@@ -383,8 +378,7 @@ class JSONInput extends Component {
             const color = number !== errorLine ? colors.default : 'red';
             return (
                 <div 
-                    key   = {uniqueID + number}
-                    id    = {uniqueID + number}
+                    key   = {number}
                     style = {{
                         ...style.labels,
                         color : color
@@ -401,7 +395,6 @@ class JSONInput extends Component {
     }
     newSpan(i,token,depth){
         let
-            uniqueID = this.uniqueID + '-token-' + i + '-rc-' + this.renderCount,
             colors   = this.colors,
             type     = token.type,
             string   = token.string;
@@ -414,14 +407,12 @@ class JSONInput extends Component {
         }
        if(string.length!==string.replace(/</g,'').replace(/>/g,'').length) string = '<xmp style=display:inline;>' + string + '</xmp>';
         return (
-            '<span' + 
-                ' id="'           + uniqueID + 
-                '" key="'         + uniqueID + 
-                '" type="'        + type     + 
-                '" value="'       + string   + 
-                '" depth="'       + depth    + 
-                '" style="color:' + color    +
-            '">'                  + string   +
+            '<span' +
+                ' type="'         + type     + '"' +
+                ' value="'        + string   + '"' +
+                ' depth="'        + depth    + '"' +
+                ' style="color:'  + color    + '"' +
+            '>'                   + string   +
             '</span>'
         );
     }
@@ -439,10 +430,9 @@ class JSONInput extends Component {
          * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
          * Find a way to consolidate render styles
          */
-        const contentID = this.contentID;
-        function isChildOf(node) {
+        const isChildOf = node => {
             while (node !== null) {
-                if (node.id === contentID) return true;
+                if (node === this.refContent) return true;
                 node = node.parentNode;
             }
             return false;
@@ -452,12 +442,11 @@ class JSONInput extends Component {
             charCount      = -1,
             linebreakCount = 0,
             node;
-        if (selection.focusNode)
-        if (isChildOf(selection.focusNode)) {
+        if (selection.focusNode && isChildOf(selection.focusNode)) {
             node = selection.focusNode; 
             charCount = selection.focusOffset;
             while (node) {
-                if (node.id === contentID) break;
+                if (node === this.refContent) break;
                 if (node.previousSibling) {
                     node = node.previousSibling;
                     if(countBR) if(node.nodeName==='BR') linebreakCount++;
@@ -472,8 +461,7 @@ class JSONInput extends Component {
     }
     setCursorPosition(nextPosition) {
         if([false,null,undefined].indexOf(nextPosition)>-1) return;
-        const contentID = this.contentID;
-        function createRange(node, chars, range) {
+        const createRange = (node, chars, range) => {
             if (!range) {
                 range = document.createRange();
                 range.selectNode(node);
@@ -493,23 +481,22 @@ class JSONInput extends Component {
             }
             return range;
         };
-        function setPosition(chars) {
+        const setPosition = chars => {
             if (chars < 0) return;
             let
                 selection = window.getSelection(),
-                range     = createRange(document.getElementById(contentID), { count: chars });
+                range     = createRange(this.refContent, { count: chars });
             if (!range) return;
             range.collapse(false);
             selection.removeAllRanges();
             selection.addRange(range);
         };
         if(nextPosition > 0) setPosition(nextPosition); 
-        else document.getElementById(contentID).focus();
+        else this.refContent.focus();
     }
     update(cursorOffset=0,updateCursorPosition=true){
         const
-            contentID  = this.contentID,
-            container = document.getElementById(contentID),
+            container = this.refContent,
             data      = this.tokenize(container);
         if('onChange' in this.props) this.props.onChange({
             plainText  : data.indented,
@@ -591,17 +578,14 @@ class JSONInput extends Component {
         this.update(0,false);
     }
     onScroll(event){
-        const uniqueID = this.uniqueID;
-        var labels = document.getElementById(uniqueID + '-labels');
-        labels.scrollTop = event.target.scrollTop;
+        this.refLabels.scrollTop = event.target.scrollTop;
     }
     componentDidUpdate(){
         this.updateInternalProps();
         this.showPlaceholder();
     }
     componentDidMount(){
-        const contentID = this.contentID;
-        document.getElementById(contentID).addEventListener('paste', e => {
+        this.refContent.addEventListener('paste', e => {
             e.preventDefault();
             var text = e.clipboardData.getData('text/plain');
             document.execCommand('insertHTML', false, text);
