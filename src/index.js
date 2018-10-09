@@ -567,7 +567,13 @@ class JSONInput extends Component {
         }
     }
     onPaste(event){
-        if('viewOnly' in this.props) if(this.props.viewOnly) this.stopEvent(event);
+        if (this.props.viewOnly) {
+            this.stopEvent(event);
+        } else {
+            event.preventDefault();
+            var text = event.clipboardData.getData('text/plain');
+            document.execCommand('insertHTML', false, text);
+        }
         this.update();
     }
     onClick(){ 
@@ -585,11 +591,6 @@ class JSONInput extends Component {
         this.showPlaceholder();
     }
     componentDidMount(){
-        this.refContent.addEventListener('paste', e => {
-            e.preventDefault();
-            var text = e.clipboardData.getData('text/plain');
-            document.execCommand('insertHTML', false, text);
-        });
         this.showPlaceholder();
     }
     componentWillUnmount(){
