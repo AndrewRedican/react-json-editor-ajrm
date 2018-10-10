@@ -9,7 +9,6 @@ class JSONInput extends Component {
     constructor(props){
         super(props);
         this.updateInternalProps = this.updateInternalProps .bind(this);
-        this.randomString        = this.randomString        .bind(this);
         this.createMarkup        = this.createMarkup        .bind(this);
         this.onClick             = this.onClick             .bind(this);
         this.onBlur              = this.onBlur              .bind(this);
@@ -415,14 +414,7 @@ class JSONInput extends Component {
             '>'                   + string   +
             '</span>'
         );
-    }
-    randomString(length){
-        if(typeof length !== 'number') throw '@randomString: Expected \'length\' to be a number';
-        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let result  = '';
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
-        return result;
-    }    
+    } 
     getCursorPosition(countBR){
         /**
          * Need to deprecate countBR
