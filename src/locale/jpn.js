@@ -2,7 +2,7 @@ export default {
     format: "{理由は} ラインで {ライン}",
     symbols: {
       colon: "結腸",           // :
-      comma: "コンマ",           // ,  ،  、
+      comma: "コンマ",           // ,
       semicolon: "セミコロン",   // ;
       slash: "スラッシュ",           // /  relevant for comment syntax support
       backslash: "バックスラッシュ",   // \  relevant for escaping character
