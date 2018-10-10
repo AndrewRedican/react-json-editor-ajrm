@@ -27,8 +27,8 @@ class JSONInput extends Component {
         this.onKeyDown           = this.onKeyDown           .bind(this);
         this.onPaste             = this.onPaste             .bind(this);
         this.stopEvent           = this.stopEvent           .bind(this);
-        this.refContent     = React.createRef();
-        this.refLabels      = React.createRef();
+        this.refContent     = null;
+        this.refLabels      = null;
         this.updateInternalProps();
         this.renderCount         = 1;
         this.state  = { 
