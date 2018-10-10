@@ -27,7 +27,7 @@ export default {
       percent: "パーセント",       //	%
       plus: "プラス",             //	+
       minus: "マイナス",           //	−
-      dash: "ダッシュ",             //	−
+      dash: "ダッシュ",             //	-
       hyphen: "ハイフン",         //	−
       tilde: "チルダ",           //	~
       underscore: "アンダースコア", //	_
