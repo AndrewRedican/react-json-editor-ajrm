@@ -43,9 +43,6 @@ class JSONInput extends Component {
         if (!this.props.locale) {
             console.warn("[react-json-editor-ajrm - Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
         }
-        if (this.props.id) {
-            console.warn("[react-json-editor-ajrm - Deprecation Warning] The editor no longer requires an ID to be set. This also means that you can no longer get its DOM node by using `document.getElementById`. Please use refs instead.");
-        }
     }
     updateInternalProps(){
         let colors = {}, style = {}, theme = themes.dark_vscode_tribute;
@@ -111,6 +108,7 @@ class JSONInput extends Component {
     }
     render(){
         const 
+            id           = this.props.id,
             markupText   = this.state.markupText,
             error        = this.state.error,
             colors       = this.colors,
@@ -123,6 +121,7 @@ class JSONInput extends Component {
         return (
             <div
                 name  = 'outer-box'
+                id    = {id && id + '-outer-box'}
                 style = {{
                     display    : 'block',
                     overflow   : 'none',
@@ -168,6 +167,7 @@ class JSONInput extends Component {
                 }
                 <div
                     name  = 'container'
+                    id    = {id && id + '-container'}
                     style = {{
                         display    : 'block',
                         height     : totalHeight,
@@ -182,6 +182,7 @@ class JSONInput extends Component {
                 >
                     <div
                         name  = 'warning-box'
+                        id    = {id && id + '-warning-box'}
                         style = {{
                             display                  : 'block',
                             overflow                 : 'hidden',
@@ -263,6 +264,7 @@ class JSONInput extends Component {
                     </div>
                     <div
                         name  = 'body'
+                        id    = {id && id + '-body'}
                         style = {{
                             display                  : 'flex',
                             overflow                 : 'none',
@@ -281,6 +283,7 @@ class JSONInput extends Component {
                     >
                         <span
                             name  = 'labels'
+                            id    = {id && id + '-labels'}
                             ref   = {ref => this.refLabels = ref}
                             style = {{
                                 display       : 'inline-block',
@@ -299,7 +302,8 @@ class JSONInput extends Component {
                             {this.renderLabels()}
                         </span>
                         <span
-                            ref             = {ref => this.refContent = ref}
+                            id              = { id }
+                            ref             = { ref => this.refContent = ref }
                             contentEditable = { true }  
                             style = {{
                                 display       : 'inline-block',
