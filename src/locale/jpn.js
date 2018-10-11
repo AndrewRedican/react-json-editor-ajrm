@@ -1,5 +1,5 @@
 export default {
-    format: "{理由は} ラインで {ライン}",
+    format: "{reason} ラインで {line}",
     symbols: {
       colon: "結腸",           // :
       comma: "コンマ",           // ,
@@ -21,7 +21,7 @@ export default {
       space: "スペース",           //       
       ampersand: "アンパサンド",   //	&
       asterisk: "アスタリスク",     //	*  relevant for some comment sytanx
-      at: "マークで",            //	@  multiple uses in other coding languages including certain data types
+      at: "〜で",            //	@  multiple uses in other coding languages including certain data types
       equals: "等しい",    //	=
       hash: "ハッシュ",             //	#
       percent: "パーセント",       //	%
@@ -53,22 +53,22 @@ export default {
       },
       termSequence: {
         prohibited: "{firstTerm}の後に{secondTerm}を続けることはできません。",
-        permitted: "{firstTerm}の後には{secondTerm}"
+        permitted: "{firstTerm}には必ず{secondTerm}が続かなければなりません。"
       },
-      double: "'{トークン}'トークンの後に別の '{トークン}'トークンを続けることはできません",
+      double: "'{token}'トークンの後に別の '{token}'トークンを続けることはできません",
       useInstead: "'{badToken}'トークンは受け入れられません。 代わりに '{goodToken}'を使用してください",
       unexpected: "予期しない '{token}'トークンが見つかりました"
     },
     brace: {
       curly: {
         missingOpen: "行方不明の '{' 開いた中かっこ",
-        missingClose: "'{'中括弧は閉じ中括弧で閉じられていません '}'",
-        cannotWrap: "'{トークン}'トークンを '{}'の中括弧で囲むことはできません"
+        missingClose: "'{'中括弧は閉じた中括弧で閉じられていません '}'",
+        cannotWrap: "'{token}'トークンを '{}'の中括弧で囲むことはできません"
       },
       square: {
         missingOpen: "行方不明の '['角かっこ ",
         missingClose: "開く '['角括弧が欠けています ']'角括弧",
-        cannotWrap: "'{トークン}'トークンを '[]'角カッコで囲むことはできません"
+        cannotWrap: "'{token}'トークンを '[]'角カッコで囲むことはできません"
       }
     },
     string: {
@@ -80,7 +80,7 @@ export default {
     },
     key: {
       numberAndLetterMissingQuotes: "数字で始まり、文字を含むキーは引用符で囲む必要があります",
-      spaceMissingQuotes: "キーを含むキーは引用符で囲む必要があります",
+      spaceMissingQuotes: "スペースを含むキーは引用符で囲む必要があります",
       unexpectedString: "キー位置で予期しない文字列が見つかりました"
   
     },
