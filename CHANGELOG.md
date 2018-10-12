@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.7] - 2018-10-10
+### Added
+- Hindi translation for warnings @shehbazjafri.
+
+### Changed
+- `id` property is no longer mandatory @PatrickSachs.
+
 ## [2.5.6] - 2018-10-07
 ### Added
 - Reset option @AndrewRedican.

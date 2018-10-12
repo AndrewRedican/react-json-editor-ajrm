@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "MIT",
@@ -75,7 +75,17 @@
     "nosql",
     "wysiwyg",
     "WYSIWYG",
-    "what you see is what you get"
+    "what you see is what you get",
+    "schema editor",
+    "english",
+    "german",
+    "spanish",
+    "hindi",
+    "indonesian",
+    "portuguese",
+    "chinese",
+    "french",
+    "russian"
   ],
   "peerDependencies": {
     "react": ">=16.2.0",

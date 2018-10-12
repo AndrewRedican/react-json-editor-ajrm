@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm-example",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "A simple website to showcase react-json-editor-ajrm component",
   "author": "andrew.redican.mejia@gmail.com",
   "scripts": {
@@ -10,7 +10,7 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-json-editor-ajrm": "^2.5.6"
+    "react-json-editor-ajrm": "^2.5.7"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",

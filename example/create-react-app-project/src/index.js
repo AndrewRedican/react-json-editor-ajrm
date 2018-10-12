@@ -42,7 +42,6 @@ class App extends Component {
     return (
       <div style={{ maxWidth: "1400px", maxHeight: "100%" }}>
         <JSONInput
-          id="unique_string" // an id is required
           placeholder={sampleData} // data to display
           theme="light_mitsuketa_tribute"
           locale={locale}

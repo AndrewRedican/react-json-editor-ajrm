@@ -16,8 +16,6 @@ function run() {
   test(`Basic Component Render`, () => {
     let wrapper = mount(
       <JSONInput
-        test
-        id='unique_string'
         locale={locale}
       />,
       { attachTo: window.domNode }
@@ -28,8 +26,6 @@ function run() {
   test(`All Component Properties Render [1]`, () => {
     let wrapper = mount(
       <JSONInput
-        test
-        id='unique_string'
         locale={locale}
         placeholder={sampleData}
         viewOnly={true}
@@ -61,8 +57,6 @@ function run() {
   test(`All Component Properties Render [2]`, () => {
     let wrapper = mount(
       <JSONInput
-        test
-        id='unique_string'
         locale={locale}
         placeholder={sampleData}
         viewOnly={false}
