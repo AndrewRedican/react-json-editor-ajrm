@@ -59,12 +59,10 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.7] - October 10, 2018
+## Latest Spotlight Release Notes [v2.5.8] - October 13, 2018
 
-1. `Hindi` locale is now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
-2. The `id` property is no longer mandatory.
-3. Project now supports server-side rendering and testing. See [pull request](https://github.com/AndrewRedican/react-json-editor-ajrm/pull/78)
-3. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#257---2018-10-10)
+1. `Japanese` and `Tamil` locales are now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
+2. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#258---2018-10-13)
 
 ## Upcoming Features
 
@@ -78,7 +76,7 @@ The `./examples` folder contains two examples:
 3. You can customize color palette as you please.
 4. Accepts a javascript object in `placeholder` property to display after component mounts.
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
-6. Locale support for `English`, `German`, `Spanish`, `Chinese`, `French`, `Indonesian`, `Russian`, `Hindi` and `Japanese`.
+6. Locale support for `English`, `German`, `Spanish`, `Chinese`, `French`, `Indonesian`, `Russian`, `Hindi`, `Japanese` and `Tamil`.
 
 ## Component Properties
 

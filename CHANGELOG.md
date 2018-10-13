@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.5.8] - 2018-10-13
 ### Added
 - Japanese translation for warnings @Adityaperiwal.
 - Tamil translation for warnings @vasind.
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - `id` property is no longer mandatory @PatrickSachs.
+- Project is now server-side rendering/testing friendly @PatrickSachs.
 
 ## [2.5.6] - 2018-10-07
 ### Added
