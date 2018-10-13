@@ -1,10 +1,11 @@
 import React, { Component }   from 'react';
-import WarningBox             from './components/warningbox';
 import themes                 from './themes';
 import { identical, getType } from './mitsuketa';
 import err                    from './err';
 import { format }             from './locale';
 import defaultLocale          from './locale/en';
+import WarningBox             from './components/warningbox';
+import LabelContainer         from './components/labelcontainer';
 
 class JSONInput extends Component {
     constructor(props){
@@ -18,7 +19,6 @@ class JSONInput extends Component {
         this.setCursorPosition   = this.setCursorPosition   .bind(this);
         this.scheduledUpdate     = this.scheduledUpdate     .bind(this);
         this.setUpdateTime       = this.setUpdateTime       .bind(this);
-        this.renderLabels        = this.renderLabels        .bind(this);
         this.newSpan             = this.newSpan             .bind(this);
         this.onScroll            = this.onScroll            .bind(this);
         this.showPlaceholder     = this.showPlaceholder     .bind(this);
@@ -211,26 +211,18 @@ class JSONInput extends Component {
                         }}
                         onClick = { this.onClick }
                     >
-                        <span
-                            name  = 'labels'
-                            id    = {id && id + '-labels'}
-                            ref   = {ref => this.refLabels = ref}
-                            style = {{
-                                display       : 'inline-block',
-                                boxSizing     : 'border-box',
-                                verticalAlign : 'top',
-                                height        : '100%',
-                                width         : '44px',
-                                margin        : 0,
-                                padding       : '5px 0px 5px 10px',
-                                overflow      : 'hidden',
-                                color         : '#D4D4D4',
-                                ...style.labelColumn
+                        <LabelContainer
+                            reference = {ref => this.refLabels = ref}
+                            id        = {id && `${id}-labels`}
+                            style     = {{
+                                container : style.labelColumn,
+                                labels    : style.labels
                             }}
-                            onClick = { this.onClick }
-                        >
-                            {this.renderLabels()}
-                        </span>
+                            onClick   = {this.onClick}
+                            errorLine = {this.state.error ? this.state.error.line : -1}
+                            lines     = {this.state.lines ? this.state.lines : 1}
+                            colors    = {this.colors}
+                        />
                         <span
                             id              = { id }
                             ref             = { ref => this.refContent = ref }
@@ -268,30 +260,6 @@ class JSONInput extends Component {
                 </div>
             </div>
         );
-    }
-    renderLabels(){
-        const
-            colors    = this.colors,
-            style     = this.style,
-            errorLine = this.state.error ? this.state.error.line : -1,
-            lines     = this.state.lines ? this.state.lines : 1;
-        let
-            labels    = new Array(lines);
-        for(var i = 0; i < lines - 1; i++) labels[i] = i + 1;
-        return labels.map( number => {
-            const color = number !== errorLine ? colors.default : 'red';
-            return (
-                <div 
-                    key   = {number}
-                    style = {{
-                        ...style.labels,
-                        color : color
-                    }}
-                >
-                    {number}
-                </div>
-            );
-        });
     }
     createMarkup(markupText){
         if(markupText===undefined) return { __html: '' };
