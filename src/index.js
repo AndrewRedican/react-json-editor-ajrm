@@ -1,4 +1,5 @@
 import React, { Component }   from 'react';
+import WarningBox             from './components/warningbox';
 import themes                 from './themes';
 import { identical, getType } from './mitsuketa';
 import err                    from './err';
@@ -19,7 +20,6 @@ class JSONInput extends Component {
         this.setUpdateTime       = this.setUpdateTime       .bind(this);
         this.renderLabels        = this.renderLabels        .bind(this);
         this.newSpan             = this.newSpan             .bind(this);
-        this.renderErrorMessage  = this.renderErrorMessage  .bind(this);
         this.onScroll            = this.onScroll            .bind(this);
         this.showPlaceholder     = this.showPlaceholder     .bind(this);
         this.tokenize            = this.tokenize            .bind(this);
@@ -180,88 +180,18 @@ class JSONInput extends Component {
                     }}
                     onClick = { this.onClick }
                 >
-                    <div
-                        name  = 'warning-box'
-                        id    = {id && id + '-warning-box'}
-                        style = {{
-                            display                  : 'block',
-                            overflow                 : 'hidden',
-                            height                   : hasError ? '60px' : '0px',
-                            width                    : '100%',
-                            margin                   : 0,
-                            backgroundColor          : colors.background_warning,
-                            transitionDuration       : '0.2s',
-                            transitionTimingFunction : 'cubic-bezier(0, 1, 0.5, 1)',
-                            ...style.warningBox
+                    <WarningBox
+                        id              = {id && `${id}-warning-box`}
+                        hasError        = {hasError}
+                        backgroundColor = {colors.background_warning}
+                        style           = {{
+                            container : style.warningBox,
+                            message   : style.errorMessage
                         }}
-                        onClick = { this.onClick }
-                    >
-                        <span
-                            style = {{
-                                display       : 'inline-block',
-                                height        : '60px',
-                                width         : '60px',
-                                margin        : 0,
-                                boxSizing     : 'border-box',
-                                overflow      : 'hidden',
-                                verticalAlign : 'top',
-                                pointerEvents : 'none'
-                            }}
-                            onClick = { this.onClick }
-                        >
-                            <div
-                                style = {{
-                                    position      : 'relative',
-                                    top           : 0,
-                                    left          : 0,
-                                    height        : '60px',
-                                    width         : '60px',
-                                    margin        : 0,
-                                    pointerEvents : 'none'
-                                }}
-                                onClick = { this.onClick }
-                            >
-                                <div
-                                    style = {{
-                                        position      : 'absolute',
-                                        top           : '50%',
-                                        left          : '50%',
-                                        transform     : 'translate(-50%, -50%)',
-                                        pointerEvents : 'none'
-                                    }}
-                                    onClick = { this.onClick }
-                                >
-                                    <svg
-                                        height  = '25px'
-                                        width   = '25px'
-                                        viewBox = '0 0 100 100'
-                                    >
-                                        <path 
-                                            fillRule ='evenodd'
-                                            clipRule ='evenodd'
-                                            fill     = 'red'
-                                            d        = 'M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z'
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                        </span>
-                        <span
-                            style = {{
-                                display       : 'inline-block',
-                                height        : '60px',
-                                width         : 'calc(100% - 60px)',
-                                margin        : 0,
-                                overflow      : 'hidden',
-                                verticalAlign : 'top',
-                                position      : 'absolute',
-                                pointerEvents : 'none'
-                            }}
-                            onClick = { this.onClick }  
-                        >
-                            { this.renderErrorMessage() }
-                        </span>
-                    </div>
+                        locale          = {this.props.locale || defaultLocale}
+                        error           = {this.state.error}
+                        onClick         = {this.onClick}
+                    />
                     <div
                         name  = 'body'
                         id    = {id && id + '-body'}
@@ -337,35 +267,6 @@ class JSONInput extends Component {
                     </div>
                 </div>
             </div>
-        );
-    }
-    renderErrorMessage(){
-        const
-            locale = this.props.locale || defaultLocale,
-            error  = this.state.error,
-            style  = this.style;
-        if(!error) return void(0);
-        return (
-            <p
-                style = {{
-                    color          : 'red',
-                    fontSize       : '12px',
-                    position       : 'absolute',
-                    width          : 'calc(100% - 60px)',
-                    height         : '60px',
-                    boxSizing      : 'border-box',
-                    margin         : 0,
-                    padding        : 0,
-                    paddingRight   : '10px',
-                    overflowWrap   : 'break-word',
-                    display        : 'flex',
-                    flexDirection  : 'column',
-                    justifyContent : 'center',
-                    ...style.errorMessage
-                }}
-            >
-            { format(locale.format, error) }
-            </p>
         );
     }
     renderLabels(){
