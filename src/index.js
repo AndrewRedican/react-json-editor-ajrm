@@ -1,10 +1,56 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import themes from './themes';
 import { identical, getType } from './mitsuketa';
 import err from './err';
 import { format } from './locale';
 import defaultLocale from './locale/en';
+
+function finalPush (buffer, prefix) {
+  if (buffer.active) {
+    buffer.quarks.push({
+      string: buffer[buffer.active],
+      type: prefix + '-' + buffer.active
+    });
+
+    buffer[buffer.active] = '';
+    buffer.active = false;
+  }
+}
+
+function pushAndStore (char, type, buffer, prefix) {
+  switch (type) {
+    case 'symbol':
+    case 'delimiter':
+      if (buffer.active) {
+        buffer.quarks.push({
+          string: buffer[buffer.active],
+          type: prefix + '-' + buffer.active
+        });
+      }
+
+      buffer[buffer.active] = '';
+      buffer.active = type;
+      buffer[buffer.active] = char;
+      break;
+    default:
+      if (type !== buffer.active || ([buffer.string, char].indexOf('\n') > -1)) {
+        if (buffer.active) {
+          buffer.quarks.push({
+            string: buffer[buffer.active],
+            type: prefix + '-' + buffer.active
+          });
+        }
+
+        buffer[buffer.active] = '';
+        buffer.active = type;
+        buffer[buffer.active] = char;
+      } else {
+        buffer[type] += char;
+      }
+      break;
+  }
+}
 
 function quarkize (text, prefix = '') {
   let buffer = {
@@ -17,79 +63,26 @@ function quarkize (text, prefix = '') {
     quarks: []
   };
 
-  function pushAndStore (char, type) {
-    switch (type) {
-      case 'symbol':
-      case 'delimiter':
-        if (buffer.active) {
-          buffer.quarks.push({
-            string: buffer[buffer.active],
-            type: prefix + '-' + buffer.active
-          });
-        }
-        buffer[buffer.active] = '';
-        buffer.active = type;
-        buffer[buffer.active] = char;
-        break;
-
-      default :
-        if (type !== buffer.active || ([buffer.string, char].indexOf('\n') > -1)) {
-          if (buffer.active) {
-            buffer.quarks.push({
-              string: buffer[buffer.active],
-              type: prefix + '-' + buffer.active
-            });
-          }
-
-          buffer[buffer.active] = '';
-          buffer.active = type;
-          buffer[buffer.active] = char;
-        } else {
-          buffer[type] += char;
-        }
-
-        break;
-    }
-  }
-
-  function finalPush () {
-    if (buffer.active) {
-      buffer.quarks.push({
-        string: buffer[buffer.active],
-        type: prefix + '-' + buffer.active
-      });
-
-      buffer[buffer.active] = '';
-      buffer.active = false;
-    }
-  }
-
-  for (var i = 0; i < text.length; i++) {
+  for (let i = 0; i < text.length; i++) {
     const char = text.charAt(i);
 
     switch (char) {
       case '"':
-      case "'":
-        pushAndStore(char, 'delimiter');
-
+      case "'" :
+        pushAndStore(char, 'delimiter', buffer, prefix);
         break;
-
       case ' ':
       case '\u00A0':
-        pushAndStore(char, 'space');
-
+        pushAndStore(char, 'space', buffer, prefix);
         break;
-
       case '{':
       case '}':
       case '[':
       case ']':
       case ':':
       case ',':
-        pushAndStore(char, 'symbol');
-
+        pushAndStore(char, 'symbol', buffer, prefix);
         break;
-
       case '0':
       case '1':
       case '2':
@@ -101,46 +94,45 @@ function quarkize (text, prefix = '') {
       case '8':
       case '9':
         if (buffer.active === 'string') {
-          pushAndStore(char, 'string');
+          pushAndStore(char, 'string', buffer, prefix);
         } else {
-          pushAndStore(char, 'number');
+          pushAndStore(char, 'number', buffer, prefix);
         }
-
         break;
-
       case '-':
         if (i < text.length - 1) {
           if ('0123456789'.indexOf(text.charAt(i + 1)) > -1) {
-            pushAndStore(char, 'number');
+            pushAndStore(char, 'number', buffer, prefix);
+
+            break;
           }
         }
-
-        break;
-      case '.':
+      case '.': // eslint-disable-line no-fallthrough
         if (i < text.length - 1 && i > 0) {
           if (
             '0123456789'.indexOf(text.charAt(i + 1)) > -1 &&
             '0123456789'.indexOf(text.charAt(i - 1)) > -1
           ) {
-            pushAndStore(char, 'number');
+            pushAndStore(char, 'number', buffer, prefix);
+
+            break;
           }
         }
-
-        break;
-      default:
-        pushAndStore(char, 'string');
+      default: // eslint-disable-line no-fallthrough
+        pushAndStore(char, 'string', buffer, prefix);
 
         break;
     }
   }
 
-  finalPush();
+  finalPush(buffer, prefix);
 
   return buffer.quarks;
 }
 
 function validToken (string, type) {
   const quotes = '\'"';
+
   let firstChar = '';
 
   let lastChar = '';
@@ -159,11 +151,11 @@ function validToken (string, type) {
         return false;
       }
 
-      firstChar = string.charAt(0)
+      firstChar = string.charAt(0);
 
-      lastChar = string.charAt(string.length - 1)
+      lastChar = string.charAt(string.length - 1);
 
-      quoteType = quotes.indexOf(firstChar)
+      quoteType = quotes.indexOf(firstChar);
 
       if (quoteType === -1) {
         return false;
@@ -184,17 +176,16 @@ function validToken (string, type) {
       }
 
       break;
-
     case 'key':
       if (string.length === 0) {
         return false;
       }
 
-      firstChar = string.charAt(0)
+      firstChar = string.charAt(0);
 
-      lastChar = string.charAt(string.length - 1)
+      lastChar = string.charAt(string.length - 1);
 
-      quoteType = quotes.indexOf(firstChar)
+      quoteType = quotes.indexOf(firstChar);
 
       if (quoteType > -1) {
         if (string.length === 1) {
@@ -227,7 +218,6 @@ function validToken (string, type) {
       }
 
       break;
-
     case 'number':
       for (let i = 0; i < string.length; i++) {
         if ('0123456789'.indexOf(string.charAt(i)) === -1) {
@@ -242,7 +232,6 @@ function validToken (string, type) {
       }
 
       break;
-
     case 'symbol':
       if (string.length > 1) {
         return false;
@@ -253,7 +242,6 @@ function validToken (string, type) {
       }
 
       break;
-
     case 'colon':
       if (string.length > 1) {
         return false;
@@ -264,7 +252,6 @@ function validToken (string, type) {
       }
 
       break;
-
     default:
       return true;
   }
@@ -279,7 +266,7 @@ function tokenFollowed (buffer) {
     return false;
   }
 
-  for (let i = last; i >= 0; i--) {
+  for (var i = last; i >= 0; i--) {
     const previousToken = buffer.tokens_normalize[i];
 
     switch (previousToken.type) {
@@ -291,8 +278,17 @@ function tokenFollowed (buffer) {
         return previousToken;
     }
   }
-
   return false;
+}
+
+function newIndent (_depth) {
+  const space = [];
+
+  for (let i = 0; i < _depth * 2; i++) {
+    space.push('&nbsp;');
+  }
+
+  return space.join('');
 }
 
 function countCarrigeReturn (string) {
@@ -315,6 +311,16 @@ function deleteCharAt (string, position) {
   return string.slice(0, position) + string.slice(position + 1);
 }
 
+function escape_character (buffer) {
+  if (buffer.currentChar !== '\\') {
+    return false;
+  }
+
+  buffer.inputText = deleteCharAt(buffer.inputText, buffer.position);
+
+  return true;
+}
+
 function add_tokenPrimary (value, buffer) {
   if (value.length === 0) {
     return false;
@@ -326,9 +332,7 @@ function add_tokenPrimary (value, buffer) {
 }
 
 function add_tokenSecondary (buffer) {
-  if (buffer.tokenSecondary.length === 0) {
-    return false;
-  }
+  if (buffer.tokenSecondary.length === 0) return false;
 
   buffer.tokens.push(buffer.tokenSecondary);
 
@@ -338,9 +342,7 @@ function add_tokenSecondary (buffer) {
 }
 
 function determine_string (buffer) {
-  if ('\'"'.indexOf(buffer.currentChar) === -1) {
-    return false;
-  }
+  if ('\'"'.indexOf(buffer.currentChar) === -1) return false;
 
   if (!buffer.stringOpen) {
     add_tokenSecondary(buffer);
@@ -365,64 +367,6 @@ function determine_string (buffer) {
   }
 
   return false;
-}
-
-function indent (number) {
-  const space = [];
-
-  for (let i = 0; i < number * 2; i++) {
-    space.push(' ');
-  }
-
-  return (number > 0 ? '\n' : '') + space.join('');
-}
-
-function indentII (number, lines) {
-  const space = [];
-
-  if (number > 0) {
-    lines++;
-  }
-
-  for (let i = 0; i < number * 2; i++) {
-    space.push('&nbsp;');
-  }
-
-  return (number > 0 ? '<br>' : '') + space.join('');
-}
-
-function newIndent (_depth) {
-  const space = [];
-
-  for (let i = 0; i < _depth * 2; i++) {
-    space.push('&nbsp;');
-  }
-
-  return space.join('');
-}
-
-function newLineBreak (byPass = false, _line, _depth) {
-  _line++;
-
-  if (_depth > 0 || byPass) {
-    return '<br>';
-  }
-
-  return '';
-}
-
-function newLineBreakAndIndent (byPass = false, _line, _depth) {
-  return newLineBreak(byPass, _line, _depth) + newIndent(_depth);
-}
-
-function escape_character (buffer) {
-  if (buffer.currentChar !== '\\') {
-    return false;
-  }
-
-  buffer.inputText = deleteCharAt(buffer.inputText, buffer.position);
-
-  return true;
 }
 
 function determine_value (buffer) {
@@ -464,14 +408,125 @@ function determine_value (buffer) {
   return true;
 }
 
-function stripQuotesFromKey (text) {
-  if (text.length === 0) {
-    return text;
+function setError (error, buffer, line, tokenID, reason, offset = 0) {
+  error = {
+    token: tokenID,
+    line: line,
+    reason: reason
+  };
+
+  buffer.tokens_merge[tokenID + offset].type = 'error';
+}
+
+function followedBySymbol (buffer, tokenID, options) {
+  if (tokenID === undefined) {
+    console.error('tokenID argument must be an integer.');
   }
 
-  if (['""', "''"].indexOf(text) > -1) {
-    return "''";
+  if (options === undefined) {
+    console.error('options argument must be an array.');
   }
+
+  if (tokenID === buffer.tokens_merge.length - 1) {
+    return false;
+  }
+
+  for (let i = tokenID + 1; i < buffer.tokens_merge.length; i++) {
+    const nextToken = buffer.tokens_merge[i];
+
+    switch (nextToken.type) {
+      case 'space':
+      case 'linebreak':
+        break;
+
+      case 'symbol':
+      case 'colon':
+        if (options.indexOf(nextToken.string) > -1) {
+          return i;
+        } else {
+          return false;
+        }
+      default:
+        return false;
+    }
+  }
+
+  return false;
+}
+
+function typeFollowed (tokenID, buffer) {
+  if (tokenID === undefined) {
+    console.error('tokenID argument must be an integer.');
+  }
+
+  if (tokenID === 0) {
+    return false;
+  }
+
+  for (let i = tokenID - 1; i >= 0; i--) {
+    const previousToken = buffer.tokens_merge[i];
+
+    switch (previousToken.type) {
+      case 'space':
+      case 'linebreak':
+        break;
+
+      default:
+        return previousToken.type;
+    }
+  }
+  return false;
+}
+
+function followsSymbol (buffer, tokenID, options) {
+  if (tokenID === undefined) {
+    console.error('tokenID argument must be an integer.');
+  }
+
+  if (options === undefined) {
+    console.error('options argument must be an array.');
+  }
+
+  if (tokenID === 0) {
+    return false;
+  }
+
+  for (let i = tokenID - 1; i >= 0; i--) {
+    const previousToken = buffer.tokens_merge[i];
+
+    switch (previousToken.type) {
+      case 'space':
+      case 'linebreak':
+        break;
+
+      case 'symbol':
+      case 'colon':
+        if (options.indexOf(previousToken.string) > -1) {
+          return true;
+        }
+
+        return false;
+      default:
+        return false;
+    }
+  }
+  return false;
+}
+
+function indent (number) {
+  const space = [];
+
+  for (let i = 0; i < number * 2; i++) {
+    space.push(' ');
+  }
+
+  return (number > 0 ? '\n' : '') + space.join('');
+}
+
+function stripQuotesFromKey (text) {
+  if (text.length === 0) return text;
+
+  if (['""', "''"].indexOf(text) > -1) return "''";
 
   let wrappedInQuotes = false;
 
@@ -483,9 +538,7 @@ function stripQuotesFromKey (text) {
     }
   }
 
-  if (wrappedInQuotes && text.length >= 2) {
-    text = text.slice(1, -1);
-  }
+  if (wrappedInQuotes && text.length >= 2) text = text.slice(1, -1);
 
   const nonAlphaNumeric = text.replace(/\w/g, '');
 
@@ -495,14 +548,13 @@ function stripQuotesFromKey (text) {
     let numberAndLetter = false;
 
     for (let i = 0; i < text.length; i++) {
-      if (i === 0) {
-        if (isNaN(text.charAt(i))) {
-          break;
-        }
-      }
+      if (i === 0) { if (isNaN(text.charAt(i))) {
+        break;
+      } }
 
       if (isNaN(text.charAt(i))) {
         numberAndLetter = true;
+
         break;
       }
     }
@@ -539,123 +591,6 @@ function stripQuotesFromKey (text) {
   } else {
     return text;
   }
-}
-
-function typeFollowed (tokenID, buffer) {
-  if (tokenID === undefined) {
-    console.error('tokenID argument must be an integer.');
-  }
-
-  if (tokenID === 0) {
-    return false;
-  }
-
-  for (let i = tokenID - 1; i >= 0; i--) {
-    const previousToken = buffer.tokens_merge[i];
-
-    switch (previousToken.type) {
-      case 'space':
-      case 'linebreak':
-        break;
-
-      default:
-        return previousToken.type;
-    }
-  }
-
-  return false;
-}
-
-function removePair (index, bracketList, delta) {
-  bracketList.splice(index + 1, 1);
-
-  bracketList.splice(index, 1);
-
-  if (!delta) {
-    delta = true;
-  }
-}
-
-function followsSymbol (tokenID, options, buffer) {
-  if (tokenID === undefined) {
-    console.error('tokenID argument must be an integer.');
-  }
-
-  if (options === undefined) {
-    console.error('options argument must be an array.');
-  }
-
-  if (tokenID === 0) {
-    return false;
-  }
-
-  for (let i = tokenID - 1; i >= 0; i--) {
-    const previousToken = buffer.tokens_merge[i];
-
-    switch (previousToken.type) {
-      case 'space':
-      case 'linebreak':
-        break;
-      case 'symbol':
-      case 'colon':
-        if (options.indexOf(previousToken.string) > -1) {
-          return true;
-        }
-
-        return false;
-
-      default:
-        return false;
-    }
-  }
-  return false;
-}
-
-function followedBySymbol (tokenID, options, buffer) {
-  if (tokenID === undefined) {
-    console.error('tokenID argument must be an integer.');
-  }
-
-  if (options === undefined) {
-    console.error('options argument must be an array.');
-  }
-
-  if (tokenID === buffer.tokens_merge.length - 1) {
-    return false;
-  }
-
-  for (let i = tokenID + 1; i < buffer.tokens_merge.length; i++) {
-    const nextToken = buffer.tokens_merge[i];
-
-    switch (nextToken.type) {
-      case 'space':
-      case 'linebreak':
-        break;
-
-      case 'symbol':
-      case 'colon':
-        if (options.indexOf(nextToken.string) > -1) {
-          return i;
-        } else {
-          return false;
-        }
-
-      default :
-        return false;
-    }
-  }
-
-  return false;
-}
-
-function setError (buffer, error, line, tokenID, reason, offset = 0) {
-  error = {
-    token: tokenID,
-    line: line,
-    reason: reason
-  };
-
-  buffer.tokens_merge[tokenID + offset].type = 'error';
 }
 
 class JSONInput extends Component {
@@ -721,33 +656,34 @@ class JSONInput extends Component {
     this.onPaste = this.onPaste.bind(this);
     this.stopEvent = this.stopEvent.bind(this);
 
-    this.getRefLabels = this.getRefLabels.bind(this);
     this.getRefContent = this.getRefContent.bind(this);
+    this.getRefLabels = this.getRefLabels.bind(this);
 
     this.refContent = null;
     this.refLabels = null;
+
     this.updateInternalProps();
+
     this.renderCount = 1;
+
+    this.state = {
+      prevPlaceholder: '',
+      markupText: '',
+      plainText: '',
+      json: '',
+      jsObject: undefined,
+      lines: false,
+      error: false
+    };
 
     if (!props.locale) {
       console.warn("[react-json-editor-ajrm - Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
     }
   }
 
-  state = {
-    prevPlaceholder: '',
-    markupText: '',
-    plainText: '',
-    json: '',
-    jsObject: undefined,
-    lines: false,
-    error: false
-  }
-
   updateInternalProps () {
     let colors = {};
     let style = {};
-
     let theme = themes.dark_vscode_tribute;
 
     if ('theme' in this.props) {
@@ -762,36 +698,16 @@ class JSONInput extends Component {
 
     if ('colors' in this.props) {
       colors = {
-        default: 'default' in this.props.colors
-          ? this.props.colors.default
-          : colors.default,
-        string: 'string' in this.props.colors
-          ? this.props.colors.string
-          : colors.string,
-        number: 'number' in this.props.colors
-          ? this.props.colors.number
-          : colors.number,
-        colon: 'colon' in this.props.colors
-          ? this.props.colors.colon
-          : colors.colon,
-        keys: 'keys' in this.props.colors
-          ? this.props.colors.keys
-          : colors.keys,
-        keys_whiteSpace: 'keys_whiteSpace' in this.props.colors
-          ? this.props.colors.keys_whiteSpace
-          : colors.keys_whiteSpace,
-        primitive: 'primitive' in this.props.colors
-          ? this.props.colors.primitive
-          : colors.primitive,
-        error: 'error' in this.props.colors
-          ? this.props.colors.error
-          : colors.error,
-        background: 'background' in this.props.colors
-          ? this.props.colors.background
-          : colors.background,
-        background_warning: 'background_warning' in this.props.colors
-          ? this.props.colors.background_warning
-          : colors.background_warning
+        default: 'default' in this.props.colors ? this.props.colors.default : colors.default,
+        string: 'string' in this.props.colors ? this.props.colors.string : colors.string,
+        number: 'number' in this.props.colors ? this.props.colors.number : colors.number,
+        colon: 'colon' in this.props.colors ? this.props.colors.colon : colors.colon,
+        keys: 'keys' in this.props.colors ? this.props.colors.keys : colors.keys,
+        keys_whiteSpace: 'keys_whiteSpace' in this.props.colors ? this.props.colors.keys_whiteSpace : colors.keys_whiteSpace,
+        primitive: 'primitive' in this.props.colors ? this.props.colors.primitive : colors.primitive,
+        error: 'error' in this.props.colors ? this.props.colors.error : colors.error,
+        background: 'background' in this.props.colors ? this.props.colors.background : colors.background,
+        background_warning: 'background_warning' in this.props.colors ? this.props.colors.background_warning : colors.background_warning
       };
     }
 
@@ -799,30 +715,14 @@ class JSONInput extends Component {
 
     if ('style' in this.props) {
       style = {
-        outerBox: 'outerBox' in this.props.style
-          ? this.props.style.outerBox
-          : {},
-        container: 'container' in this.props.style
-          ? this.props.style.container
-          : {},
-        warningBox: 'warningBox' in this.props.style
-          ? this.props.style.warningBox
-          : {},
-        errorMessage: 'errorMessage' in this.props.style
-          ? this.props.style.errorMessage
-          : {},
-        body: 'body' in this.props.style
-          ? this.props.style.body
-          : {},
-        labelColumn: 'labelColumn' in this.props.style
-          ? this.props.style.labelColumn
-          : {},
-        labels: 'labels' in this.props.style
-          ? this.props.style.labels
-          : {},
-        contentBox: 'contentBox' in this.props.style
-          ? this.props.style.contentBox
-          : {}
+        outerBox: 'outerBox' in this.props.style ? this.props.style.outerBox : {},
+        container: 'container' in this.props.style ? this.props.style.container : {},
+        warningBox: 'warningBox' in this.props.style ? this.props.style.warningBox : {},
+        errorMessage: 'errorMessage' in this.props.style ? this.props.style.errorMessage : {},
+        body: 'body' in this.props.style ? this.props.style.body : {},
+        labelColumn: 'labelColumn' in this.props.style ? this.props.style.labelColumn : {},
+        labels: 'labels' in this.props.style ? this.props.style.labels : {},
+        contentBox: 'contentBox' in this.props.style ? this.props.style.contentBox : {}
       };
     } else {
       style = {
@@ -839,24 +739,18 @@ class JSONInput extends Component {
 
     this.style = style;
 
-    this.confirmGood = 'confirmGood' in this.props
-      ? this.props.confirmGood
-      : true;
+    this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
 
     const totalHeight = (this.props.height || '610px');
 
     const totalWidth = (this.props.width || '479px');
 
     this.totalHeight = totalHeight;
+
     this.totalWidth = totalWidth;
 
-    if (
-      !('onKeyPressUpdate' in this.props) || // ???
-      this.props.onKeyPressUpdate // ???
-    ) {
-      if (!this.timer) {
-        this.timer = setInterval(this.scheduledUpdate, 100);
-      }
+    if ((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate) { // ???
+      if (!this.timer) this.timer = setInterval(this.scheduledUpdate, 100);
     } else if (this.timer) {
       clearInterval(this.timer);
       this.timer = false;
@@ -864,17 +758,14 @@ class JSONInput extends Component {
 
     this.updateTime = false;
 
-    this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props
-      ? this.props.waitAfterKeyPress
-      : 1000;
+    this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props ? this.props.waitAfterKeyPress : 1000;
 
-    this.resetConfiguration = 'reset' in this.props
-      ? this.props.reset
-      : false;
+    this.resetConfiguration = 'reset' in this.props ? this.props.reset : false;
   }
 
   getRefLabels (ref) {
     this.refLabels = ref
+    this.resetConfiguration = 'reset' in this.props ? this.props.reset : false;
   }
 
   getRefContent (ref) {
@@ -882,6 +773,8 @@ class JSONInput extends Component {
   }
 
   render () {
+    const id = this.props.id;
+
     const markupText = this.state.markupText;
 
     const error = this.state.error;
@@ -903,7 +796,7 @@ class JSONInput extends Component {
     return (
       <div
         name='outer-box'
-        id={`${this.props.id}-outer-box`}
+        id={id + '-outer-box'}
         style={{
           display: 'block',
           overflow: 'none',
@@ -949,10 +842,9 @@ class JSONInput extends Component {
             )
             : null
         }
-
-        <div
-          name='container'
-          id={`${this.props.id}-container`}
+        <div // eslint-disable-line
+          name='container' // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
+          id={id + '-container'}
           style={{
             display: 'block',
             height: totalHeight,
@@ -961,13 +853,13 @@ class JSONInput extends Component {
             boxSizing: 'border-box',
             overflow: 'hidden',
             fontFamily: 'Roboto, sans-serif',
-            pointerEvents: 'none',
             ...style.container
           }}
+          onClick={this.onClick}
         >
-          <div
-            name='warning-box'
-            id={`${this.props.id}-warning-box`}
+          <div // eslint-disable-line
+            name='warning-box' // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
+            id={id + '-warning-box'}
             style={{
               display: 'block',
               overflow: 'hidden',
@@ -977,12 +869,12 @@ class JSONInput extends Component {
               backgroundColor: colors.background_warning,
               transitionDuration: '0.2s',
               transitionTimingFunction: 'cubic-bezier(0, 1, 0.5, 1)',
-              pointerEvents: 'none',
               ...style.warningBox
             }}
+            onClick={this.onClick}
           >
-            <span
-              style={{
+            <span // eslint-disable-line
+              style={{ // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
                 display: 'inline-block',
                 height: '60px',
                 width: '60px',
@@ -992,9 +884,10 @@ class JSONInput extends Component {
                 verticalAlign: 'top',
                 pointerEvents: 'none'
               }}
+              onClick={this.onClick}
             >
-              <div
-                style={{
+              <div // eslint-disable-line
+                style={{ // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
                   position: 'relative',
                   top: 0,
                   left: 0,
@@ -1003,15 +896,17 @@ class JSONInput extends Component {
                   margin: 0,
                   pointerEvents: 'none'
                 }}
+                onClick={this.onClick}
               >
-                <div
-                  style={{
+                <div // eslint-disable-line
+                  style={{ // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     pointerEvents: 'none'
                   }}
+                  onClick={this.onClick}
                 >
                   <svg
                     height='25px'
@@ -1029,8 +924,8 @@ class JSONInput extends Component {
               </div>
             </span>
 
-            <span
-              style={{
+            <span // eslint-disable-line
+              style={{ // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
                 display: 'inline-block',
                 height: '60px',
                 width: 'calc(100% - 60px)',
@@ -1040,14 +935,15 @@ class JSONInput extends Component {
                 position: 'absolute',
                 pointerEvents: 'none'
               }}
+              onClick={this.onClick}
             >
               { this.renderErrorMessage() }
             </span>
           </div>
 
-          <div
-            name='body'
-            id={`${this.props.id}-body`}
+          <div // eslint-disable-line
+            name='body' // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
+            id={id + '-body'}
             style={{
               display: 'flex',
               overflow: 'none',
@@ -1062,10 +958,11 @@ class JSONInput extends Component {
               transitionTimingFunction: 'cubic-bezier(0, 1, 0.5, 1)',
               ...style.body
             }}
+            onClick={this.onClick}
           >
-            <span
-              name='labels'
-              id={`${this.props.id}-labels`}
+            <span // eslint-disable-line
+              name='labels' // jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events
+              id={id + '-labels'}
               ref={this.getRefLabels}
               style={{
                 display: 'inline-block',
@@ -1079,14 +976,15 @@ class JSONInput extends Component {
                 color: '#D4D4D4',
                 ...style.labelColumn
               }}
+              onClick={this.onClick}
             >
               {this.renderLabels()}
             </span>
 
             <span
-              tabIndex='0'
               role='textbox'
-              id={this.props.id}
+              tabIndex='0'
+              id={id}
               ref={this.getRefContent}
               contentEditable
               style={{
@@ -1123,11 +1021,14 @@ class JSONInput extends Component {
       </div>
     );
   }
-
   renderErrorMessage () {
     const locale = this.props.locale || defaultLocale;
 
-    if (!this.state.error) {
+    const error = this.state.error;
+
+    const style = this.style;
+
+    if (!error) {
       return;
     }
 
@@ -1147,18 +1048,22 @@ class JSONInput extends Component {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          ...this.style.errorMessage
+          ...style.errorMessage
         }}
       >
-        { format(locale.format, this.state.error) }
+        { format(locale.format, error) }
       </p>
     );
   }
 
   renderLabels () {
-    const lines = this.state.lines
-      ? this.state.lines
-      : 1;
+    const colors = this.colors;
+
+    const style = this.style;
+
+    const errorLine = this.state.error ? this.state.error.line : -1;
+
+    const lines = this.state.lines ? this.state.lines : 1;
 
     let labels = new Array(lines);
 
@@ -1166,24 +1071,26 @@ class JSONInput extends Component {
       labels[i] = i + 1;
     }
 
-    return labels.map(number => (
-      <div
-        key={number}
-        style={{
-          ...this.style.labels,
-          color: number !== (this.state.error ? this.state.error.line : -1)
-            ? this.colors.default
-            : 'red'
-        }}
-      >
-        {number}
-      </div>
-    ));
+    return labels.map(number => {
+      const color = number !== errorLine ? colors.default : 'red';
+
+      return (
+        <div
+          key={number}
+          style={{
+            ...style.labels,
+            color: color
+          }}
+        >
+          {number}
+        </div>
+      );
+    });
   }
 
   createMarkup (markupText) {
     if (markupText === undefined) {
-      return { __html: '' }
+      return { __html: '' };
     }
 
     return { __html: '' + markupText };
@@ -1199,14 +1106,11 @@ class JSONInput extends Component {
     let color = '';
 
     switch (type) {
-      case 'string':
-      case 'number':
-      case 'primitive':
-      case 'error':
+      case 'string': case 'number': case 'primitive': case 'error':
         color = colors[token.type];
         break;
 
-      case 'key' :
+      case 'key':
         if (string === ' ') {
           color = colors.keys_whiteSpace;
         } else {
@@ -1222,24 +1126,18 @@ class JSONInput extends Component {
         }
         break;
 
-      default :
+      default:
         color = colors.default;
         break;
     }
 
     if (string.length !== string.replace(/</g, '').replace(/>/g, '').length) {
-      string = '<xmp style=display:inline;>' + string + '</xmp>';
+      string = ['<xmp style=display:inline;>', string, '</xmp>'].join('');
     }
 
-    return (
-      '<span' +
-      ' type="' + type + '"' +
-      ' value="' + string + '"' +
-      ' depth="' + depth + '"' +
-      ' style="color:' + color + '"' +
-      '>' + string +
-      '</span>'
-    );
+    return [
+      '<span type="', type, '" value="', string, '" depth="', depth, '" style="color:', color, '">', string, '</span>'
+    ].join('');
   }
 
   getCursorPosition (countBR) {
@@ -1249,7 +1147,6 @@ class JSONInput extends Component {
      * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
      * Find a way to consolidate render styles
      */
-
     const isChildOf = node => {
       while (node !== null) {
         if (node === this.refContent) {
@@ -1276,9 +1173,7 @@ class JSONInput extends Component {
       charCount = selection.focusOffset;
 
       while (node) {
-        if (node === this.refContent) {
-          break;
-        }
+        if (node === this.refContent) break;
 
         if (node.previousSibling) {
           node = node.previousSibling;
@@ -1307,7 +1202,9 @@ class JSONInput extends Component {
     const createRange = (node, chars, range) => {
       if (!range) {
         range = document.createRange();
+
         range.selectNode(node);
+
         range.setStart(node, 0);
       }
 
@@ -1321,7 +1218,7 @@ class JSONInput extends Component {
             range.setEnd(node, chars.count); chars.count = 0;
           }
         } else {
-          for (var lp = 0; lp < node.childNodes.length; lp++) {
+          for (let lp = 0; lp < node.childNodes.length; lp++) {
             range = createRange(node.childNodes[lp], chars, range);
 
             if (chars.count === 0) {
@@ -1343,9 +1240,7 @@ class JSONInput extends Component {
 
       let range = createRange(this.refContent, { count: chars });
 
-      if (!range) {
-        return;
-      }
+      if (!range) return;
 
       range.collapse(false);
 
@@ -1429,23 +1324,26 @@ class JSONInput extends Component {
     }
 
     event.preventDefault();
+
     event.stopPropagation();
   }
 
   onKeyPress (event) {
     const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
 
-    if (this.props.viewOnly && !ctrlOrMetaIsPressed) {
+    if (
+      this.props.viewOnly &&
+      !ctrlOrMetaIsPressed
+    ) {
       this.stopEvent(event);
     }
 
-    if (!ctrlOrMetaIsPressed) {
-      this.setUpdateTime();
-    }
+    if (!ctrlOrMetaIsPressed) this.setUpdateTime();
   }
 
   onKeyDown (event) {
     const viewOnly = !!this.props.viewOnly;
+
     const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
 
     switch (event.key) {
@@ -1459,33 +1357,28 @@ class JSONInput extends Component {
         this.setUpdateTime();
 
         break;
-
       case 'Backspace':
       case 'Delete':
         if (viewOnly) this.stopEvent(event);
-
         this.setUpdateTime();
-
         break;
-
       case 'ArrowLeft':
       case 'ArrowRight':
       case 'ArrowUp':
       case 'ArrowDown':
         this.setUpdateTime();
-
         break;
 
-      case 'a' : case 'c' :
+      case 'a':
+      case 'c':
         if (viewOnly && !ctrlOrMetaIsPressed) {
           this.stopEvent(event);
         }
-
         break;
-
       default :
-        if (viewOnly) this.stopEvent(event);
-
+        if (viewOnly) {
+          this.stopEvent(event);
+        }
         break;
     }
   }
@@ -1496,7 +1389,7 @@ class JSONInput extends Component {
     } else {
       event.preventDefault();
 
-      var text = event.clipboardData.getData('text/plain');
+      const text = event.clipboardData.getData('text/plain');
 
       document.execCommand('insertHTML', false, text);
     }
@@ -1537,34 +1430,30 @@ class JSONInput extends Component {
   }
 
   componentWillUnmount () {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+    if (this.timer) clearInterval(this.timer);
   }
 
   showPlaceholder () {
     const placeholderDoesNotExist = !('placeholder' in this.props);
 
-    if (placeholderDoesNotExist) {
-      return;
-    }
+    if (placeholderDoesNotExist) return;
 
     const { placeholder } = this.props;
 
     const placeholderHasEmptyValues = [undefined, null].indexOf(placeholder) > -1;
-    if (placeholderHasEmptyValues) return;
+
+    if (placeholderHasEmptyValues) {
+      return;
+    }
 
     const { prevPlaceholder, jsObject } = this.state;
-
     const { resetConfiguration } = this;
 
     const placeholderDataType = getType(placeholder);
 
     const unexpectedDataType = ['object', 'array'].indexOf(placeholderDataType) === -1;
 
-    if (unexpectedDataType) {
-      err.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
-    }
+    if (unexpectedDataType) err.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
 
     const samePlaceholderValues = identical(placeholder, prevPlaceholder);
 
@@ -1607,6 +1496,7 @@ class JSONInput extends Component {
     }
 
     const locale = this.props.locale || defaultLocale;
+
     const newSpan = this.newSpan;
     /**
      *     DOM NODE || ONBLUR OR UPDATE
@@ -1643,7 +1533,7 @@ class JSONInput extends Component {
         let info = {};
 
         switch (child.nodeName) {
-          case 'SPAN' :
+          case 'SPAN':
             info = {
               string: child.textContent,
               type: child.attributes.type.textContent
@@ -1652,38 +1542,45 @@ class JSONInput extends Component {
             buffer.tokens_unknown.push(info);
 
             break;
-
-          case 'DIV' :
-            buffer.tokens_unknown.push({ string: child.textContent, type: 'unknown' });
+          case 'DIV':
+            buffer.tokens_unknown.push({
+              string: child.textContent,
+              type: 'unknown'
+            });
 
             break;
-
-          case 'BR' :
+          case 'BR':
             if (child.textContent === '') {
-              buffer.tokens_unknown.push({ string: '\n', type: 'unknown' });
+              buffer.tokens_unknown.push({
+                string: '\n',
+                type: 'unknown'
+              });
             }
 
             break;
-
-          case '#text' :
-            buffer.tokens_unknown.push({ string: child.wholeText, type: 'unknown' });
-
-            break;
-
-          case 'FONT' :
-            buffer.tokens_unknown.push({ string: child.textContent, type: 'unknown' });
+          case '#text':
+            buffer.tokens_unknown.push({
+              string: child.wholeText,
+              type: 'unknown'
+            });
 
             break;
+          case 'FONT':
+            buffer.tokens_unknown.push({
+              string: child.textContent,
+              type: 'unknown'
+            });
 
+            break;
           default :
             console.error('Unrecognized node:', { child })
-
             break;
         }
       }
 
-      for (var i = 0; i < buffer.tokens_unknown.length; i++) {
+      for (let i = 0; i < buffer.tokens_unknown.length; i++) {
         let token = buffer.tokens_unknown[i];
+
         buffer.tokens_proto = buffer.tokens_proto.concat(quarkize(token.string, 'proto'));
       }
 
@@ -1763,7 +1660,6 @@ class JSONInput extends Component {
 
               break;
             }
-
             switch (string) {
               case '[':
               case '{':
@@ -1772,7 +1668,6 @@ class JSONInput extends Component {
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
                 break;
-
               case ']':
               case '}':
                 buffer2.brackets.pop();
@@ -1780,7 +1675,6 @@ class JSONInput extends Component {
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
                 break;
-
               case ',':
                 if (tokenFollowed(buffer).type === 'colon') {
                   break;
@@ -1789,7 +1683,6 @@ class JSONInput extends Component {
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
                 break;
-
               case ':':
                 normalToken.type = 'colon';
 
@@ -1799,7 +1692,6 @@ class JSONInput extends Component {
             }
 
             break;
-
           case 'delimiter':
             if (buffer2.isValue) {
               normalToken.type = 'string';
@@ -1828,12 +1720,10 @@ class JSONInput extends Component {
 
             if (buffer2.stringOpen === string) {
               buffer2.stringOpen = false;
-
               break;
             }
 
             break;
-
           case 'primitive':
           case 'string':
             if (['false', 'true', 'null', 'undefined'].indexOf(string) > -1) {
@@ -1871,7 +1761,6 @@ class JSONInput extends Component {
             }
 
             break;
-
           case 'space':
             if (buffer2.stringOpen) {
               if (buffer2.isValue) {
@@ -1882,7 +1771,6 @@ class JSONInput extends Component {
             }
 
             break;
-
           case 'number':
             if (buffer2.stringOpen) {
               if (buffer2.isValue) {
@@ -1894,7 +1782,6 @@ class JSONInput extends Component {
 
             break;
           default :
-
             break;
         }
 
@@ -1937,12 +1824,7 @@ class JSONInput extends Component {
 
       const quotes = '\'"';
 
-      const alphanumeric = (
-        'abcdefghijklmnopqrstuvwxyz' +
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        '0123456789' +
-        '_$'
-      );
+      const alphanumeric = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$';
 
       let error = false;
 
@@ -1957,33 +1839,26 @@ class JSONInput extends Component {
       let bracketList = [];
 
       for (let i = 0; i < buffer.tokens_merge.length; i++) {
-        if (error) {
-          break;
-        }
-
-        let token = buffer.tokens_merge[i];
+        if (error) break;
+        let
+          token = buffer.tokens_merge[i];
 
         let string = token.string;
 
         let type = token.type;
 
         let found = false;
-
         switch (type) {
-          case 'space':
-            break;
-          case 'linebreak':
-            line++;
-            break;
-
+          case 'space': break;
+          case 'linebreak': line++; break;
           case 'symbol':
             switch (string) {
               case '{':
               case '[':
-                found = followsSymbol(i, ['}', ']'], buffer);
+                found = followsSymbol(buffer, i, ['}', ']']);
 
                 if (found) {
-                  setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+                  setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                     firstToken: buffer.tokens_merge[found].string,
                     secondToken: string
                   }));
@@ -1992,8 +1867,8 @@ class JSONInput extends Component {
                 }
 
                 if (string === '[' && i > 0) {
-                  if (!followsSymbol(i, [':', '[', ','], buffer)) {
-                    setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.permitted, {
+                  if (!followsSymbol(buffer, i, [':', '[', ','])) {
+                    setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.permitted, {
                       firstToken: '[',
                       secondToken: [':', '[', ',']
                     }));
@@ -2001,10 +1876,9 @@ class JSONInput extends Component {
                     break;
                   }
                 }
-
                 if (string === '{') {
-                  if (followsSymbol(i, ['{'], buffer)) {
-                    setError(buffer, error, line, i, format(locale.invalidToken.double, {
+                  if (followsSymbol(buffer, i, ['{'])) {
+                    setError(error, buffer, line, i, format(locale.invalidToken.double, {
                       token: '{'
                     }));
 
@@ -2016,27 +1890,22 @@ class JSONInput extends Component {
 
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
-                bracketList.push({
-                  i: i,
-                  line: line,
-                  string: string
-                });
+                bracketList.push({ i: i, line: line, string: string });
 
                 break;
-
               case '}':
               case ']':
                 if (string === '}') {
                   if (buffer2.brackets[buffer2.brackets.length - 1] !== '{') {
-                    setError(buffer, error, line, i, format(locale.brace.curly.missingOpen));
+                    setError(error, buffer, line, i, format(locale.brace.curly.missingOpen));
 
                     break;
                   }
                 }
 
                 if (string === '}') {
-                  if (followsSymbol(i, [','], buffer)) {
-                    setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+                  if (followsSymbol(buffer, i, [','])) {
+                    setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                       firstToken: ',',
                       secondToken: '}'
                     }));
@@ -2044,18 +1913,16 @@ class JSONInput extends Component {
                     break;
                   }
                 }
-
                 if (string === ']') {
                   if (buffer2.brackets[buffer2.brackets.length - 1] !== '[') {
-                    setError(buffer, error, line, i, format(locale.brace.square.missingOpen));
+                    setError(error, buffer, line, i, format(locale.brace.square.missingOpen));
 
                     break;
                   }
                 }
-
                 if (string === ']') {
-                  if (followsSymbol(i, [':'], buffer)) {
-                    setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+                  if (followsSymbol(buffer, i, [':'])) {
+                    setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                       firstToken: ':',
                       secondToken: ']'
                     }));
@@ -2068,27 +1935,22 @@ class JSONInput extends Component {
 
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
-                bracketList.push({
-                  i: i,
-                  line: line,
-                  string: string
-                });
+                bracketList.push({ i: i, line: line, string: string });
 
                 break;
-
               case ',':
-                found = followsSymbol(i, ['{'], buffer);
+                found = followsSymbol(buffer, i, ['{']);
 
                 if (found) {
-                  if (followedBySymbol(i, ['}'], buffer)) {
-                    setError(buffer, error, line, i, format(locale.brace.curly.cannotWrap, {
+                  if (followedBySymbol(buffer, i, ['}'])) {
+                    setError(error, buffer, line, i, format(locale.brace.curly.cannotWrap, {
                       token: ','
                     }));
 
                     break;
                   }
 
-                  setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+                  setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                     firstToken: '{',
                     secondToken: ','
                   }));
@@ -2096,8 +1958,8 @@ class JSONInput extends Component {
                   break;
                 }
 
-                if (followedBySymbol(i, ['}', ',', ']'], buffer)) {
-                  setError(buffer, error, line, i, format(locale.noTrailingOrLeadingComma));
+                if (followedBySymbol(buffer, i, ['}', ',', ']'])) {
+                  setError(error, buffer, line, i, format(locale.noTrailingOrLeadingComma));
 
                   break;
                 }
@@ -2107,16 +1969,15 @@ class JSONInput extends Component {
                 switch (found) {
                   case 'key':
                   case 'colon':
-                    setError(buffer, error, line, i, format(locale.invalidToken.termSequence.prohibited, {
+                    setError(error, buffer, line, i, format(locale.invalidToken.termSequence.prohibited, {
                       firstTerm: found === 'key' ? locale.types.key : locale.symbols.colon,
                       secondTerm: locale.symbols.comma
                     }));
 
                     break;
-
                   case 'symbol':
-                    if (followsSymbol(i, ['{'], buffer)) {
-                      setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+                    if (followsSymbol(buffer, i, ['{'])) {
+                      setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                         firstToken: '{',
                         secondToken: ','
                       }));
@@ -2125,7 +1986,6 @@ class JSONInput extends Component {
                     }
 
                     break;
-
                   default:
                     break;
                 }
@@ -2133,7 +1993,6 @@ class JSONInput extends Component {
                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
 
                 break;
-
               default:
                 break;
             }
@@ -2141,12 +2000,11 @@ class JSONInput extends Component {
             buffer.json += string;
 
             break;
-
           case 'colon':
-            found = followsSymbol(i, ['['], buffer);
+            found = followsSymbol(buffer, i, ['[']);
 
-            if (found && followedBySymbol(i, [']'], buffer)) {
-              setError(buffer, error, line, i, format(locale.brace.square.cannotWrap, {
+            if (found && followedBySymbol(buffer, i, [']'])) {
+              setError(error, buffer, line, i, format(locale.brace.square.cannotWrap, {
                 token: ':'
               }));
 
@@ -2154,7 +2012,7 @@ class JSONInput extends Component {
             }
 
             if (found) {
-              setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
+              setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.prohibited, {
                 firstToken: '[',
                 secondToken: ':'
               }));
@@ -2163,7 +2021,7 @@ class JSONInput extends Component {
             }
 
             if (typeFollowed(i, buffer) !== 'key') {
-              setError(buffer, error, line, i, format(locale.invalidToken.termSequence.permitted, {
+              setError(error, buffer, line, i, format(locale.invalidToken.termSequence.permitted, {
                 firstTerm: locale.symbols.colon,
                 secondTerm: locale.types.key
               }));
@@ -2171,8 +2029,8 @@ class JSONInput extends Component {
               break;
             }
 
-            if (followedBySymbol(i, ['}', ']'], buffer)) {
-              setError(buffer, error, line, i, format(locale.invalidToken.termSequence.permitted, {
+            if (followedBySymbol(buffer, i, ['}', ']'])) {
+              setError(error, buffer, line, i, format(locale.invalidToken.termSequence.permitted, {
                 firstTerm: locale.symbols.colon,
                 secondTerm: locale.types.value
               }));
@@ -2185,7 +2043,6 @@ class JSONInput extends Component {
             buffer.json += string;
 
             break;
-
           case 'key':
           case 'string': {
             let firstChar = string.charAt(0);
@@ -2196,41 +2053,45 @@ class JSONInput extends Component {
 
             if (quotes.indexOf(firstChar) === -1) {
               if (quotes.indexOf(lastChar) !== -1) {
-                setError(buffer, error, line, i, format(locale.string.missingOpen, {
+                setError(error, buffer, line, i, format(locale.string.missingOpen, {
                   quote: firstChar
                 }));
+
                 break;
               }
             }
 
             if (quotes.indexOf(lastChar) === -1) {
               if (quotes.indexOf(firstChar) !== -1) {
-                setError(buffer, error, line, i, format(locale.string.missingClose, {
+                setError(error, buffer, line, i, format(locale.string.missingClose, {
                   quote: firstChar
                 }));
+
                 break;
               }
             }
 
             if (quotes.indexOf(firstChar) > -1) {
               if (firstChar !== lastChar) {
-                setError(buffer, error, line, i, format(locale.string.missingClose, {
+                setError(error, buffer, line, i, format(locale.string.missingClose, {
                   quote: firstChar
                 }));
+
                 break;
               }
             }
 
             if (type === 'string') {
               if (quotes.indexOf(firstChar) === -1 && quotes.indexOf(lastChar) === -1) {
-                setError(buffer, error, line, i, format(locale.string.mustBeWrappedByQuotes));
+                setError(error, buffer, line, i, format(locale.string.mustBeWrappedByQuotes));
+
                 break;
               }
             }
 
             if (type === 'key') {
-              if (followedBySymbol(i, ['}', ']'], buffer)) {
-                setError(buffer, error, line, i, format(locale.invalidToken.termSequence.permitted, {
+              if (followedBySymbol(buffer, i, ['}', ']'])) {
+                setError(error, buffer, line, i, format(locale.invalidToken.termSequence.permitted, {
                   firstTerm: locale.types.key,
                   secondTerm: locale.symbols.colon
                 }));
@@ -2239,16 +2100,15 @@ class JSONInput extends Component {
 
             if (quotes.indexOf(firstChar) === -1 && quotes.indexOf(lastChar) === -1) {
               for (let h = 0; h < string.length; h++) {
-                if (error) {
-                  break;
-                }
+                if (error) break;
 
                 const c = string.charAt(h);
 
                 if (alphanumeric.indexOf(c) === -1) {
-                  setError(buffer, error, line, i, format(locale.string.nonAlphanumeric, {
+                  setError(error, buffer, line, i, format(locale.string.nonAlphanumeric, {
                     token: c
                   }));
+
                   break;
                 }
               }
@@ -2266,48 +2126,52 @@ class JSONInput extends Component {
                   if (!isNaN(buffer.tokens_merge[i - 1])) {
                     buffer.tokens_merge[i - 1] += buffer.tokens_merge[i];
 
-                    setError(buffer, error, line, i, format(locale.key.numberAndLetterMissingQuotes));
+                    setError(error, buffer, line, i, format(locale.key.numberAndLetterMissingQuotes));
 
                     break;
                   }
                 }
 
-                setError(buffer, error, line, i, format(locale.key.spaceMissingQuotes));
+                setError(error, buffer, line, i, format(locale.key.spaceMissingQuotes));
 
                 break;
               }
             }
 
             if (type === 'key') {
-              if (!followsSymbol(i, ['{', ','], buffer)) {
-                setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.permitted, {
+              if (!followsSymbol(buffer, i, ['{', ','])) {
+                setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.permitted, {
                   firstToken: type,
                   secondToken: ['{', ',']
                 }));
+
                 break;
               }
             }
 
             if (type === 'string') {
-              if (!followsSymbol(i, ['[', ':', ','], buffer)) {
-                setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.permitted, {
+              if (!followsSymbol(buffer, i, ['[', ':', ','])) {
+                setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.permitted, {
                   firstToken: type,
                   secondToken: ['[', ':', ',']
                 }));
+
                 break;
               }
             }
 
             if (type === 'key') {
               if (buffer2.isValue) {
-                setError(buffer, error, line, i, format(locale.string.unexpectedKey));
+                setError(error, buffer, line, i, format(locale.string.unexpectedKey));
+
                 break;
               }
             }
 
             if (type === 'string') {
               if (!buffer2.isValue) {
-                setError(buffer, error, line, i, format(locale.key.unexpectedString));
+                setError(error, buffer, line, i, format(locale.key.unexpectedString));
+
                 break;
               }
             }
@@ -2319,7 +2183,7 @@ class JSONInput extends Component {
 
           case 'number':
           case 'primitive':
-            if (followsSymbol(i, ['{'], buffer)) {
+            if (followsSymbol(buffer, i, ['{'])) {
               buffer.tokens_merge[i].type = 'key';
 
               type = buffer.tokens_merge[i].type;
@@ -2329,8 +2193,8 @@ class JSONInput extends Component {
               buffer.tokens_merge[i].type = 'key';
 
               type = buffer.tokens_merge[i].type;
-            } else if (!followsSymbol(i, ['[', ':', ','], buffer)) {
-              setError(buffer, error, line, i, format(locale.invalidToken.tokenSequence.permitted, {
+            } else if (!followsSymbol(buffer, i, ['[', ':', ','])) {
+              setError(error, buffer, line, i, format(locale.invalidToken.tokenSequence.permitted, {
                 firstToken: type,
                 secondToken: ['[', ':', ',']
               }));
@@ -2350,12 +2214,13 @@ class JSONInput extends Component {
 
             if (type === 'primitive') {
               if (string === 'undefined') {
-                setError(buffer, error, line, i, format(locale.invalidToken.useInstead, {
+                setError(error, buffer, line, i, format(locale.invalidToken.useInstead, {
                   badToken: 'undefined',
                   goodToken: 'null'
                 }));
               }
             }
+
             buffer.json += string;
 
             break;
@@ -2400,7 +2265,13 @@ class JSONInput extends Component {
             const pair = bracketList[tokenCount].string + bracketList[tokenCount + 1].string;
 
             if (['[]', '{}'].indexOf(pair) > -1) {
-              removePair(tokenCount, bracketList, delta);
+              bracketList.splice(tokenCount + 1, 1);
+
+              bracketList.splice(tokenCount, 1);
+
+              if (!delta) {
+                delta = true;
+              }
             }
           }
 
@@ -2424,11 +2295,7 @@ class JSONInput extends Component {
 
           line = bracketList[0].line;
 
-          setError(
-            buffer, error, line,
-            _tokenPosition,
-            format(locale.brace[_closingBracketType === ']' ? 'square' : 'curly'].missingClose)
-          );
+          setError(_tokenPosition, format(locale.brace[_closingBracketType === ']' ? 'square' : 'curly'].missingClose));
         }
       }
 
@@ -2441,7 +2308,9 @@ class JSONInput extends Component {
 
             const subsMark = errorMessage.indexOf('position');
 
-            if (subsMark === -1) throw new Error('Error parsing failed');
+            if (subsMark === -1) {
+              throw new Error('Error parsing failed');
+            }
 
             const errPositionStr = errorMessage.substring(subsMark + 9, errorMessage.length);
 
@@ -2460,9 +2329,13 @@ class JSONInput extends Component {
             while (charTotal < errPosition && !exitWhile) {
               token = buffer.tokens_merge[tokenIndex];
 
-              if (token.type === 'linebreak') _line++;
+              if (token.type === 'linebreak') {
+                _line++;
+              }
 
-              if (['space', 'linebreak'].indexOf(token.type) === -1) charTotal += token.string.length;
+              if (['space', 'linebreak'].indexOf(token.type) === -1) {
+                charTotal += token.string.length;
+              }
 
               if (charTotal >= errPosition) {
                 break;
@@ -2483,13 +2356,11 @@ class JSONInput extends Component {
               const char = token.string.charAt(i);
 
               if (char === '\\') {
-                backslashCount = backslashCount > 0
-                  ? backslashCount + 1
-                  : 1;
+                backslashCount = backslashCount > 0 ? backslashCount + 1 : 1;
               } else {
                 if (backslashCount % 2 !== 0 || backslashCount === 0) {
                   if ('\'"bfnrt'.indexOf(char) === -1) {
-                    setError(buffer, error, line, tokenIndex, format(locale.invalidToken.unexpected, {
+                    setError(tokenIndex, format(locale.invalidToken.unexpected, {
                       token: '\\'
                     }));
                   }
@@ -2500,7 +2371,7 @@ class JSONInput extends Component {
             }
 
             if (!error) {
-              setError(buffer, error, line, tokenIndex, format(locale.invalidToken.unexpected, {
+              setError(tokenIndex, format(locale.invalidToken.unexpected, {
                 token: token.string
               }));
             }
@@ -2512,6 +2383,20 @@ class JSONInput extends Component {
 
       let _depth = 0;
 
+      function newLineBreak (byPass = false) { // eslint-disable-line no-inner-declarations
+        _line++;
+
+        if (_depth > 0 || byPass) {
+          return '<br>';
+        }
+
+        return '';
+      }
+
+      function newLineBreakAndIndent (byPass = false) { // eslint-disable-line no-inner-declarations
+        return newLineBreak(byPass) + newIndent(_depth);
+      }
+
       if (!error) {
         for (let i = 0; i < buffer.tokens_merge.length; i++) {
           const token = buffer.tokens_merge[i];
@@ -2519,56 +2404,52 @@ class JSONInput extends Component {
           const string = token.string;
 
           const type = token.type;
-
           switch (type) {
             case 'space':
             case 'linebreak':
               break;
-
             case 'string':
             case 'number':
             case 'primitive':
             case 'error':
-              buffer.markup += ((followsSymbol(i, [',', '['], buffer) ? newLineBreakAndIndent(false, _line, _depth) : '') + newSpan(i, token, _depth));
+              buffer.markup += ((followsSymbol(buffer, i, [',', '[']) ? newLineBreakAndIndent() : '') + newSpan(i, token, _depth));
 
               break;
-
             case 'key':
-              buffer.markup += (newLineBreakAndIndent(false, _line, _depth) + newSpan(i, token, _depth));
+              buffer.markup += (newLineBreakAndIndent() + newSpan(i, token, _depth));
 
               break;
-
             case 'colon':
               buffer.markup += (newSpan(i, token, _depth) + '&nbsp;');
 
               break;
-
             case 'symbol':
               switch (string) {
                 case '[':
                 case '{':
-                  buffer.markup += ((!followsSymbol(i, [':'], buffer) ? newLineBreakAndIndent(false, _line, _depth) : '') + newSpan(i, token, _depth)); _depth++;
+                  buffer.markup += ((!followsSymbol(buffer, i, [':']) ? newLineBreakAndIndent() : '') + newSpan(i, token, _depth));
+                  _depth++;
 
                   break;
-
                 case ']':
                 case '}': {
                   _depth--;
 
                   const islastToken = i === buffer.tokens_merge.length - 1;
 
-                  const _adjustment = i > 0 ? ['[', '{'].indexOf(buffer.tokens_merge[i - 1].string) > -1 ? '' : newLineBreakAndIndent(islastToken, _line, _depth) : '';
+                  const _adjustment = i > 0 ? ['[', '{'].indexOf(buffer.tokens_merge[i - 1].string) > -1 ? '' : newLineBreakAndIndent(islastToken) : '';
 
                   buffer.markup += (_adjustment + newSpan(i, token, _depth));
 
                   break;
                 }
 
-                case ',' :
+                case ',':
                   buffer.markup += newSpan(i, token, _depth);
 
                   break;
               }
+
               break;
           }
         }
@@ -2586,7 +2467,9 @@ class JSONInput extends Component {
 
           const string = token.string;
 
-          if (type === 'linebreak') _line++;
+          if (type === 'linebreak') {
+            _line++;
+          }
 
           buffer.markup += newSpan(i, token, _depth);
 
@@ -2668,11 +2551,7 @@ class JSONInput extends Component {
         }
       }
 
-      let buffer2 = {
-        brackets: [],
-        isValue: false,
-        tokens: []
-      };
+      let buffer2 = { brackets: [], isValue: false, tokens: [] };
 
       buffer2.tokens = buffer.tokens.map(token => {
         let type = '';
@@ -2692,7 +2571,6 @@ class JSONInput extends Component {
             buffer2.isValue = (buffer2.brackets[buffer2.brackets.length - 1] === '[');
 
             break;
-
           case ':':
             type = 'symbol';
 
@@ -2703,7 +2581,6 @@ class JSONInput extends Component {
             buffer2.isValue = true;
 
             break;
-
           case '{':
           case '[':
             type = 'symbol';
@@ -2717,7 +2594,6 @@ class JSONInput extends Component {
             buffer2.isValue = (buffer2.brackets[buffer2.brackets.length - 1] === '[');
 
             break;
-
           case '}':
           case ']':
             type = 'symbol';
@@ -2731,7 +2607,6 @@ class JSONInput extends Component {
             buffer2.isValue = (buffer2.brackets[buffer2.brackets.length - 1] === '[');
 
             break;
-
           case 'undefined':
             type = 'primitive';
 
@@ -2740,26 +2615,31 @@ class JSONInput extends Component {
             value = undefined;
 
             break;
-
           case 'null':
             type = 'primitive';
-            string = token;
-            value = null;
-            break;
 
+            string = token;
+
+            value = null;
+
+            break;
           case 'false':
             type = 'primitive';
-            string = token;
-            value = false;
-            break;
 
+            string = token;
+
+            value = false;
+
+            break;
           case 'true':
             type = 'primitive';
-            string = token;
-            value = true;
-            break;
 
-          default : {
+            string = token;
+
+            value = true;
+
+            break;
+          default: {
             const C = token.charAt(0);
 
             if ('\'"'.indexOf(C) > -1) {
@@ -2874,20 +2754,31 @@ class JSONInput extends Component {
             indentation += token.string + ' ';
 
             break;
-
           case ',':
             indentation += token.string + indent(token.depth);
 
             break;
-
-          default:
+          default :
             indentation += token.string;
-
             break;
         }
       }
 
       let lines = 1;
+
+      function indentII (number) { // eslint-disable-line no-inner-declarations
+        const space = [];
+
+        if (number > 0) {
+          lines++;
+        }
+
+        for (let i = 0; i < number * 2; i++) {
+          space.push('&nbsp;');
+        }
+
+        return (number > 0 ? '<br>' : '') + space.join('');
+      }
 
       let markup = '';
 
@@ -2904,10 +2795,11 @@ class JSONInput extends Component {
             const nextToken = i < (buffer2.tokens.length - 1) - 1 ? buffer2.tokens[i + 1] : '';
 
             if ('}]'.indexOf(nextToken.string) === -1) {
-              markup += span + indentII(token.depth, lines);
+              markup += span + indentII(token.depth);
             } else {
               markup += span;
             }
+
             break;
           }
 
@@ -2916,23 +2808,22 @@ class JSONInput extends Component {
             const prevToken = i > 0 ? buffer2.tokens[i - 1] : '';
 
             if ('[{'.indexOf(prevToken.string) === -1) {
-              markup += indentII(token.depth, lines) + (lastIndex === i ? '<br>' : '') + span;
+              markup += indentII(token.depth) + (lastIndex === i ? '<br>' : '') + span;
             } else {
               markup += span;
             }
 
             break;
           }
+
           case ':':
             markup += span + ' ';
 
             break;
-
           case ',':
-            markup += span + indentII(token.depth, lines);
+            markup += span + indentII(token.depth);
 
             break;
-
           default:
             markup += span;
 

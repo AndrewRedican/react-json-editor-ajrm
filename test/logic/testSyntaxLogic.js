@@ -30,6 +30,7 @@ function testSyntaxLogic (language = 'JS', scope, input, output) {
     const
       wrapper = shallow(
         <JSONInput
+          id='input'
           locale={locale}
         />,
         { attachTo: window.domNode }
@@ -67,6 +68,7 @@ function testSyntaxLogic (language = 'JS', scope, input, output) {
     const
       wrapper = shallow(
         <JSONInput
+          id='input'
           locale={locale}
         />,
         { attachTo: window.domNode }

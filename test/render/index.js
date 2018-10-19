@@ -43,6 +43,7 @@ function run () {
   test(`Basic Component Render`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
       />,
       { attachTo: window.domNode }
@@ -53,6 +54,7 @@ function run () {
   test(`All Component Properties Render [1]`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
         placeholder={sampleData}
         viewOnly
@@ -75,6 +77,7 @@ function run () {
   test(`All Component Properties Render [2]`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
         placeholder={sampleData}
         viewOnly={false}
