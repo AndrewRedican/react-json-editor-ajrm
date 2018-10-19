@@ -1,7 +1,7 @@
-import syntaxTest from "./syntax";
-import localeTest from "./locale";
+import syntaxTest from './syntax';
+import localeTest from './locale';
 
-function run() {
+function run () {
   syntaxTest();
   localeTest();
   // ... Add more logic specifc tests once we need them in different files ...

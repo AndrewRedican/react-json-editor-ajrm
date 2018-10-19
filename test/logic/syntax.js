@@ -1,7 +1,7 @@
 import testSyntaxLogic from './testSyntaxLogic';
-import sampleData from "./../sampleData";
+import sampleData from './../sampleData';
 
-function run() {
+function run () {
   testSyntaxLogic('JS', 'Basic Sample', sampleData.basic, {
     jsObject: { ...sampleData.basic },
     json: `{"hello":"world","foo":"bar"}`,
@@ -22,7 +22,7 @@ function run() {
 
   testSyntaxLogic('JS', 'Common Sample', sampleData.common, {
     jsObject: { ...sampleData.common },
-    json: "{\"strings\":[\"xyz\",\"This is a test\",\"+_)(*&^%$#@!~/|}{:?/.,;][=-`\"],\"numbers\":[0,1,-100,-7.5,500,1.823],\"primitives\":[false,true]}",
+    json: '{"strings":["xyz","This is a test","+_)(*&^%$#@!~/|}{:?/.,;][=-`"],"numbers":[0,1,-100,-7.5,500,1.823],"primitives":[false,true]}',
     lines: 20,
     noSpaces: "{strings:['xyz','This is a test','+_)(*&^%$#@!~/|}{:?/.,;][=-`'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true]}",
     tokens: [
@@ -66,7 +66,7 @@ function run() {
 
   testSyntaxLogic('JS', 'Uncommon Key Names', sampleData.uncommonKeys, {
     jsObject: { ...sampleData.uncommonKeys },
-    json: "{\"0\":\"number-like text\",\"true\":true,\"false\":false,\"undefined\":\"undefined\",\"null\":\"null\",\"\":0,\"compound word\":[\"*\"],\"~!@#$%\":\"non-alphanumeric\",\"$\":\"dollar\",\"_\":\"underscore\",\"{}\":\"curly brackets\",\"[]\":\"square brackets\",\"A423423\":\"letter-number\",\"0A\":\"number-letter\",\"A 4\":\"letter-space-number\",\"0 A\":\"number-space-letter\",\"0 A,&\":\"number-space-letter-nonAlphanumeric\"}",
+    json: '{"0":"number-like text","true":true,"false":false,"undefined":"undefined","null":"null","":0,"compound word":["*"],"~!@#$%":"non-alphanumeric","$":"dollar","_":"underscore","{}":"curly brackets","[]":"square brackets","A423423":"letter-number","0A":"number-letter","A 4":"letter-space-number","0 A":"number-space-letter","0 A,&":"number-space-letter-nonAlphanumeric"}',
     lines: 22,
     noSpaces: "{0:'number-like text',true:true,false:false,undefined:'undefined',null:'null','':0,'compound word':['*'],'~!@#$%':'non-alphanumeric','$':'dollar',_:'underscore','{}':'curly brackets','[]':'square brackets',A423423:'letter-number','0A':'number-letter','A 4':'letter-space-number','0 A':'number-space-letter','0 A,&':'number-space-letter-nonAlphanumeric'}",
     tokens: [
@@ -152,6 +152,6 @@ export default run;
  * 1. Quotes in key and string notations and nested. I.e.   "" ''  ``
  * 2. Escape character. I.e \
  * 3. Html Tags and stand alone reserved words I.e. <pre> <div>  <> >< <br/>
- * 
+ *
  * 6. Provide invalid information, validate warnings
  **/

@@ -1,42 +1,42 @@
-const path = require("path");
-const webpack = require("webpack");
-const package = require("./../../package.json");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const { name, version } = require('./../../package.json');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const defines = {
-  "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-  "process.env.VERSION": JSON.stringify(package.version)
+  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  'process.env.VERSION': JSON.stringify(version)
 };
 
 const config = {
-  target: "web",
+  target: 'web',
   mode: process.env.NODE_ENV,
-  entry: "./src/index.js",
+  entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
   },
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: [{ loader: "style-loader" }, { loader: "css-loader" }]
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }]
       },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       }
     ]
   },
-  devtool: process.env.NODE_ENV === "development" ? "eval-source-map" : false,
+  devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
   plugins: [
     new webpack.DefinePlugin(defines),
     new HtmlWebpackPlugin({
-      title: package.name + " (version " + package.version + ")",
-      template: "./src/index.html"
+      title: name + ' (version ' + version + ')',
+      template: './src/index.html'
     })
   ]
 };

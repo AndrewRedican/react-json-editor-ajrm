@@ -8,19 +8,20 @@ module.exports = {
     'plugin:react-perf/recommended',
     'standard',
     'standard-react',
-    'plugin:jsx-a11y/recommended'
+    'plugin:jsx-a11y/recommended',
+    'plugin:jest/recommended'
   ],
   'plugins': [
     'babel',
     'import',
     'jsx-a11y',
-    'html',
     'promise',
     'react',
     'react-perf',
     'standard',
     'no-inferred-method-name',
-    'react-functional-set-state'
+    'react-functional-set-state',
+    'jest'
   ],
   'env': {
     'node': true,
@@ -28,7 +29,8 @@ module.exports = {
     'commonjs': true,
     'worker': true,
     'jest': true,
-    'es6': true
+    'es6': true,
+    'jest/globals': true
   },
   'globals': {
     '__DEV__': false,
@@ -39,12 +41,12 @@ module.exports = {
   'settings': {
     'ecmascript': 6,
     'import/resolver': 'webpack',
-    "react": {
-      // "createClass": "createReactClass", // Regex for Component Factory to use,
-                                         // default to "createReactClass"
-      "pragma": "React",  // Pragma to use, default to "React"
-      "version": "^16.5.2", // React version, default to the latest React stable release
-      // "flowVersion": "0.53" // Flow version
+    'react': {
+      // 'createClass': 'createReactClass', // Regex for Component Factory to use,
+                                         // default to 'createReactClass'
+      'pragma': 'React',  // Pragma to use, default to 'React'
+      'version': '^16.5.2', // React version, default to the latest React stable release
+      // 'flowVersion': '0.53' // Flow version
     }
   },
   'rules': {
@@ -91,7 +93,13 @@ module.exports = {
     'import/export': 2,
     'import/no-duplicates': 2,
     'import/imports-first': 2,
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
+
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error'
   },
   'parserOptions': {
     'sourceType': 'module'
