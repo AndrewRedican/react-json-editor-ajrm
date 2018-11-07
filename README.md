@@ -27,7 +27,7 @@
     />
 ```
 
-*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains polyfilled ES5 code, the second unpolyfilled ES6. The `react-json-editor-ajrm/es` version is **not compatible** with [`react-create-app`](https://github.com/facebook/create-react-app). If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
+*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains polyfilled ES5 code, the second unpolyfilled ES6. The `react-json-editor-ajrm/es` version is **not compatible** with [`create-react-app`](https://github.com/facebook/create-react-app). If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
 
 ## Examples
 
