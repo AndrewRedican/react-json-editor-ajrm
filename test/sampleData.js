@@ -7,10 +7,12 @@ const sampleData = {
         strings : [
             'xyz',
             'This is a test',
-            '+_)(*&^%$#@!~/|}{:?/.,;][=-`'
+            '+_)(*&^%$#@!~/|}{:?/.,;][=-`',
+            'This is a test with a newline\n'
         ],
         numbers : [ 0, 1, -100, -7.5, 500, 1.823 ],
-        primitives : [false,true]
+        primitives : [false,true],
+        escape : ['\n', '\r']
     },
     uncommonKeys : {
         true            : true,
