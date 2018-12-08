@@ -84,6 +84,18 @@ function run() {
     );
     expect(wrapper).toMatchSnapshot();
   });
+
+  test(`Custom Error Render`, () => {
+    let wrapper = mount(
+      <JSONInput
+        locale={locale}
+        placeholder={sampleData}
+        error={{reason: "My custom error", line: 5}}
+      />,
+      { attachTo: window.domNode }
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 }
 
 export default run;
