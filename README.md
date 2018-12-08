@@ -59,10 +59,10 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.8] - October 13, 2018
+## Latest Spotlight Release Notes [v2.5.9] - December 8, 2018
 
-1. `Japanese` and `Tamil` locales are now supported. [Read More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)
-2. Find more details in [Change Log](https://github.com/AndrewRedican/react-json-editor-ajrm/blob/master/CHANGELOG.md#258---2018-10-13)
+1. EsLint added to project.
+2. Fixed security vulnerability alert.
 
 ## Upcoming Features
 

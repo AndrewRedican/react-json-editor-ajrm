@@ -1,6 +1,6 @@
 {
   "name": "react-json-editor-ajrm",
-  "version": "2.5.8",
+  "version": "2.5.9",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "MIT",
