@@ -6,12 +6,18 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-json-editor-ajrm": "^2.5.8",
-    "react-scripts": "1.1.5"
+    "react-scripts": "^2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

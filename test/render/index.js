@@ -1,21 +1,49 @@
-import React from "react";
+import React from 'react';
+import { mount } from 'enzyme'
 import JSONInput from '../../src';
 import locale from '../../src/locale/en'
-import sampleData from "./../sampleData";
+import sampleData from './../sampleData';
 
 const sampleFunctions = {
-  getResults: function (data) {
+  getResults: (data) => {
     console.log(data);
   },
-  modWarning: function (text) {
+  modWarning: (text) => {
     return text;
   }
 };
 
-function run() {
+const colors = {
+  string: '#E25E29'
+}
+
+const colors2 = {
+  string: '#DAA520'
+}
+
+const style = {
+  outerBox: {
+    border: '5px solid grey'
+  },
+  container: {
+    backgroundColor: ''
+  }
+}
+
+const style2 = {
+  labelColumn: {
+    display: 'hidden'
+  },
+  contentBox: {
+    pointerEvents: 'none'
+  }
+}
+
+function run () {
   test(`Basic Component Render`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
       />,
       { attachTo: window.domNode }
@@ -26,28 +54,20 @@ function run() {
   test(`All Component Properties Render [1]`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
         placeholder={sampleData}
-        viewOnly={true}
+        viewOnly
         onChange={sampleFunctions.getResults}
         confirmGood={false}
         height='500px'
         width='100%'
-        onKeyPressUpdate={true}
+        onKeyPressUpdate
         waitAfterKeyPress={1200}
         modifyErrorText={sampleFunctions.modWarning}
         theme='dark_vscode_tribute'
-        colors={{
-          string: '#E25E29'
-        }}
-        style={{
-          outerBox: {
-            border: '5px solid grey'
-          },
-          container: {
-            backgroundColor: ''
-          }
-        }}
+        colors={colors}
+        style={style}
       />,
       { attachTo: window.domNode }
     );
@@ -57,28 +77,20 @@ function run() {
   test(`All Component Properties Render [2]`, () => {
     let wrapper = mount(
       <JSONInput
+        id='input'
         locale={locale}
         placeholder={sampleData}
         viewOnly={false}
         onChange={sampleFunctions.getResults}
-        confirmGood={true}
+        confirmGood
         height='500px'
         width='100%'
         onKeyPressUpdate={false}
         waitAfterKeyPress={600}
         modifyErrorText={sampleFunctions.modWarning}
         theme='light_mitsuketa_tribute'
-        colors={{
-          string: '#DAA520'
-        }}
-        style={{
-          labelColumn: {
-            display: 'hidden'
-          },
-          contentBox: {
-            pointerEvents: 'none'
-          }
-        }}
+        colors={colors2}
+        style={style2}
       />,
       { attachTo: window.domNode }
     );

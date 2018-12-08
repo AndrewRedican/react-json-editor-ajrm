@@ -1,6 +1,6 @@
-import * as localeSystem from "../../src/locale";
+import * as localeSystem from '../../src/locale';
 
-function run() {
+function run () {
   test('Formatting with all arguments present and used', () => {
     const string = 'The {adjective} {color} {animal} jumps over the lazy dog.';
     const result = localeSystem.format(string, {
@@ -8,7 +8,7 @@ function run() {
       color: 'blue',
       animal: 'cat'
     });
-    expect(result).toEqual("The smart blue cat jumps over the lazy dog.")
+    expect(result).toEqual('The smart blue cat jumps over the lazy dog.')
   });
 
   test('Formatting with some arguments used twice', () => {
@@ -18,7 +18,7 @@ function run() {
       color: 'blue',
       animal: 'cat'
     });
-    expect(result).toEqual("The smart blue cat jumps over the smart dog.")
+    expect(result).toEqual('The smart blue cat jumps over the smart dog.')
   });
 
   test('Formatting with some arguments not used', () => {
@@ -28,7 +28,7 @@ function run() {
       color: 'blue',
       animal: 'cat'
     });
-    expect(result).toEqual("The smart brown cat jumps over the lazy dog.")
+    expect(result).toEqual('The smart brown cat jumps over the lazy dog.')
   });
 
   test('Formatting with some arguments missing', () => {
@@ -37,7 +37,7 @@ function run() {
       adjective: 'smart',
       color: 'blue'
     });
-    expect(result).toEqual("The smart blue {animal} jumps over the lazy dog.")
+    expect(result).toEqual('The smart blue {animal} jumps over the lazy dog.')
   });
 
   test('Formatting with some arguments having different casing', () => {
@@ -47,7 +47,7 @@ function run() {
       color: 'blue',
       Animal: 'cat'
     });
-    expect(result).toEqual("The smart blue cat jumps over the lazy dog.")
+    expect(result).toEqual('The smart blue cat jumps over the lazy dog.')
   });
 }
 
