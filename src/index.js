@@ -568,7 +568,7 @@ class JSONInput extends Component {
         } else {
             event.preventDefault();
             var text = event.clipboardData.getData('text/plain');
-            document.execCommand('insertHTML', false, text);
+            document.execCommand('insertText', false, text);
         }
         this.update();
     }
