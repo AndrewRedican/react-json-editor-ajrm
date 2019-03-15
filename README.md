@@ -1,4 +1,4 @@
-*NOTE: This library is currently (02.01.2018) **unmaintained**. You may want to [look around for an alternative](https://www.google.com/search?q=json+editor+react) until a new maintainer can be found.*
+*NOTE: This library is currently (since 02.01.2019 - today) **unmaintained**. You may want to [look around for an alternative](https://www.google.com/search?q=json+editor+react) until a new maintainer can be found.*
 
 # react-json-editor-ajrm
 
