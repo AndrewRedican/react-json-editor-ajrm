@@ -41,25 +41,31 @@ The `./examples` folder contains two examples:
 ## Testing right away!
 
 1. Fork and/or clone this Github repository
-2. Go to an example project under [react-json-editor-ajrm/example](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
-
-```
-    $ cd path/to/repo/react-json-editor-ajrm/example/webpack-project
-```
-
-3. Install example project dependencies:
+2. Install project dependencies:
 
 ```
     $ npm i
 ```
 
-4. Serve sample website to port 8080:
+3. Go to an example project under [react-json-editor-ajrm/example](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
+
+```
+    $ cd path/to/repo/react-json-editor-ajrm/example/webpack-project
+```
+
+4. Install example project dependencies:
+
+```
+    $ npm i
+```
+
+5. Serve sample website to port 8080:
 
 ```
    $ npm start
 ```
 
-5. Open `http://localhost:8080` in the web browser
+6. Open `http://localhost:8080` in the web browser
 
 ## Latest Spotlight Release Notes [v2.5.9] - December 8, 2018
 
