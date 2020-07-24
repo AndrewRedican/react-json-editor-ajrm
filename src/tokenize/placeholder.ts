@@ -1,8 +1,29 @@
 /* JS OBJECTS || PLACEHOLDER */
+import { Tokenize, Token } from './interfaces';
 import { newSpan, surroundingTokens } from './utils';
 
+// Interfaces
+interface PrimaryBuffer {
+  inputText: string;
+  position: number;
+  currentChar: string;
+  tokenPrimary: string;
+  tokenSecondary: string;
+  brackets: Array<string>;
+  isValue: boolean;
+  stringOpen: null|string;
+  stringStart: number;
+  tokens: Array<string>;
+}
+
+interface SecondaryBuffer {
+  brackets: Array<string>;
+  isValue: boolean;
+  tokens: Array<Token>;
+}
+
 // Helper Functions
-function stringMayRemoveQuotes(nonAlphaNumeric, text) {
+function stringMayRemoveQuotes(nonAlphaNumeric: string, text: string): boolean {
   let numberAndLetter = false;
 
   for (let i = 0; i < text.length; i++) {
@@ -18,7 +39,7 @@ function stringMayRemoveQuotes(nonAlphaNumeric, text) {
   return !(nonAlphaNumeric.length > 0 || numberAndLetter);
 }
 
-function stripQuotesFromKey(text) {
+function stripQuotesFromKey(text: string): string {
   if (text.length === 0) {
     return text;
   }
@@ -41,7 +62,7 @@ function stripQuotesFromKey(text) {
   return mayRemoveQuotes ? val : `'${val}'`;
 }
 
-function addTokenPrimary(buffer, value) {
+function addTokenPrimary(buffer: PrimaryBuffer, value: string): boolean {
   if (value.length === 0) {
     return false;
   }
@@ -49,7 +70,7 @@ function addTokenPrimary(buffer, value) {
   return true;
 }
 
-function addTokenSecondary(buffer) {
+function addTokenSecondary(buffer: PrimaryBuffer): boolean {
   if (buffer.tokenSecondary.length === 0) {
     return false;
   }
@@ -58,7 +79,7 @@ function addTokenSecondary(buffer) {
   return true;
 }
 
-function escapeCharacter(buffer) {
+function escapeCharacter(buffer: PrimaryBuffer): boolean {
   if (buffer.currentChar !== '\\') {
     return false;
   }
@@ -68,7 +89,7 @@ function escapeCharacter(buffer) {
   return true;
 }
 
-function determineString(buffer) {
+function determineString(buffer: PrimaryBuffer) {
   if ('\'"'.includes(buffer.currentChar)) {
     if (!buffer.stringOpen) {
       addTokenSecondary(buffer);
@@ -79,14 +100,14 @@ function determineString(buffer) {
     if (buffer.stringOpen === buffer.currentChar) {
       addTokenSecondary(buffer);
       addTokenPrimary(buffer, buffer.inputText.substring(buffer.stringStart, buffer.position + 1));
-      buffer.stringOpen = false;
+      buffer.stringOpen = null;
       return true;
     }
   }
   return false;
 }
 
-function determineValue(buffer) {
+function determineValue(buffer: PrimaryBuffer): boolean {
   if (!':,{}[]'.includes(buffer.currentChar) || buffer.stringOpen) {
     return false;
   }
@@ -115,8 +136,9 @@ function determineValue(buffer) {
 }
 
 // Main Function
-function PlaceholderJSON(obj) {
-  const buffer = {
+// this is temp solution to splitting the class across files
+export default function(this: Record<string, any>, obj: Record<string, any>): Tokenize {
+  const buffer: PrimaryBuffer = {
     inputText: JSON.stringify(obj),
     position: 0,
     currentChar: '',
@@ -124,7 +146,7 @@ function PlaceholderJSON(obj) {
     tokenSecondary: '',
     brackets: [],
     isValue: false,
-    stringOpen: false,
+    stringOpen: null,
     stringStart: 0,
     tokens: []
   };
@@ -140,15 +162,15 @@ function PlaceholderJSON(obj) {
     }
   }
 
-  const buffer2 = {
+  const buffer2: SecondaryBuffer = {
     brackets: [],
     isValue: false,
     tokens: []
   };
 
-  buffer2.tokens = buffer.tokens.map(token => {
-    const rtnToken = {
-      type: '',
+  buffer2.tokens = buffer.tokens.map<Token>(token => {
+    const rtnToken: Token = {
+      type: 'undefined',
       string: '',
       value: '',
       depth: 0
@@ -238,8 +260,8 @@ function PlaceholderJSON(obj) {
   let indentation = '';
   let markup = '';
 
-  const indent = (num) => `${num > 0 ? '\n' : ''}${Array(num * 2).fill(' ').join('')}`;
-  const indentII = (num) => {
+  const indent = (num: number) => `${num > 0 ? '\n' : ''}${Array(num * 2).fill(' ').join('')}`;
+  const indentII = (num: number) => {
     lines += num > 0 ? 1 : 0;
     return `${num > 0 ? '</br>' : ''}${Array(num * 2).fill('&nbsp;').join('')}`;
   };
@@ -288,5 +310,3 @@ function PlaceholderJSON(obj) {
     lines
   };
 }
-
-export default PlaceholderJSON;

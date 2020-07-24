@@ -1,172 +1,105 @@
 /* DOM Node || OnBlue or Update */
+import { ErrorMsg, Tokenize, Token, TokenType } from './interfaces';
+import { quarkize } from './todo';
 import { format } from '../locale';
 import defaultLocale from '../locale/en';
+import { safeGet } from '../utils';
 import {
-  followedBySymbol, followsSymbol, newSpan, precedingToken, surroundingTokens, typeFollowed
+  followedBySymbol, followsSymbol, newSpan, precedingToken, typeFollowed
 } from './utils';
 
+
+// Interfaces
+interface PrimaryBuffer {
+  tokens_unknown: Array<any>;
+  tokens_proto: Array<any>;
+  tokens_split: Array<any>;
+  tokens_fallback: Array<any>;
+  tokens_normalize: Array<any>;
+  tokens_merge: Array<any>;
+  tokens_plainText: string;
+  indented: string;
+  json: string;
+  jsObject: Record<string, any>;
+  markup: string;
+}
+
+interface SecondaryBuffer {
+  brackets: Array<string>;
+  isValue: boolean;
+  stringOpen: boolean;
+}
+
+interface Bracket {
+  i: number;
+  line: number;
+  string: string;
+}
+
 // Helper Functions
-function pushAndStore(buffer, char, type, prefix = '') {
-  switch (type) {
-    case 'symbol':
-    case 'delimiter':
-      if (buffer.active) {
-        buffer.quarks.push({
-          string: buffer[buffer.active],
-          type: `${prefix}-${buffer.active}`
-        });
-      }
-      buffer[buffer.active] = '';
-      buffer.active = type;
-      buffer[buffer.active] = char;
-      break;
-    default:
-      if (type !== buffer.active || [buffer.string, char].includes('\n')) {
-        if (buffer.active) {
-          buffer.quarks.push({
-            string: buffer[buffer.active],
-            type: `${prefix}-${buffer.active}`
-          });
-        }
-        buffer[buffer.active] = '';
-        buffer.active = type;
-        buffer[buffer.active] = char;
-      } else {
-        buffer[type] += char;
-      }
-  }
-}
-
-function quarkize(text, prefix = '') {
-  const buffer = {
-    active: false,
-    string: '',
-    number: '',
-    symbol: '',
-    space: '',
-    delimiter: '',
-    quarks: []
-  };
-
-  text.split('').forEach((char, i) => {
-    switch (char) {
-      case '"':
-      case "'":
-        pushAndStore(buffer, char, 'delimiter', prefix);
-        break;
-      case ' ':
-      case '\u00A0':
-        pushAndStore(buffer, char, 'space', prefix);
-        break;
-      case '{':
-      case '}':
-      case '[':
-      case ']':
-      case ':':
-      case ',':
-        pushAndStore(buffer, char, 'symbol', prefix);
-        break;
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-        pushAndStore(buffer, char, buffer.active === 'string' ? 'string' : 'number', prefix);
-        break;
-      case '-':
-        if (i < text.length - 1 && '0123456789'.includes(text.charAt(i + 1))) {
-          pushAndStore(buffer, char, 'number', prefix);
-          break;
-        }
-      case '.':
-        if (i < text.length - 1 && i > 0 && '0123456789'.includes(text.charAt(i + 1)) && '0123456789'.includes(text.charAt(i - 1))) {
-          pushAndStore(buffer, char, 'number', prefix);
-          break;
-        }
-      default:
-        pushAndStore(buffer, char, 'string', prefix);
-    }
-  });
-
-  if (buffer.active) {
-    buffer.quarks.push({
-      string: buffer[buffer.active],
-      type: `${prefix}-${buffer.active}`
-    });
-    buffer[buffer.active] = '';
-    buffer.active = false;
-  }
-  return buffer.quarks;
-}
-
-function validToken(string, type) {
+function validToken(str: string, type: TokenType): boolean {
   const quotes = ["'", '"'];
-  const firstChar = string.charAt(0);
-  const lastChar = string.charAt(string.length - 1) || '';
+  const firstChar = str.charAt(0);
+  const lastChar = str.charAt(str.length - 1) || '';
   const quoteType = quotes.indexOf(firstChar);
   const nonAlphanumeric = '\'"`.,:;{}[]&<>=~*%\\|/-+!?@^ \xa0';
 
   switch (type) {
     case 'primitive':
-      return ['true', 'false', 'null', 'undefined'].includes(string);
+      return ['true', 'false', 'null', 'undefined'].includes(str);
     case 'string':
-      if (string.length < 2) {
+      if (str.length < 2) {
         return false;
       }
       if (quoteType === -1 || firstChar !== lastChar) {
         return false;
       }
-      for (let i = 0; i < string.length; i++) {
-        if (i > 0 && i < string.length - 1 && string.charAt(i) === quotes[quoteType] && string.charAt(i - 1) !== '\\') {
+      for (let i = 0; i < str.length; i++) {
+        if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i - 1) !== '\\') {
           return false;
         }
       }
       break;
     case 'key':
-      if (string.length === 0) {
+      if (str.length === 0) {
         return false;
       }
       if (quoteType > -1) {
-        if (string.length === 1 || firstChar !== lastChar) {
+        if (str.length === 1 || firstChar !== lastChar) {
           return false;
         }
-        for (let i = 0; i < string.length; i++) {
-          if (i > 0 && i < string.length - 1 && string.charAt(i) === quotes[quoteType] && string.charAt(i - 1) !== '\\') {
+        for (let i = 0; i < str.length; i++) {
+          if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i - 1) !== '\\') {
             return false;
           }
         }
       } else {
         for (let i = 0; i < nonAlphanumeric.length; i++) {
           const nonAlpha = nonAlphanumeric.charAt(i);
-          if (!string.include(nonAlpha)) {
+          if (!str.includes(nonAlpha)) {
             return false;
           }
         }
       }
       break;
     case 'number':
-      for (let i = 0; i < string.length; i++) {
-        if (!'0123456789'.includes(string.charAt(i)) && i === 0) {
-          if (string.charAt(0) !== '-') {
+      for (let i = 0; i < str.length; i++) {
+        if (!'0123456789'.includes(str.charAt(i)) && i === 0) {
+          if (str.charAt(0) !== '-') {
             return false;
           }
-        } else if (string.charAt(i) !== '.') {
+        } else if (str.charAt(i) !== '.') {
           return false;
         }
       }
       break;
     case 'symbol':
-      if (string.length > 1 || !'{[:]},'.includes(string)) {
+      if (str.length > 1 || !'{[:]},'.includes(str)) {
         return false;
       }
       break;
     case 'colon':
-      if (string.length > 1 || string !== ':') {
+      if (str.length > 1 || str !== ':') {
         return false;
       }
       break;
@@ -175,10 +108,10 @@ function validToken(string, type) {
   return true;
 }
 
-function tokenFollowed(tokens){
+function tokenFollowed(tokens: Array<Token>): null|Token {
   const last = tokens.length - 1;
   if (last < 1) {
-    return false;
+    return null;
   }
   
   for (let i = last; i >= 0; i--) {
@@ -191,19 +124,18 @@ function tokenFollowed(tokens){
         return previousToken;
     }
   }
-  return false;
+  return null;
 }
 
 // Main Function
-function DomNodeUpdate(obj, locale = defaultLocale) {
-  const containerNode = obj.cloneNode(true);
-  const hasChildren = containerNode.hasChildNodes();
-  if (!hasChildren) {
-    return '';
+function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLocale): null|Tokenize {
+  const rootNode = obj.cloneNode(true);
+  if (!rootNode.hasChildNodes()) {
+    return null;
   }
 
-  const children = containerNode.childNodes;
-  const buffer = {
+  const children = rootNode.childNodes;
+  const buffer: PrimaryBuffer = {
     tokens_unknown: [],
     tokens_proto: [],
     tokens_split: [],
@@ -213,7 +145,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
     tokens_plainText: '',
     indented: '',
     json: '',
-    jsObject: undefined,
+    jsObject: {},
     markup: ''
   };
 
@@ -222,7 +154,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
       case 'SPAN':
         buffer.tokens_unknown.push({
           string: child.textContent,
-          type: child.attributes.type.textContent
+          type: child.textContent  // .attributes.type.textContent
         });
         break;
       case 'DIV':
@@ -241,7 +173,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
         break;
       case '#text':
         buffer.tokens_unknown.push({
-          string: child.wholeText,
+          string: child.textContent, // wholeText,
           type: 'unknown'
         });
         break;
@@ -293,7 +225,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
     };
   });
 
-  const buffer2 = {
+  const buffer2: SecondaryBuffer = {
     brackets: [],
     isValue: false,
     stringOpen: false
@@ -303,7 +235,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
   for (let i = 0; i < buffer.tokens_fallback.length; i++) {
     let token = buffer.tokens_fallback[i];
     const lastIndex = buffer.tokens_normalize.length - 1;
-    const lastType = tokenFollowed(buffer.tokens_normalize).type;
+    const lastType = safeGet(tokenFollowed(buffer.tokens_normalize) || {}, 'type', '');
     const normalToken = {
       string: token.string,
       type: token.type
@@ -347,9 +279,10 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
           break;
         }
         if (i > 0) {
-          const prevToken = precedingToken(buffer.tokens_fallback, i);
-          const tokenType = prevToken.type;
-          const tokenChar = prevToken.string.charAt(prevToken.string.length - 1);
+          const prevToken = precedingToken(buffer.tokens_fallback, i) || {};
+          const tokenType = safeGet(prevToken, 'type', '');
+          const tokenString = safeGet(prevToken, 'string', '');
+          const tokenChar = tokenString.charAt(tokenString.length - 1);
           if (tokenType === 'string' && tokenChar === '\\') {
             break;
           }
@@ -419,16 +352,16 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
 
   const quotes = '\'"';
   const alphanumeric = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$';
-  let error = false;
+  let error: undefined|ErrorMsg = undefined;
   let line = buffer.tokens_merge.length > 0 ? 1 : 0;
-  const bracketList = [];
+  const bracketList: Array<Bracket> = [];
     
   // Reset Buffer2
   buffer2.brackets = [];
   buffer2.isValue = false;
   buffer2.stringOpen = false;
 
-  const setError = (tokenID, reason, offset=0) => {
+  const setError = (tokenID: number, reason: string, offset=0) => {
     error = {
       token: tokenID,
       line,
@@ -458,7 +391,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
             found = followsSymbol(buffer.tokens_merge, i, ['}', ']']);
             if (found) {
               setError(i, format(locale.invalidToken.tokenSequence.prohibited, {
-                firstToken: buffer.tokens_merge[found].string,
+                firstToken: buffer.tokens_merge[i].string, // TODO: should i be found as original?
                 secondToken: string
               }));
               break;
@@ -535,12 +468,12 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
               setError(i, format(locale.noTrailingOrLeadingComma));
               break;
             }
-            found = typeFollowed(buffer.tokens_merge, i);
-            switch (found) {
+            const typeFollow = typeFollowed(buffer.tokens_merge, i);
+            switch (typeFollow) {
               case 'key':
               case 'colon':
                 setError(i, format(locale.invalidToken.termSequence.prohibited, {
-                  firstTerm: found === 'key' ? locale.types.key : locale.symbols.colon,
+                  firstTerm: typeFollow === 'key' ? locale.types.key : locale.symbols.colon,
                   secondTerm: locale.symbols.comma
                 }));
                 break;
@@ -728,14 +661,14 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
   }
 
   buffer.json = noEscapedSingleQuote;
-  if (!error) {
+  if (error === undefined) {
     const maxIterations = Math.ceil(bracketList.length / 2);
     let round = 0;
     let delta = false;
 
-    const removePair = index => {
-      bracketList.splice(index + 1, 1);
-      bracketList.splice(index, 1);
+    const removePair = (idx: number) => {
+      bracketList.splice(idx + 1, 1);
+      bracketList.splice(idx, 1);
       if (!delta) {
         delta = true;
       }
@@ -781,7 +714,7 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
         const errPosition = parseInt(errPositionStr, 10);
         let charTotal = 0;
         let tokenIndex = 0;
-        let token = false;
+        let token: Token = buffer.tokens_merge[tokenIndex];
         let lineCount = 1;
         let exitWhile = false;
 
@@ -839,9 +772,9 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
     return (depth > 0 || byPass) ? '<br>' : '';
   };
 
-  if (error) {
+  if (error !== undefined) {
     let lineFallback = 1;
-    const countCarrigeReturn = (str) => {
+    const countCarrigeReturn = (str: string) => {
       let count = 0;
       for (let i = 0; i < str.length; i++) {
         if (['\n', '\r'].includes(str[i])) {
@@ -924,12 +857,12 @@ function DomNodeUpdate(obj, locale = defaultLocale) {
     }
   });
 
-  if (error) {
+  if (error !== undefined) {
     const { modifyErrorText } = this.props;
-    const isFunction = (fun) => fun && {}.toString.call(fun) === '[object Function]';
+    const isFunction = (fun: Function) => fun && {}.toString.call(fun) === '[object Function]';
 
     if (modifyErrorText && isFunction(modifyErrorText)) {
-      error.reason = modifyErrorText(error.reason);
+      setError(error.token, modifyErrorText(error.reason), error.offset);
     }
   }
 

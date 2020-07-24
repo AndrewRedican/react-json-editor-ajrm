@@ -16,16 +16,14 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true,
     "typeRoots": [
-      "lib/@types",
+      "src/@types",
       "node_modules/@types"
     ],
     /* Additional Options */
     "baseUrl": "lib",
     "declaration": true,
-    "removeComments": true,
-    "outDir": "dist",
+    "removeComments": true
   },
   "exclude": [
     ".eslintrc.js",
@@ -33,7 +31,6 @@
     "tests"
   ],
   "include": [
-    "bin",
-    "lib/**/*.ts"
+    "src/**/*.ts"
   ]
 }

@@ -1,5 +1,8 @@
 /* Tokenize utility functions */
+import { Token, TokenType } from './interfaces';
 import { isUndefined } from '../err';
+
+type Colors = Record<string, any>;
 
 /* Shared */
 /**
@@ -10,7 +13,7 @@ import { isUndefined } from '../err';
  * @param {Colors} colors - Color object
  * @returns {string} - formatted span string
  */
-export function newSpan(i, token, depth, colors={}) {
+export function newSpan(i: number, token: Token, depth: Number, colors: Colors = {}) {
   const { string, type } = token;
   let color = '';
 
@@ -37,7 +40,7 @@ export function newSpan(i, token, depth, colors={}) {
   }
 
   return (
-    `<span type="${type}" value="${val}" depth="${depth}" style="color: ${color}">${val}</span>`
+    `<span key="${i}" type="${type}" value="${val}" depth="${depth}" style="color: ${color}">${val}</span>`
   );
 }
 
@@ -46,8 +49,9 @@ export function newSpan(i, token, depth, colors={}) {
  * Get the precededing token
  * @param {Array<Token>} tokens - Array of tokens
  * @param {number} tokenID - ID of the token to get preceding
+ * @returns {null|Token}
  */
-export function precedingToken(tokens, tokenID) {
+export function precedingToken(tokens: Array<Token>, tokenID: number): null|Token {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   if (tokenID > 0 && tokenID < tokens.length) {
@@ -60,8 +64,9 @@ export function precedingToken(tokens, tokenID) {
  * Get the following token
  * @param {Array<Token>} tokens - Array of tokens
  * @param {number} tokenID - ID of the token to get preceding
+ * @returns {null|Token}
  */
-export function followingToken(tokens, tokenID) {
+export function followingToken(tokens: Array<Token>, tokenID: number): null|Token {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   if (tokenID >= 0 && tokenID < tokens.length - 2) {
@@ -76,7 +81,7 @@ export function followingToken(tokens, tokenID) {
  * @param {number} tokenID - ID of the token to get preceding
  * @returns {[null|Token, null|Token]} - [preceding token, following token]
  */
-export function surroundingTokens(tokens, tokenID) {
+export function surroundingTokens(tokens: Array<Token>, tokenID: number): [null|Token, null|Token] {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   return [
@@ -93,7 +98,7 @@ export function surroundingTokens(tokens, tokenID) {
  * @param {Array<string>} options - Array of string symbols to validate follow the given token
  * @returns {boolean} - any of the given symbol options precede the given token
  */
-export function followedBySymbol(tokens, tokenID, options) {
+export function followedBySymbol(tokens: Array<Token>, tokenID: number, options: Array<string>): boolean {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   isUndefined('options', options, 'options argument must be an array.');
@@ -122,7 +127,7 @@ export function followedBySymbol(tokens, tokenID, options) {
  * @param {Array<string>} options - Array of string symbols to validate preced the given token
  * @returns {boolean} - any of the given symbol options precede the given token
  */
-export function followsSymbol(tokens, tokenID, options) {
+export function followsSymbol(tokens: Array<Token>, tokenID: number, options: Array<string>): boolean {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   isUndefined('options', options, 'options argument must be an array.');
@@ -150,7 +155,7 @@ export function followsSymbol(tokens, tokenID, options) {
  * @param {number} tokenID - ID of the token to find the previous type
  * @returns {null|TokenType} - Preceding token's type, if available (excluding space & linebreak)
  */
-export function typeFollowed(tokens, tokenID) {
+export function typeFollowed(tokens: Array<Token>, tokenID: number): TokenType {
   isUndefined('tokens', tokens, 'tokens argument must be an array');
   isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
   for (let i = tokenID; i > 0; i--) {
@@ -165,5 +170,5 @@ export function typeFollowed(tokens, tokenID) {
       }
     }
   }
-  return null;
+  return 'undefined';
 }

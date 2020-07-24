@@ -7,6 +7,11 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
+    "build": "rimraf dist && npm run tsc && npm run build:commonjs && npm run build:es && npm run build:copy-files && npm run test",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
+    "build:copy-files": "node ./scripts/copy-files.js",
+    "clean": "ts-clean -d bin, lib -e .js,.d.ts",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "test": "npm run test:start && npm run test:clear",
@@ -15,14 +20,12 @@
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
     "test:release": "npm run build && npm pack ./dist",
-    "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files && npm run test",
-    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
-    "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
-    "build:copy-files": "node ./scripts/copy-files.js",
-    "release": "npm run build && npm publish ./dist"
+    "release": "npm run build && npm publish ./dist",
+    "tsc": "npm run clean && tsc"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.5"
+    "@babel/runtime": "^7.10.5",
+    "mitsuketa": "^1.4.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
@@ -47,7 +50,6 @@
     "enzyme-to-json": "^3.5.0",
     "fs-extra": "^9.0.1",
     "jest": "^26.1.0",
-    "mitsuketa": "^1.4.3",
     "react": ">=16.13.0",
     "react-dom": ">=16.13.0",
     "react-test-renderer": "^16.13.1",
@@ -104,17 +106,19 @@
   ],
   "jest": {
     "preset": "ts-jest",
-    "sideEffects": false,
     "verbose": true,
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
     ],
     "transform": {
-      "^.+\\.js$": "<rootDir>/test/jest.transform.js"
+      "^.+\\.jsx?$": "<rootDir>/test/jest.transform.js"
     },
     "moduleFileExtensions": [
       "js",
-      "jsx"
+      "json",
+      "jsx",
+      "ts",
+      "tsx"
     ],
     "testURL": "http://localhost",
     "setupFiles": [

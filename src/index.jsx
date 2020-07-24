@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import themes from './themes';
-import { getType, identical } from './mitsuketa';
+import { getType, identical } from 'mitsuketa';
 import * as err from './err';
 import { safeGet } from './utils';
 

@@ -7,7 +7,7 @@
  * @returns {boolean} object contains property or not
  * @public
  */
-export function hasProperty(obj, prop) {
+export function hasProperty(obj: Record<string, any>, prop: string): boolean {
   return Object.prototype.hasOwnProperty.call(obj, prop) || prop in obj;
 }
 
@@ -19,9 +19,9 @@ export function hasProperty(obj, prop) {
  * @return {any} value of the property or default value given/null
  * @public
  */
-export function safeGet(obj, key, def) {
+export function safeGet(obj: Record<string, any>, key: string, def?: any): any {
+  obj = ['null', 'undefined'].includes(typeof obj) ? {} : obj;
   def = def === null ? null : def;
-  obj = [null, undefined].includes(obj) ? {} : obj;
   
   const val = obj[key];
   if (hasProperty(obj, key)) {

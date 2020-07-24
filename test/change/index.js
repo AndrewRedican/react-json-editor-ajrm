@@ -4,20 +4,20 @@ import locale from '../../src/locale/en';
 
 function run() {
   test(`Update placeholder property value`, () => {
-    let wrapper = mount(
+    let wrapper = shallow(
       <JSONInput
         locale={locale}
         reset={false}
         placeholder={{ valueToChange : false }}
-      />,
-      { attachTo: window.domNode }
+      />
     );
     expect(wrapper).toMatchSnapshot();
 
     function checkState(componentState){
-        Object.keys(componentState).forEach( keyName => {
-            expect(wrapper.state()[keyName]).toEqual(componentState[keyName]);
-        });
+      const wrapperState = wrapper.state();
+      Object.keys(componentState).forEach(keyName => {
+        expect(wrapperState[keyName]).toEqual(componentState[keyName]);
+      });
     }
 
     // Note: markupText not evaluated

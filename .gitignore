@@ -372,13 +372,18 @@ $RECYCLE.BIN/
 # Test Files
 tests/schema_gen
 
-# Docs
-docs-html
-
 # Built Files
-/*.d.ts
-/*.js
 /dist/
+/src/**/*.d.ts
+/src/**/*.js
+
+# Definitions
+!src/@types/**/*.d.ts
+
+# Unconverted files
+!src/tokenize/todo.js
+!src/tokenize/todo.d.ts
+
 
 # Assorted Files
 lint_*.txt
