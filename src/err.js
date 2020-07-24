@@ -1,86 +1,103 @@
-import {
-    getType,
-    locate
-} from './mitsuketa';
+import { getType, locate } from './mitsuketa';
 
-const err = {
-    getCaller: (skip = 1) => {
-        // A somewhat hacky solution that will yield different results in different JS engines. 
-        // Since we only call this function when an error will actually be thrown we typically don't 
-        // rally mind the performance impact this might have if called too often.
-        // Lucky for us we use nodeJS and thus only V8.
-        const stackTrace = (new Error()).stack;
-        var callerName = stackTrace.replace(/^Error\s+/, '');
-        callerName = callerName.split("\n")[skip];
-        callerName = callerName.replace(/^\s+at Object./, '').replace(/^\s+at /, '').replace(/ \(.+\)$/, '')
-        return callerName;
-    },
+const UNKNOWN = '<unknown parameter>';
 
-    throwError: (fxName = 'unknown function', paramName = 'unknown parameter', expectation = 'to be defined') => {
-        throw ['@', fxName, '(): Expected parameter \'', paramName, '\' ', expectation].join('');
-    },
+export function getCaller(skip = 1) {
+  // A somewhat hacky solution that will yield different results in different JS engines.
+  // Since we only call this function when an error will actually be thrown we typically don't
+  // rally mind the performance impact this might have if called too often.
+  // Lucky for us we use nodeJS and thus only V8.
+  const stackTrace = (new Error()).stack || '';
+  let callerName = stackTrace.replace(/^Error\s+/, '');
+  callerName = callerName.split('\n')[skip];
+  callerName = callerName.replace(/^\s+at Object./, '').replace(/^\s+at /, '').replace(/ \(.+\)$/, '');
+  return callerName;
+}
 
-    isUndefined: (paramName = '<unknown parameter>', param) => {
-        if ([null, undefined].indexOf(param) > -1) err.throwError(err.getCaller(2), paramName);
-    },
+export function throwError(fxName = 'unknown function', paramName = 'unknown parameter', expectation = 'to be defined') {
+  throw ['@', fxName, '(): Expected parameter \'', paramName, '\' ', expectation].join('');
+}
 
-    isFalsy: (paramName = '<unknown parameter>', param) => {
-        if (!param) err.throwError(err.getCaller(2), paramName);
-    },
+export function isUndefined(paramName = UNKNOWN, param, expectation) {
+  if ([null, undefined].includes(param)) {
+    throwError(getCaller(2), paramName, expectation);
+  }
+}
 
-    isNoneOf: (paramName = '<unknown parameter>', param, contains = []) => {
-        if (contains.indexOf(param) === -1) err.throwError(err.getCaller(2), paramName, 'to be any of' + JSON.stringify(contains));
-    },
+export function isFalsy(paramName = UNKNOWN, param) {
+  if (!param) {
+    throwError(getCaller(2), paramName);
+  }
+}
 
-    isAnyOf: (paramName = '<unknown parameter>', param, contains = []) => {
-        if (contains.indexOf(param) > -1) err.throwError(err.getCaller(2), paramName, 'not to be any of' + JSON.stringify(contains));
-    },
+export function isNoneOf(paramName = UNKNOWN, param, contains = []) {
+  if (contains.indexOf(param) === -1) {
+    throwError(getCaller(2), paramName, `to be any of ${JSON.stringify(contains)}`);
+  }
+}
 
-    isNotType: (paramName = '<unknown parameter>', param, type = '') => {
-        if (getType(param) !== type.toLowerCase()) err.throwError(err.getCaller(2), paramName, 'to be type ' + type.toLowerCase());
-    },
+export function isAnyOf(paramName = UNKNOWN, param, contains = []) {
+  if (contains.includes(param)) {
+    throwError(getCaller(2), paramName, `not to be any of ${JSON.stringify(contains)}`);
+  }
+}
 
-    isAnyTypeOf: (paramName = '<unknown parameter>', param, types = []) => {
-        types.forEach(type => {
-            if (getType(param) === type) err.throwError(err.getCaller(2), paramName, 'not to be type of ' + type.toLowerCase());
-        });
-    },
+export function isNotType(paramName = UNKNOWN, param, type = '') {
+  if (getType(param) !== type.toLowerCase()) {
+    throwError(getCaller(2), paramName, `to be type ${type.toLowerCase()}`);
+  }
+}
 
-    missingKey: (paramName = '<unknown parameter>', param, keyName = '') => {
-        err.isUndefined(paramName, param);
-        if (Object.keys(param).indexOf(keyName) === -1) err.throwError(err.getCaller(2), paramName, 'to contain \'' + keyName + '\' key');
-    },
+export function isAnyTypeOf(paramName = UNKNOWN, param, types = []) {
+  types.forEach(type => {
+      if (getType(param) === type) {
+        throwError(getCaller(2), paramName, `not to be type of ${type.toLowerCase()}`);
+      }
+  });
+}
 
-    missingAnyKeys: (paramName = '<unknown parameter>', param, keyNames = ['']) => {
-        err.isUndefined(paramName, param);
-        const keyList = Object.keys(param);
-        keyNames.forEach(keyName => {
-            if (keyList.indexOf(keyName) === -1) err.throwError(err.getCaller(2), paramName, 'to contain \'' + keyName + '\' key');
-        });
-    },
+export function missingKey(paramName = UNKNOWN, param, keyName = '') {
+  isUndefined(paramName, param);
+  if (Object.keys(param).indexOf(keyName) === -1) {
+    throwError(getCaller(2), paramName, `to contain '${keyName}' key`);
+  }
+}
 
-    containsUndefined: (paramName = '<unknown parameter>', param) => {
-        [undefined, null].forEach(value => {
-            const location = locate(param, value);
-            if (location) err.throwError(err.getCaller(2), paramName, 'not to contain \'' + JSON.stringify(value) + '\' at ' + location);
-        });
-    },
+export function missingAnyKeys(paramName = UNKNOWN, param, keyNames = ['']) {
+  isUndefined(paramName, param);
+  const keyList = Object.keys(param);
+  keyNames.forEach(keyName => {
+      if (keyList.indexOf(keyName) === -1) {
+        throwError(getCaller(2), paramName, `to contain '${keyName}' key`);
+      }
+  });
+}
 
-    isInvalidPath: (paramName = '<unknown parameter>', param) => {
-        err.isUndefined(paramName, param);
-        err.isNotType(paramName, param, 'string');
-        err.isAnyOf(paramName, param, ['', '/']);
-        '.$[]#'.split().forEach(invalidChar => {
-            if (param.indexOf(invalidChar) > -1) err.throwError(err.getCaller(2), paramName, 'not to contain invalid character \'' + invalidChar + '\'');
-        });
-        if (param.match(/\/{2,}/g)) err.throwError(err.getCaller(2), paramName, 'not to contain consecutive forward slash characters');
-    },
+export function containsUndefined(paramName = UNKNOWN, param) {
+  [undefined, null].forEach(value => {
+      const location = locate(param, value);
+      if (location) {
+        throwError(getCaller(2), paramName, `not to contain '${JSON.stringify(value)}' at ${location}`);
+      }
+  });
+}
 
-    isInvalidWriteData: (paramName = '<unknown parameter>', param) => {
-        err.isUndefined(paramName, param);
-        err.containsUndefined(paramName, param);
-    }
+export function isInvalidPath(paramName = UNKNOWN, param) {
+  isUndefined(paramName, param);
+  isNotType(paramName, param, 'string');
+  isAnyOf(paramName, param, ['', '/']);
+  ['.', '$', '[', ']', '#'].forEach(invalidChar => {
+      if (param.indexOf(invalidChar) > -1) {
+        throwError(getCaller(2), paramName, `not to contain invalid character '${invalidChar}'`);
+      }
+  });
 
-};
+  if (param.match(/\/{2,}/g)) {
+    throwError(getCaller(2), paramName, 'not to contain consecutive forward slash characters');
+  }
+}
 
-export default err;
+export function isInvalidWriteData(paramName = UNKNOWN, param) {
+  isUndefined(paramName, param);
+  containsUndefined(paramName, param);
+}

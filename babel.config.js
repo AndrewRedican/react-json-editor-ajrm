@@ -1,3 +1,4 @@
+const developmentEnvironments = ['development', 'test'];
 const { BABEL_ENV } = process.env;
 
 console.log("Running Babel ...", { BABEL_ENV });
@@ -23,16 +24,6 @@ const presets = moduleSystem === "es"
     '@babel/preset-react'
   ];
 
-// The ES system does not polyfill etc, while the others do.
-const transformOptions = moduleSystem === "es"
-  ? {
-    helpers: true,
-    useESModules: true
-  }
-  : {
-    helpers: true,
-    useESModules: false
-  };
 
 module.exports = {
   presets,
@@ -40,7 +31,19 @@ module.exports = {
     '@babel/plugin-transform-object-assign',
     '@babel/plugin-proposal-object-rest-spread',
     'babel-plugin-extensible-destructuring',
-    ['@babel/plugin-transform-runtime', transformOptions]
+    [
+      // The ES system does not polyfill etc, while the others do
+      '@babel/plugin-transform-runtime',
+      {
+        helpers: true,
+        useESModules: moduleSystem === 'es'
+      }
+    ],
+    // Stage 3
+    [
+      '@babel/plugin-proposal-class-properties',
+      { loose: true }
+    ],
   ],
   env: {
     production: {

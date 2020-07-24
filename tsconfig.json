@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "strict": true,
+    "pretty": true,
+    "sourceMap": false,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny" : true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "typeRoots": [
+      "lib/@types",
+      "node_modules/@types"
+    ],
+    /* Additional Options */
+    "baseUrl": "lib",
+    "declaration": true,
+    "removeComments": true,
+    "outDir": "dist",
+  },
+  "exclude": [
+    ".eslintrc.js",
+    "config/",
+    "tests"
+  ],
+  "include": [
+    "bin",
+    "lib/**/*.ts"
+  ]
+}
