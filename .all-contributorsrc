@@ -1,6 +1,6 @@
 {
-  "projectName": "react-json-editor-ajrm",
-  "projectOwner": "AndrewRedican",
+  "projectName": "react-json-editor",
+  "projectOwner": "Jerry",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
@@ -9,6 +9,15 @@
   "imageSize": 100,
   "commit": true,
   "contributors": [
+    {
+      "login": "czack425",
+      "name": "Jerry",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11284326?v=4",
+      "profile": "https://github.com/czack425",
+      "contributions": [
+        "code"
+      ]
+    },
     {
       "login": "AndrewRedican",
       "name": "Andrew Redican",
@@ -145,15 +154,6 @@
       "name": "Alexey Lyakhov",
       "avatar_url": "https://avatars3.githubusercontent.com/u/2255993?v=4",
       "profile": "https://github.com/JustFly1984",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "czack425",
-      "name": "Jerry",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/11284326?v=4",
-      "profile": "https://github.com/czack425",
       "contributions": [
         "code"
       ]
