@@ -21,9 +21,10 @@
       "node_modules/@types"
     ],
     /* Additional Options */
-    "baseUrl": "lib",
+    "baseUrl": "src",
     "declaration": true,
-    "removeComments": true
+    "removeComments": true,
+    "outDir": "lib"
   },
   "exclude": [
     ".eslintrc.js",
