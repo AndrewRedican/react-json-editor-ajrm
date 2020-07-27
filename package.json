@@ -14,6 +14,7 @@
     "clean": "ts-clean -d bin, lib -e .js,.d.ts",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
+    "prepare": "npm run build",
     "test": "npm run test:start && npm run test:clear",
     "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --updateSnapshot",
     "test:clear": "del-cli test/__snapshots__",
@@ -128,7 +129,10 @@
       "enzyme-to-json/serializer"
     ]
   },
+  "directories": {
+    "lib": "lib"
+  },
   "files": [
-    "*"
+    "lib/*"
   ]
 }
