@@ -1,38 +1,40 @@
+import Locale from './interface';
+
 // Japanese
-export default {
+const locale: Locale = {
   format: '{reason} ラインで {line}',
   symbols: {
-    colon: '結腸', // :
-    comma: 'コンマ', // ,
-    semicolon: 'セミコロン', // ;
-    slash: 'スラッシュ', // /  relevant for comment syntax support
-    backslash: 'バックスラッシュ', // \  relevant for escaping character
+    colon: '結腸',
+    comma: 'コンマ',
+    semicolon: 'セミコロン',
+    slash: 'スラッシュ',
+    backslash: 'バックスラッシュ',
     brackets: {
-      round: '丸括弧', // ( )
-      square: '角括弧', // [ ]
-      curly: '中括弧', // { }
-      angle: 'アングルブラケット' // < >
+      round: '丸括弧',
+      square: '角括弧',
+      curly: '中括弧',
+      angle: 'アングルブラケット'
     },
-    period: '期間', // . Also known as full point, full stop, or dot
+    period: '期間',
     quotes: {
-      single: '一重引用符', // '
-      double: '二重引用符', // "
-      grave: '深刻な引用' // ` used on Javascript ES6 Syntax for String Templates
+      single: '一重引用符',
+      double: '二重引用符',
+      grave: '深刻な引用'
     },
-    space: 'スペース', //
-    ampersand: 'アンパサンド', //	&
-    asterisk: 'アスタリスク', //	*  relevant for some comment sytanx
-    at: '〜で', //	@  multiple uses in other coding languages including certain data types
-    equals: '等しい', //	=
-    hash: 'ハッシュ', //	#
-    percent: 'パーセント', //	%
-    plus: 'プラス', //	+
-    minus: 'マイナス', //	−
-    dash: 'ダッシュ', //	-
-    hyphen: 'ハイフン', //	−
-    tilde: 'チルダ', //	~
-    underscore: 'アンダースコア', //	_
-    bar: 'バー', //	|
+    space: 'スペース',
+    ampersand: 'アンパサンド',
+    asterisk: 'アスタリスク',
+    at: '〜で',
+    equals: '等しい',
+    hash: 'ハッシュ',
+    percent: 'パーセント',
+    plus: 'プラス',
+    minus: 'マイナス',
+    dash: 'ダッシュ',
+    hyphen: 'ハイフン',
+    tilde: 'チルダ',
+    underscore: 'アンダースコア',
+    bar: 'バー'
   },
   types: {
     key: 'キー',
@@ -45,7 +47,6 @@ export default {
     integer: '整数',
     array: 'アレイ',
     float: '浮く'
-    // ... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
@@ -83,7 +84,8 @@ export default {
     numberAndLetterMissingQuotes: '数字で始まり、文字を含むキーは引用符で囲む必要があります',
     spaceMissingQuotes: 'スペースを含むキーは引用符で囲む必要があります',
     unexpectedString: 'キー位置で予期しない文字列が見つかりました'
-
   },
   noTrailingOrLeadingComma: '配列やオブジェクトの先頭や末尾にコンマをつけることはできません'
 };
+
+export default locale;

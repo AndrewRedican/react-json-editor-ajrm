@@ -31,7 +31,7 @@ export function isFalsy(paramName = UNKNOWN, param: any) {
 }
 
 export function isNoneOf(paramName: string = UNKNOWN, param: any, contains: Array<any> = []) {
-  if (contains.indexOf(param) === -1) {
+  if (!contains.includes(param)) {
     throwError(getCaller(2), paramName, `to be any of ${JSON.stringify(contains)}`);
   }
 }
@@ -48,7 +48,7 @@ export function isNotType(paramName: string = UNKNOWN, param: any, type = '') {
   }
 }
 
-export function isAnyTypeOf(paramName: string = UNKNOWN, param: any, types: Array<any> = []) {
+export function isAnyTypeOf(paramName: string = UNKNOWN, param: any, types: Array<string> = []) {
   types.forEach(type => {
       if (getType(param) === type) {
         throwError(getCaller(2), paramName, `not to be type of ${type.toLowerCase()}`);
@@ -58,7 +58,7 @@ export function isAnyTypeOf(paramName: string = UNKNOWN, param: any, types: Arra
 
 export function missingKey(paramName: string = UNKNOWN, param: any, keyName = '') {
   isUndefined(paramName, param);
-  if (Object.keys(param).indexOf(keyName) === -1) {
+  if (!Object.keys(param).includes(keyName)) {
     throwError(getCaller(2), paramName, `to contain '${keyName}' key`);
   }
 }
@@ -67,7 +67,7 @@ export function missingAnyKeys(paramName: string = UNKNOWN, param: any, keyNames
   isUndefined(paramName, param);
   const keyList = Object.keys(param);
   keyNames.forEach(keyName => {
-      if (keyList.indexOf(keyName) === -1) {
+      if (!keyList.includes(keyName)) {
         throwError(getCaller(2), paramName, `to contain '${keyName}' key`);
       }
   });

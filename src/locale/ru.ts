@@ -1,38 +1,40 @@
+import Locale from './interface';
+
 // Russian
-export default {
+const locale: Locale = {
   format: '{reason} на строке {line}',
   symbols: {
-    colon: 'двоеточие', // :
-    comma: 'запятая', // ,  ،  、
-    semicolon: 'точка с запятой', // ;
-    slash: 'косая черта', // /  relevant for comment syntax support
-    backslash: 'обратная косая черта', // \  relevant for escaping character
+    colon: 'двоеточие',
+    comma: 'запятая',
+    semicolon: 'точка с запятой',
+    slash: 'косая черта',
+    backslash: 'обратная косая черта',
     brackets: {
-      round: 'круглые скобки', // ( )
-      square: 'квадратные скобки', // [ ]
-      curly: 'фигурные скобки', // { }
-      angle: 'угловые скобки' // < >
+      round: 'круглые скобки',
+      square: 'квадратные скобки',
+      curly: 'фигурные скобки',
+      angle: 'угловые скобки'
     },
-    period: 'точка', // . Also known as full point, full stop, or dot
+    period: 'точка',
     quotes: {
-      single: 'одинарная кавычка', // '
-      double: 'двойная кавычка', // "
-      grave: 'косая кавычка' // ` used on Javascript ES6 Syntax for String Templates
+      single: 'одинарная кавычка',
+      double: 'двойная кавычка',
+      grave: 'косая кавычка'
     },
-    space: 'пробел', //
-    ampersand: 'амперсанд', //	&
-    asterisk: 'астериск', //	*  relevant for some comment sytanx
-    at: 'коммерческое at ', //	@  multiple uses in other coding languages including certain data types
-    equals: 'знак равенства', //	=
-    hash: 'октоторп', //	#
-    percent: 'процент', //	%
-    plus: 'плюс', //	+
-    minus: 'минус', //	−
-    dash: 'тире', //	−
-    hyphen: 'дефис', //	−
-    tilde: 'тильда', //	~
-    underscore: 'нижнее подчеркивание', //	_
-    bar: 'вертикальная черта', //	|
+    space: 'пробел',
+    ampersand: 'амперсанд',
+    asterisk: 'астериск',
+    at: 'коммерческое at ',
+    equals: 'знак равенства',
+    hash: 'октоторп',
+    percent: 'процент',
+    plus: 'плюс',
+    minus: 'минус',
+    dash: 'тире',
+    hyphen: 'дефис',
+    tilde: 'тильда',
+    underscore: 'нижнее подчеркивание',
+    bar: 'вертикальная черта'
   },
   types: {
     key: 'ключ',
@@ -45,7 +47,6 @@ export default {
     integer: 'целое число',
     array: 'массив',
     float: 'число с плавающей точкой'
-    // ... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
@@ -86,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'Начальные или конечные запятые в массивах и объектах не разрешены'
 };
+
+export default locale;

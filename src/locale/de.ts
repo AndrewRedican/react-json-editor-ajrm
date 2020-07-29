@@ -1,5 +1,7 @@
+import Locale from './interface';
+
 // German
-export default {
+const locale: Locale = {
   format: '{reason} in Zeile {line}',
   symbols: {
     colon: 'Doppelpunkt',
@@ -32,7 +34,7 @@ export default {
     hyphen: 'Viertelgeviertstrich',
     tilde: 'Tilde',
     underscore: 'Unterstrich',
-    bar: 'senkrechter Strich',
+    bar: 'senkrechter Strich'
   },
   types: {
     key: 'Zeichenerklärung',
@@ -85,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'Anführende oder Anschließende Kommas sind in Arrays und Objekten nicht erlaubt'
 };
+
+export default locale;

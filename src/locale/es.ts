@@ -1,5 +1,7 @@
+import Locale from './interface';
+
 // Spanish
-export default {
+const locale: Locale = {
   format: '{reason} en la línea {line}',
   symbols: {
     colon: 'dos puntos',
@@ -32,7 +34,7 @@ export default {
     hyphen: 'guion',
     tilde: 'tilde',
     underscore: 'guion bajo',
-    bar: 'pleca',
+    bar: 'pleca'
   },
   types: {
     key: 'llave',
@@ -85,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'No se permiten comas contiguas dentro de listas u objetos'
 };
+
+export default locale;

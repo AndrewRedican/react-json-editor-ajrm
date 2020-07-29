@@ -1,38 +1,40 @@
+import Locale from './interface';
+
 // Indonesian
-export default {
+const locale: Locale = {
   format: '{reason} pada baris {line}',
   symbols: {
-    colon: 'kolon', // :
-    comma: 'koma', // ,  ،  、
-    semicolon: 'titik dua', // ;
-    slash: 'garis miring', // /  relevant for comment syntax support
-    backslash: 'garis miring terbalik', // \  relevant for escaping character
+    colon: 'kolon',
+    comma: 'koma',
+    semicolon: 'titik dua',
+    slash: 'garis miring',
+    backslash: 'garis miring terbalik',
     brackets: {
-      round: 'kurung buka', // ( )
-      square: 'kurung besar', // [ ]
-      curly: 'kurung keriting', // { }
-      angle: 'kurung sudut' // < >
+      round: 'kurung buka',
+      square: 'kurung besar',
+      curly: 'kurung keriting',
+      angle: 'kurung sudut'
     },
-    period: 'titik', // . Also known as full point, full stop, or dot
+    period: 'titik',
     quotes: {
-      single: 'tanda kutip tunggal', // '
-      double: 'tanda kutip ganda', // "
-      grave: 'tanda kutip satu' // ` used on Javascript ES6 Syntax for String Templates
+      single: 'tanda kutip tunggal',
+      double: 'tanda kutip ganda',
+      grave: 'tanda kutip satu'
     },
-    space: 'spasi', //
-    ampersand: 'dan', //	&
-    asterisk: 'asterisk', //	*  relevant for some comment sytanx
-    at: 'at sign', //	@  multiple uses in other coding languages including certain data types
-    equals: 'sama dengan', //	=
-    hash: 'pagar', //	#
-    percent: 'persen', //	%
-    plus: 'tambah', //	+
-    minus: 'kurang', //	−
-    dash: 'hubung', //	−
-    hyphen: 'pisah', //	−
-    tilde: 'tilde', //	~
-    underscore: 'garis miring', //	_
-    bar: 'garis vertikal', //	|
+    space: 'spasi',
+    ampersand: 'dan',
+    asterisk: 'asterisk',
+    at: 'at sign',
+    equals: 'sama dengan',
+    hash: 'pagar',
+    percent: 'persen',
+    plus: 'tambah',
+    minus: 'kurang',
+    dash: 'hubung',
+    hyphen: 'pisah',
+    tilde: 'tilde',
+    underscore: 'garis miring',
+    bar: 'garis vertikal'
   },
   types: {
     key: 'key',
@@ -45,7 +47,6 @@ export default {
     integer: 'integer',
     array: 'array',
     float: 'float'
-    // ... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
@@ -83,7 +84,8 @@ export default {
     numberAndLetterMissingQuotes: 'Key yang diawali dengan nomor dan berisi huruf harus dibungkus dengan tanda kutip',
     spaceMissingQuotes: 'Key yang mengandung spasi harus dibungkus dengan tanda kutip',
     unexpectedString: 'String tak terduga ditemukan pada posisi key'
-
   },
   noTrailingOrLeadingComma: 'Trailing atau koma utama dalam array dan objek tidak diizinkan'
 };
+
+export default locale;

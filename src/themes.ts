@@ -1,5 +1,7 @@
 /* eslint @typescript-eslint/naming-convention: 0 */
-const dark_vscode_tribute = {
+import { ColorProps } from 'interfaces';
+
+export const dark_vscode_tribute: ColorProps = {
   default: '#D4D4D4',
   background: '#1E1E1E',
   background_warning: '#1E1E1E',
@@ -11,7 +13,7 @@ const dark_vscode_tribute = {
   primitive: '#6392C6'
 };
 
-const light_mitsuketa_tribute = {
+export const light_mitsuketa_tribute: ColorProps = {
   default: '#D4D4D4',
   background: '#FCFDFD',
   background_warning: '#FEECEB',
@@ -21,9 +23,4 @@ const light_mitsuketa_tribute = {
   keys: '#59A5D8',
   keys_whiteSpace: '#835FB6',
   primitive: '#386FA4'
-};
-
-export default {
-  dark_vscode_tribute,
-  light_mitsuketa_tribute
 };

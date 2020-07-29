@@ -1,38 +1,40 @@
+import Locale from './interface';
+
 // Hindi
-export default {
+const locale: Locale = {
   format: '{reason} रेखा पर {line}',
   symbols: {
-    colon: 'विरामचिह्न', // :
-    comma: 'अल्पविराम', // ,  ،  、
-    semicolon: 'अर्द्धविराम', // ;
-    slash: 'स्लैश', // /  relevant for comment syntax support
-    backslash: 'बैकस्लैश', // \  relevant for escaping character
+    colon: 'विरामचिह्न',
+    comma: 'अल्पविराम',
+    semicolon: 'अर्द्धविराम',
+    slash: 'स्लैश',
+    backslash: 'बैकस्लैश',
     brackets: {
-      round: 'गोलाकार कोष्ठक', // ( )
-      square: 'वर्गाकार कोष्ठक', // [ ]
-      curly: 'कुंचित कोष्ठक', // { }
-      angle: 'कोणीय कोष्ठक' // < >
+      round: 'गोलाकार कोष्ठक',
+      square: 'वर्गाकार कोष्ठक',
+      curly: 'कुंचित कोष्ठक',
+      angle: 'कोणीय कोष्ठक'
     },
-    period: 'पूर्ण विराम', // . Also known as full point, full stop, or dot
+    period: 'पूर्ण विराम',
     quotes: {
-      single: 'एक उद्धरण चिह्न', // '
-      double: 'दोहरा उद्धरण चिह्न', // "
-      grave: 'गंभीर लहजा' // ` used on Javascript ES6 Syntax for String Templates
+      single: 'एक उद्धरण चिह्न',
+      double: 'दोहरा उद्धरण चिह्न',
+      grave: 'गंभीर लहजा'
     },
-    space: 'जगह', //
-    ampersand: 'ऐंपरसेंड', //	&
-    asterisk: 'तारक चिह्न', //	*  relevant for some comment sytanx
-    at: 'ऐट् चिह्न', //	@  multiple uses in other coding languages including certain data types
-    equals: 'समान चिह्न', //	=
-    hash: 'हैश्', //	#
-    percent: 'प्रतिशत', //	%
-    plus: 'मिलाकर', //	+
-    minus: 'घटाव', //	−
-    dash: 'एक चिह्न', //	−
-    hyphen: 'हाइफन', //	−
-    tilde: 'टिल्ड', //	~
-    underscore: 'अधोरेखा', //	_
-    bar: 'खड़ा बार', //	|
+    space: 'जगह',
+    ampersand: 'ऐंपरसेंड',
+    asterisk: 'तारक चिह्न',
+    at: 'ऐट् चिह्न',
+    equals: 'समान चिह्न',
+    hash: 'हैश्',
+    percent: 'प्रतिशत',
+    plus: 'मिलाकर',
+    minus: 'घटाव',
+    dash: 'एक चिह्न',
+    hyphen: 'हाइफन',
+    tilde: 'टिल्ड',
+    underscore: 'अधोरेखा',
+    bar: 'खड़ा बार'
   },
   types: {
     key: 'बार',
@@ -45,7 +47,6 @@ export default {
     integer: 'पूर्णांक',
     array: 'श्रृंखला',
     float: 'फ्लोट'
-    // ... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
@@ -86,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'सरणी और ऑब्जेक्ट्स में पीछे या अग्रणी कॉमा की अनुमति नहीं है'
 };
+
+export default locale;

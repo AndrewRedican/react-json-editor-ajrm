@@ -16,7 +16,11 @@ function run() {
     function checkState(componentState){
       const wrapperState = wrapper.state();
       Object.keys(componentState).forEach(keyName => {
-        expect(wrapperState[keyName]).toEqual(componentState[keyName]);
+        try {
+          expect(wrapperState[keyName]).toEqual(componentState[keyName]);
+        } catch (err) {
+          throw new Error(`State key '${keyName}'\n${err}`);
+        }
       });
     }
 
@@ -25,10 +29,10 @@ function run() {
     // Behavior On Component Initial Mount
     const intialState = {
         error: undefined,
-        jsObject: undefined,
+        jsObject: {},
         json: '',
         lines: 4,
-        plainText: undefined,
+        plainText: '{\n  valueToChange: false}',
         prevPlaceholder: {
             valueToChange : false
         }
@@ -39,10 +43,10 @@ function run() {
     wrapper.setProps({ placeholder: { valueToChange : true }});
     const stateAfterPlaceholderChange = {
         error: undefined,
-        jsObject: undefined,
+        jsObject: {},
         json: '',
         lines: 4,
-        plainText: undefined,
+        plainText: '{\n  valueToChange: true}',
         prevPlaceholder: {
             valueToChange : true
         }

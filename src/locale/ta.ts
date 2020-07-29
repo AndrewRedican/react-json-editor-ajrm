@@ -1,38 +1,40 @@
+import Locale from './interface';
+
 // Tamil
-export default {
+const locale: Locale = {
   format: '{reason} வரிசையில் {line}',
   symbols: {
-    colon: 'முழுப்புள்ளி', // :
-    comma: 'கமா', // ,  ،  、
-    semicolon: 'அரைப்புள்ளி', // ;
-    slash: 'வெட்டி', // /  relevant for comment syntax support
-    backslash: 'பின்சாய்வு', // \  relevant for escaping character
+    colon: 'முழுப்புள்ளி',
+    comma: 'கமா',
+    semicolon: 'அரைப்புள்ளி',
+    slash: 'வெட்டி',
+    backslash: 'பின்சாய்வு',
     brackets: {
-      round: 'சுற்று அடைப்புக்குறி', // ( )
-      square: 'சதுர அடைப்புக்குறி', // [ ]
-      curly: 'சுருள் அடைப்புக்குறி', // { }
-      angle: 'கோண அடைப்புக்குறி' // < >
+      round: 'சுற்று அடைப்புக்குறி',
+      square: 'சதுர அடைப்புக்குறி',
+      curly: 'சுருள் அடைப்புக்குறி',
+      angle: 'கோண அடைப்புக்குறி'
     },
-    period: 'காலம்', // . Also known as full point, full stop, or dot
+    period: 'காலம்',
     quotes: {
-      single: 'ஒற்றை மேற்கோள்', // '
-      double: 'இரட்டை மேற்கோள்', // "
-      grave: 'கடுமையான உச்சரிப்பு' // ` used on Javascript ES6 Syntax for String Templates
+      single: 'ஒற்றை மேற்கோள்',
+      double: 'இரட்டை மேற்கோள்',
+      grave: 'கடுமையான உச்சரிப்பு'
     },
-    space: 'இடம்', //
-    ampersand: 'உம்மைக்குறி', //	&
-    asterisk: 'நட்சத்திர குறி', //	*  relevant for some comment sytanx
-    at: 'அடையாளம்', //	@  multiple uses in other coding languages including certain data types
-    equals: ' சமஅடையாளம்', //	=
-    hash: 'ஹாஷ்', //	#
-    percent: 'சதவீதம்', //	%
-    plus: 'பிளஸ்', //	+
-    minus: 'குறை', //	−
-    dash: 'கோடு', //	−
-    hyphen: 'ஹைபன்', //	−
-    tilde: 'டில்டு', //	~
-    underscore: 'அடிக்கோடு', //	_
-    bar: 'செங்குத்துப் பட்டை', //	|
+    space: 'இடம்',
+    ampersand: 'உம்மைக்குறி',
+    asterisk: 'நட்சத்திர குறி',
+    at: 'அடையாளம்',
+    equals: ' சமஅடையாளம்',
+    hash: 'ஹாஷ்',
+    percent: 'சதவீதம்',
+    plus: 'பிளஸ்',
+    minus: 'குறை',
+    dash: 'கோடு',
+    hyphen: 'ஹைபன்',
+    tilde: 'டில்டு',
+    underscore: 'அடிக்கோடு',
+    bar: 'செங்குத்துப் பட்டை'
   },
   types: {
     key: 'திறவுகோல்',
@@ -45,12 +47,11 @@ export default {
     integer: 'முழு',
     array: 'படை',
     float: 'மிதவை'
-    // ... Reference: https://en.wikipedia.org/wiki/List_of_data_structures
   },
   invalidToken: {
     tokenSequence: {
       prohibited: "'{firstToken}' டோக்கனை மற்றொரு டோக்கன் '{secondToken}' தொடர்ந்து பின்பற்ற முடியாது",
-      permitted: "'{firstToken}' டோக்கனை மற்றொரு டோக்கன் '{secondToken}' தொடர்ந்து பின்பற்ற முடியும்",
+      permitted: "'{firstToken}' டோக்கனை மற்றொரு டோக்கன் '{secondToken}' தொடர்ந்து பின்பற்ற முடியும்"
     },
     termSequence: {
       prohibited: 'ஒரு {firstTerm} ஒரு {secondTerm} தொடர முடியாது',
@@ -86,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'வரிசைகள் மற்றும் பொருள்களில் முன்னணி அல்லது பின்னணி கமாக்கள் அனுமதிக்கப்படுவதில்லை'
 };
+
+export default locale;

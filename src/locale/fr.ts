@@ -1,5 +1,7 @@
+import Locale from './interface';
+
 // French
-export default {
+const locale: Locale = {
   format: '{reason} à la ligne {line}',
   symbols: {
     colon: 'deux points',
@@ -32,7 +34,7 @@ export default {
     hyphen: "trait d'union",
     tilde: 'tilde',
     underscore: 'tiret bas',
-    bar: 'barre verticale',
+    bar: 'barre verticale'
   },
   types: {
     key: 'clé',
@@ -85,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'Les virgules initiales ou finales ne sont pas autorisées dans les collections et objets'
 };
+
+export default locale;

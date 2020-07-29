@@ -1,0 +1,9 @@
+{
+  "tsconfig": "./tsconfig.json",
+  "excludeExternals": false,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "mode": "library",
+  "includeVersion": true,
+  "excludeNotExported": true
+}

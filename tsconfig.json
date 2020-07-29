@@ -24,14 +24,16 @@
     "baseUrl": "src",
     "declaration": true,
     "removeComments": true,
+    "jsx": "react",
     "outDir": "lib"
   },
   "exclude": [
     ".eslintrc.js",
     "config/",
-    "tests"
+    "test"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

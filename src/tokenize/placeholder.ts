@@ -1,7 +1,12 @@
 /* JS OBJECTS || PLACEHOLDER */
-import { Tokenize, Token } from './interfaces';
-import { newSpan, surroundingTokens } from './utils';
+import { isFunction } from 'util';
+import { PlaceholderTokenize, MarkupToken } from './interfaces';
+import { formatPlaceholderTokens } from './utils';
+import JSONInput from '../index';
+import { ColorProps } from '../interfaces';
 
+
+type TokenFormat = (tokens: Array<MarkupToken>, colors: ColorProps) => [number, string, string];
 // Interfaces
 interface PrimaryBuffer {
   inputText: string;
@@ -19,7 +24,7 @@ interface PrimaryBuffer {
 interface SecondaryBuffer {
   brackets: Array<string>;
   isValue: boolean;
-  tokens: Array<Token>;
+  tokens: Array<MarkupToken>;
 }
 
 // Helper Functions
@@ -137,7 +142,8 @@ function determineValue(buffer: PrimaryBuffer): boolean {
 
 // Main Function
 // this is temp solution to splitting the class across files
-export default function(this: Record<string, any>, obj: Record<string, any>): Tokenize {
+export default function PlaceholderJSON(this: JSONInput, obj: Record<string, any>): PlaceholderTokenize {
+  const formatTokens: TokenFormat = this.formatPlaceholderJSON && isFunction(this.formatPlaceholderJSON) ? this.formatPlaceholderJSON : formatPlaceholderTokens;
   const buffer: PrimaryBuffer = {
     inputText: JSON.stringify(obj),
     position: 0,
@@ -168,8 +174,8 @@ export default function(this: Record<string, any>, obj: Record<string, any>): To
     tokens: []
   };
 
-  buffer2.tokens = buffer.tokens.map<Token>(token => {
-    const rtnToken: Token = {
+  buffer2.tokens = buffer.tokens.map<MarkupToken>(token => {
+    const rtnToken: MarkupToken = {
       type: 'undefined',
       string: '',
       value: '',
@@ -255,51 +261,12 @@ export default function(this: Record<string, any>, obj: Record<string, any>): To
   });
 
   const clean = buffer2.tokens.map(t => t.string).join('');
-  const lastIndex = buffer2.tokens.length - 1;
-  let lines = 1;
-  let indentation = '';
-  let markup = '';
+  const [
+    lines,
+    indentation,
+    markup
+  ] = formatTokens(buffer2.tokens, this.colors);
 
-  const indent = (num: number) => `${num > 0 ? '\n' : ''}${Array(num * 2).fill(' ').join('')}`;
-  const indentII = (num: number) => {
-    lines += num > 0 ? 1 : 0;
-    return `${num > 0 ? '</br>' : ''}${Array(num * 2).fill('&nbsp;').join('')}`;
-  };
-
-  // FORMAT BY TOKEN!!
-  buffer2.tokens.forEach((token, idx) => {
-    const { depth, string } = token;
-    const span = newSpan(idx, token, token.depth, this.colors);
-    const [prevToken, nextToken] = surroundingTokens(buffer2.tokens, idx);
-    const nextString = nextToken ? nextToken.string : '';
-    const prevString = prevToken ? prevToken.string : '';
-
-    switch (string) {
-      case '{':
-      case '[':
-        indentation += '}]'.includes(nextString) ? token.string : `${string}${indent(depth)}`;
-        markup += '}]'.includes(nextString) ? span : `${span}${indentII(depth)}`;
-        break;
-      case '}':
-      case ']':
-        indentation += '[{'.includes(prevString) ? string : `${indent(depth)}${string}`;
-        markup += '[{'.includes(prevString) ? span : `${indentII(depth)}${lastIndex === idx ? '<br>' : ''}${span}`;
-        break;
-      case ':':
-        indentation += `${string} `;
-        markup += `${span} `;
-        break;
-      case ',':
-        indentation += `${string}${indent(depth)}`;
-        markup += `${span}${indentII(depth)}`;
-        break;
-      default:
-        indentation += string;
-        markup += span;
-    }
-  });
-
-  lines += 2;
   return {
     tokens: buffer2.tokens,
     noSpaces: clean,
@@ -307,6 +274,6 @@ export default function(this: Record<string, any>, obj: Record<string, any>): To
     json: JSON.stringify(obj),
     jsObject: obj,
     markup,
-    lines
+    lines: lines + 2
   };
 }

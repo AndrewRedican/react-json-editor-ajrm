@@ -1,5 +1,7 @@
+import Locale from './interface';
+
 // Portuguese
-export default {
+const locale: Locale = {
   format: '{reason} na linha {line}',
   symbols: {
     colon: 'dois pontos',
@@ -32,7 +34,7 @@ export default {
     hyphen: 'hífen',
     tilde: 'acento til',
     underscore: 'travessão',
-    bar: 'barra vertical',
+    bar: 'barra vertical'
   },
   types: {
     key: 'chave',
@@ -85,3 +87,5 @@ export default {
   },
   noTrailingOrLeadingComma: 'Vírgulas adjacentes não são permitidas em listas ou objetos'
 };
+
+export default locale;

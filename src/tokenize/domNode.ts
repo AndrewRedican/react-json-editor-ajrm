@@ -1,22 +1,27 @@
 /* DOM Node || OnBlue or Update */
-import { ErrorMsg, Tokenize, Token, TokenType } from './interfaces';
-import { quarkize } from './todo';
+import { isFunction } from 'util';
+import {
+  DomNodeTokenize, ErrorMsg, TokenType, SimpleToken, BaseToken, FallbackToken, MergeToken
+} from './interfaces';
+import JSONInput from '../index';
+import { ColorProps } from '../interfaces';
 import { format } from '../locale';
 import defaultLocale from '../locale/en';
 import { safeGet } from '../utils';
 import {
-  followedBySymbol, followsSymbol, newSpan, precedingToken, typeFollowed
+  formatDomNodeTokens, followedBySymbol, followsSymbol, newSpan, precedingToken, typeFollowed, mergeObjects
 } from './utils';
 
 
+type TokenFormat = (tokens: Array<MergeToken>, colors: ColorProps) => [number, string];
 // Interfaces
 interface PrimaryBuffer {
-  tokens_unknown: Array<any>;
-  tokens_proto: Array<any>;
-  tokens_split: Array<any>;
-  tokens_fallback: Array<any>;
-  tokens_normalize: Array<any>;
-  tokens_merge: Array<any>;
+  tokens_unknown: Array<SimpleToken>;
+  tokens_proto: Array<BaseToken>;
+  tokens_split: Array<BaseToken>;
+  tokens_fallback: Array<FallbackToken>;
+  tokens_normalize: Array<SimpleToken>;
+  tokens_merge: Array<MergeToken>;
   tokens_plainText: string;
   indented: string;
   json: string;
@@ -27,7 +32,7 @@ interface PrimaryBuffer {
 interface SecondaryBuffer {
   brackets: Array<string>;
   isValue: boolean;
-  stringOpen: boolean;
+  stringOpen: boolean|string;
 }
 
 interface Bracket {
@@ -36,7 +41,115 @@ interface Bracket {
   string: string;
 }
 
+type QuarkType = 'delimiter'|'number'|'space'|'string'|'symbol';
+
+interface QuarkBuffer {
+  active?: QuarkType;
+  string: string;
+  number: string;
+  symbol: string;
+  space: string;
+  delimiter: string;
+  quarks: Array<BaseToken>;
+}
+
 // Helper Functions
+function pushAndStore(buffer: QuarkBuffer, char: string, type: QuarkType, prefix = ''): void {
+  switch (type) {
+    case 'symbol':
+    case 'delimiter':
+      if (buffer.active) {
+        buffer.quarks.push({
+          string: buffer[buffer.active],
+          type: `${prefix}-${buffer.active}`
+        });
+      }
+      // buffer[buffer.active] = '';
+      buffer.active = type;
+      buffer[buffer.active] = char;
+      break;
+    default:
+      if (type !== buffer.active || [buffer.string, char].includes('\n')) {
+        if (buffer.active) {
+          buffer.quarks.push({
+            string: buffer[buffer.active],
+            type: `${prefix}-${buffer.active}`
+          });
+        }
+        // buffer[buffer.active] = '';
+        buffer.active = type;
+        buffer[buffer.active] = char;
+      } else {
+        buffer[type] += char;
+      }
+  }
+}
+
+function quarkize(text: string, prefix = '') {
+  const buffer: QuarkBuffer = {
+    active: undefined,
+    string: '',
+    number: '',
+    symbol: '',
+    space: '',
+    delimiter: '',
+    quarks: []
+  };
+
+  text.split('').forEach((char, i) => {
+    let charType: QuarkType = 'string';
+    switch (char) {
+      case '"':
+      case "'":
+        charType = 'delimiter';
+        break;
+      case ' ':
+      case '\u00A0':
+        charType = 'space';
+        break;
+      case '{':
+      case '}':
+      case '[':
+      case ']':
+      case ':':
+      case ',':
+        charType = 'symbol';
+        break;
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        charType = buffer.active === 'string' ? 'string' : 'number';
+        break;
+      case '-':
+        charType = (i < text.length - 1 && '0123456789'.includes(text.charAt(i + 1))) ? 'number' : 'string';
+        break;
+      case '.':
+        charType = (i < text.length - 1 && i > 0 && '0123456789'.includes(text.charAt(i + 1)) && '0123456789'.includes(text.charAt(i - 1))) ? 'number' : 'string';
+        break;
+      default:
+        charType = 'string';
+    }
+    pushAndStore(buffer, char, charType, prefix);
+  });
+
+  if (buffer.active) {
+    buffer.quarks.push({
+      string: buffer[buffer.active],
+      type: `${prefix}-${buffer.active}`
+    });
+    // buffer[buffer.active] = '';
+    buffer.active = undefined;
+  }
+  return buffer.quarks;
+}
+
 function validToken(str: string, type: TokenType): boolean {
   const quotes = ["'", '"'];
   const firstChar = str.charAt(0);
@@ -85,10 +198,10 @@ function validToken(str: string, type: TokenType): boolean {
     case 'number':
       for (let i = 0; i < str.length; i++) {
         if (!'0123456789'.includes(str.charAt(i)) && i === 0) {
-          if (str.charAt(0) !== '-') {
+          if (!str.startsWith('-')) {
             return false;
           }
-        } else if (str.charAt(i) !== '.') {
+        } else if (!str.startsWith('.')) {
           return false;
         }
       }
@@ -108,12 +221,12 @@ function validToken(str: string, type: TokenType): boolean {
   return true;
 }
 
-function tokenFollowed(tokens: Array<Token>): null|Token {
+function tokenFollowed(tokens: Array<SimpleToken>): null|SimpleToken {
   const last = tokens.length - 1;
   if (last < 1) {
     return null;
   }
-  
+
   for (let i = last; i >= 0; i--) {
     const previousToken = tokens[i];
     switch (previousToken.type) {
@@ -128,7 +241,8 @@ function tokenFollowed(tokens: Array<Token>): null|Token {
 }
 
 // Main Function
-function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLocale): null|Tokenize {
+export default function DomNodeUpdate(this: JSONInput, obj: HTMLElement, locale = defaultLocale): null|DomNodeTokenize {
+  const formatTokens: TokenFormat = this.formatDomNodeUpdate && isFunction(this.formatDomNodeUpdate) ? this.formatDomNodeUpdate : formatDomNodeTokens;
   const rootNode = obj.cloneNode(true);
   if (!rootNode.hasChildNodes()) {
     return null;
@@ -153,13 +267,13 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
     switch (child.nodeName) {
       case 'SPAN':
         buffer.tokens_unknown.push({
-          string: child.textContent,
-          type: child.textContent  // .attributes.type.textContent
+          string: child.textContent || '',
+          type: 'unknown'  // child.textContent // .attributes.type.textContent
         });
         break;
       case 'DIV':
         buffer.tokens_unknown.push({
-          string: child.textContent,
+          string: child.textContent || '',
           type: 'unknown'
         });
         break;
@@ -173,13 +287,13 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
         break;
       case '#text':
         buffer.tokens_unknown.push({
-          string: child.textContent, // wholeText,
+          string: child.textContent || '', // wholeText,
           type: 'unknown'
         });
         break;
       case 'FONT':
         buffer.tokens_unknown.push({
-          string: child.textContent,
+          string: child.textContent || '',
           type: 'unknown'
         });
         break;
@@ -194,7 +308,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
 
   buffer.tokens_proto.forEach(token => {
     if (!token.type.includes('proto')) {
-      if (!validToken(token.string, token.type)) {
+      if (!validToken(token.string, token.type as TokenType)) {
         buffer.tokens_split = buffer.tokens_split.concat(quarkize(token.string, 'split'));
       } else {
         buffer.tokens_split.push(token);
@@ -204,11 +318,11 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
     }
   });
 
-  buffer.tokens_fallback = buffer.tokens_split.map(token => {
+  buffer.tokens_fallback = buffer.tokens_split.map<FallbackToken>(token => {
     let { type } = token;
     const fallback = [];
 
-    if (type.indexOf('-') > -1) {
+    if (type.includes('-')) {
       type = type.slice(type.indexOf('-') + 1);
       if (type !== 'string') {
         fallback.push('string');
@@ -222,7 +336,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
       length: token.string.length,
       type,
       fallback
-    };
+    } as FallbackToken;
   });
 
   const buffer2: SecondaryBuffer = {
@@ -233,9 +347,9 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
 
   // Sort tokens for push -> buffer.tokens_normalize
   for (let i = 0; i < buffer.tokens_fallback.length; i++) {
-    let token = buffer.tokens_fallback[i];
+    const token = buffer.tokens_fallback[i];
     const lastIndex = buffer.tokens_normalize.length - 1;
-    const lastType = safeGet(tokenFollowed(buffer.tokens_normalize) || {}, 'type', '');
+    const lastType = safeGet(tokenFollowed(buffer.tokens_normalize) || {}, 'type', '') as TokenType;
     const normalToken = {
       string: token.string,
       type: token.type
@@ -280,8 +394,8 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
         }
         if (i > 0) {
           const prevToken = precedingToken(buffer.tokens_fallback, i) || {};
-          const tokenType = safeGet(prevToken, 'type', '');
-          const tokenString = safeGet(prevToken, 'string', '');
+          const tokenType = safeGet(prevToken, 'type', '') as TokenType;
+          const tokenString = safeGet(prevToken, 'string', '') as string;
           const tokenChar = tokenString.charAt(tokenString.length - 1);
           if (tokenType === 'string' && tokenChar === '\\') {
             break;
@@ -352,10 +466,10 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
 
   const quotes = '\'"';
   const alphanumeric = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$';
-  let error: undefined|ErrorMsg = undefined;
+  let error: undefined|ErrorMsg;
   let line = buffer.tokens_merge.length > 0 ? 1 : 0;
   const bracketList: Array<Bracket> = [];
-    
+
   // Reset Buffer2
   buffer2.brackets = [];
   buffer2.isValue = false;
@@ -368,7 +482,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
       reason
     };
     buffer.tokens_merge[tokenID + offset].type = 'error';
-  }
+  };
 
   // TODO: Break apart loop
   buffer.tokens_merge.forEach((token, i) => {
@@ -577,7 +691,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
         if (type === 'key') {
           if (typeFollowed(buffer.tokens_merge, i) === 'key') {
             if (i > 0 && !Number.isNaN(Number(buffer.tokens_merge[i - 1]))) {
-              buffer.tokens_merge[i - 1] += buffer.tokens_merge[i];
+              mergeObjects(buffer.tokens_merge[i - 1], buffer.tokens_merge[i]);
               setError(i, format(locale.key.numberAndLetterMissingQuotes));
               break;
             }
@@ -701,9 +815,9 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
 
     if (![undefined, ''].includes(buffer.json)) {
       try {
-        buffer.jsObject = JSON.parse(buffer.json);
+        buffer.jsObject = JSON.parse(buffer.json) as Record<string, any>;
       } catch (err) {
-        const errorMessage = err.message;
+        const errorMessage = (err as Error).message;
         const subsMark = errorMessage.indexOf('position');
 
         if (subsMark === -1) {
@@ -714,7 +828,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
         const errPosition = parseInt(errPositionStr, 10);
         let charTotal = 0;
         let tokenIndex = 0;
-        let token: Token = buffer.tokens_merge[tokenIndex];
+        let token: MergeToken = buffer.tokens_merge[tokenIndex];
         let lineCount = 1;
         let exitWhile = false;
 
@@ -763,14 +877,6 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
   }
 
   let lines = 1;
-  let depth = 0;
-  const lastIndex = buffer.tokens_merge.length - 1;
-  const newIndent = () => Array(depth * 2).fill('&nbsp;').join('');
-  const newLineBreakAndIndent = (byPass = false) => `${newLineBreak(byPass)}${newIndent()}`;
-  const newLineBreak = (byPass = false) => {
-    lines += 1;
-    return (depth > 0 || byPass) ? '<br>' : '';
-  };
 
   if (error !== undefined) {
     let lineFallback = 1;
@@ -792,7 +898,7 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
         lines += 1;
       }
 
-      buffer.markup += newSpan(i, token, depth, this.colors);
+      buffer.markup += newSpan(i, token, 0, this.colors);
       lineFallback += countCarrigeReturn(string);
     }
 
@@ -802,52 +908,9 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
       lines = lineFallback;
     }
   } else {
-    // FORMAT BY TOKEN!!
-    // TODO: Simplify this....
-    buffer.tokens_merge.forEach((token, i) => {
-      const { string, type } = token;
-      const span = newSpan(i, token, depth, this.colors);
-      const islastToken = i === lastIndex;
-      const prevToken = precedingToken(buffer.tokens_merge, i);
-      const lineAdjust = prevToken && ['[', '{'].includes(prevToken.string) ? newLineBreakAndIndent(islastToken) : '';
-
-      switch (type) {
-        case 'space':
-        case 'linebreak':
-          break;
-        case 'string':
-        case 'number':
-        case 'primitive':
-        case 'error':
-          buffer.markup += `${followsSymbol(buffer.tokens_merge, i, [',', '[']) ? newLineBreakAndIndent() : ''}${span}`;
-          break;
-        case 'key':
-          buffer.markup += `${newLineBreakAndIndent()}${span}`;
-          break;
-        case 'colon':
-          buffer.markup += `${span}&nbsp;`;
-          break;
-        case 'symbol':
-          switch (string) {
-            case '[':
-            case '{':
-              buffer.markup += `${!followsSymbol(buffer.tokens_merge, i, [':']) ? newLineBreakAndIndent() : ''}${span}`;
-              depth += 1;
-              break;
-            case ']':
-            case '}':
-              depth -= 1;
-              buffer.markup += `${lineAdjust}${newSpan(i, token, depth, this.colors)}`;
-              break;
-            case ',':
-              buffer.markup += span;
-              break;
-            // no default
-          }
-          break;
-        // no default
-      }
-    });
+    const [ tokenLines, markup ] = formatTokens(buffer.tokens_merge, this.colors);
+    lines += tokenLines;
+    buffer.markup += markup;
   }
 
   buffer.tokens_merge.forEach(token => {
@@ -859,7 +922,6 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
 
   if (error !== undefined) {
     const { modifyErrorText } = this.props;
-    const isFunction = (fun: Function) => fun && {}.toString.call(fun) === '[object Function]';
 
     if (modifyErrorText && isFunction(modifyErrorText)) {
       setError(error.token, modifyErrorText(error.reason), error.offset);
@@ -877,5 +939,3 @@ function DomNodeUpdate(this: Record<string, any>, obj: Node, locale = defaultLoc
     error
   };
 }
-
-export default DomNodeUpdate;

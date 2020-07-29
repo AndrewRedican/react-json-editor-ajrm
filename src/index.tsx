@@ -1,9 +1,10 @@
 /* eslint react/no-unused-state: 0, @typescript-eslint/lines-between-class-members: 1 */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import themes from './themes';
+import React, {
+  Component, ClipboardEvent, KeyboardEvent, SyntheticEvent, UIEvent
+} from 'react';
 import { getType, identical } from 'mitsuketa';
 import * as err from './err';
+import * as themes from './themes';
 import { safeGet } from './utils';
 
 // Locale/Language
@@ -12,14 +13,64 @@ import defaultLocale from './locale/en';
 
 // Tokenize
 import { DomNodeUpdate, PlaceholderJSON } from './tokenize';
+import { formatDomNodeTokens, formatPlaceholderTokens } from './tokenize/utils';
+import { ErrorMsg, DomNodeTokenize, PlaceholderTokenize } from './tokenize/interfaces';
 
-class JSONInput extends Component {
+// Interfaces
+import {
+  ColorProps, JSONInputProps, JSONInputState, StyleProps, ObjectCSS
+} from './interfaces';
+
+interface Chars {
+  count: number
+}
+
+// Default Props
+const defaultProps = {
+  locale: defaultLocale,
+  id: '',
+  placeholder: {},
+  reset: false,
+  viewOnly: false,
+  // onChange: (changes: ChangeProps) => { console.log(`Input Change - [${Object.keys(changes).join(', ')}]`); },
+  confirmGood: true,
+  height: '610px',
+  width: '479px',
+  onKeyPressUpdate: true,
+  waitAfterKeyPress: 1000,
+  theme: 'light_mitsuketa_tribute',
+  colors: themes.light_mitsuketa_tribute,
+  style: {}
+};
+
+class JSONInput extends Component<JSONInputProps, JSONInputState> {
+  // eslint-disable-next-line react/static-property-placement
+  static defaultProps: JSONInputProps = defaultProps;
+
+  // Properties with default
+  colors = defaultProps.colors;
+  confirmGood = defaultProps.confirmGood;
+  style: StyleProps = defaultProps.style;
+  totalHeight = defaultProps.height;
+  totalWidth = defaultProps.width;
+  resetConfiguration = defaultProps.reset;
+  waitAfterKeyPress = defaultProps.waitAfterKeyPress;
+
+  // Properties without default
+  renderCount: number;
+  refContent = React.createRef<HTMLSpanElement>();
+  refLabels = React.createRef<HTMLSpanElement>();
+  timer?: NodeJS.Timeout;
+  updateTime?: number;
+
   // Tokenize Functions
   tokenizeDomNodeUpdate = DomNodeUpdate;
   tokenizePlaceholderJSON = PlaceholderJSON;
+  formatDomNodeUpdate?: typeof formatDomNodeTokens;
+  formatPlaceholderJSON?: typeof formatPlaceholderTokens;
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props: JSONInputProps) {
+    super(props);
     this.updateInternalProps = this.updateInternalProps.bind(this);
     this.createMarkup = this.createMarkup.bind(this);
     this.onClick = this.onClick.bind(this);
@@ -42,20 +93,16 @@ class JSONInput extends Component {
     this.tokenizeDomNodeUpdate = this.tokenizeDomNodeUpdate.bind(this);
     this.tokenizePlaceholderJSON = this.tokenizePlaceholderJSON.bind(this);
 
-    this.refContent = null;
-    this.refLabels = null;
-
     this.updateInternalProps();
 
     this.renderCount = 1;
     this.state = {
-      prevPlaceholder: '',
+      prevPlaceholder: {},
       markupText: '',
       plainText: '',
       json: '',
-      jsObject: undefined,
-      lines: false,
-      error: false
+      jsObject: {},
+      lines: 2
     };
 
     const { locale } = this.props;
@@ -95,14 +142,14 @@ class JSONInput extends Component {
     }
   }
 
-  onKeyDown(e) {
+  onKeyDown(event: KeyboardEvent) {
     const { viewOnly } = this.props;
     const viewer = !!viewOnly;
-    const ctrlOrMetaIsPressed = e.ctrlKey || e.metaKey;
+    const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
 
-    switch (e.key) {
+    switch (event.key) {
       case 'Tab':
-        this.stopEvent(e);
+        this.stopEvent(event);
         if (viewer) {
           break;
         }
@@ -112,7 +159,7 @@ class JSONInput extends Component {
       case 'Backspace':
       case 'Delete':
         if (viewer) {
-          this.stopEvent(e);
+          this.stopEvent(event);
         }
         this.setUpdateTime();
         break;
@@ -125,49 +172,54 @@ class JSONInput extends Component {
       case 'a':
       case 'c':
         if (viewer && !ctrlOrMetaIsPressed) {
-          this.stopEvent(e);
+          this.stopEvent(event);
         }
         break;
       default:
         if (viewer) {
-          this.stopEvent(e);
+          this.stopEvent(event);
         }
     }
   }
 
-  onKeyPress(e) {
+  onKeyPress(event: KeyboardEvent) {
     const { viewOnly } = this.props;
-    const ctrlOrMetaIsPressed = e.ctrlKey || e.metaKey;
+    const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
     if (viewOnly && !ctrlOrMetaIsPressed) {
-      this.stopEvent(e);
+      this.stopEvent(event);
     }
     if (!ctrlOrMetaIsPressed) {
       this.setUpdateTime();
     }
   }
 
-  onPaste(e) {
+  onPaste(event: ClipboardEvent) {
     const { viewOnly } = this.props;
     if (viewOnly) {
-      this.stopEvent(e);
+      this.stopEvent(event);
     } else {
-      e.preventDefault();
-      const text = e.clipboardData.getData('text/plain');
+      event.preventDefault();
+      const text = event.clipboardData.getData('text/plain');
       document.execCommand('insertText', false, text);
     }
     this.update();
   }
 
-  onScroll(e) {
-    this.refLabels.scrollTop = e.target.scrollTop;
+  onScroll(event: UIEvent) {
+    const { target } = event;
+    const { current } = this.refLabels;
+    if (target && current) {
+      // current.scrollTop = target.scrollTop;
+    }
   }
 
-  setCursorPosition(nextPosition) {
+  setCursorPosition(nextPosition: any) {
+    console.log(nextPosition);
     if ([false, null, undefined].includes(nextPosition)) {
       return;
     }
 
-    const createRange = (node, chars, range) => {
+    const createRange = (node: Node, chars: Chars, range?: Range): Range => {
       let rtnRange = range;
       if (!rtnRange) {
         rtnRange = document.createRange();
@@ -179,8 +231,9 @@ class JSONInput extends Component {
         rtnRange.setEnd(node, chars.count);
       } else if (node && chars.count > 0) {
         if (node.nodeType === Node.TEXT_NODE) {
-          if (node.textContent.length < chars.count) {
-            chars.count -= node.textContent.length;
+          const contents = node.textContent || '';
+          if (contents.length < chars.count) {
+            chars.count -= contents.length;
           } else {
             rtnRange.setEnd(node, chars.count);
             chars.count = 0;
@@ -197,49 +250,54 @@ class JSONInput extends Component {
       return rtnRange;
     };
 
-    const setPosition = chars => {
+    const setPosition = (chars: number) => {
       if (chars >= 0) {
-        const selection = window.getSelection();
-        const range = createRange(this.refContent, { count: chars });
+        const range = createRange(this.refContent.current as Node, { count: chars });
 
         if (!range) {
           return;
         }
         range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        const selection = window.getSelection();
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
       }
     };
 
     if (nextPosition > 0) {
       setPosition(nextPosition);
     } else {
-      this.refContent.focus();
+      const contents = this.refContent.current;
+      if (contents) {
+        contents.focus();
+      }
     }
   }
 
   setUpdateTime() {
     const { onKeyPressUpdate } = this.props;
-    if (onKeyPressUpdate && onKeyPressUpdate === false) {
+    if (onKeyPressUpdate !== undefined && !onKeyPressUpdate) {
       return;
     }
     this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
   }
 
-  getCursorPosition(countBR) {
+  getCursorPosition(countBR?: ErrorMsg) {
     /**
       * Need to deprecate countBR
       * It is used to differenciate between good markup render, and aux render when error found
       * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
       * Find a way to consolidate render styles
       */
-    const isChildOf = node => {
-      while (node !== null) {
-        if (node === this.refContent) {
+    const isChildOf = (node: Node) => {
+      let n: null|Node = node;
+      while (n !== null) {
+        if (n === this.refContent.current) {
           return true;
         }
-        // eslint-disable-next-line no-param-reassign
-        node = node.parentNode;
+        n = n.parentNode;
       }
       return false;
     };
@@ -249,11 +307,11 @@ class JSONInput extends Component {
     let linebreakCount = 0;
     let node;
 
-    if (selection.focusNode && isChildOf(selection.focusNode)) {
+    if (selection && selection.focusNode && isChildOf(selection.focusNode)) {
       node = selection.focusNode;
       charCount = selection.focusOffset;
       while (node) {
-        if (node === this.refContent) {
+        if (node === this.refContent.current) {
           break;
         }
         if (node.previousSibling) {
@@ -261,7 +319,7 @@ class JSONInput extends Component {
           if (countBR && node.nodeName === 'BR') {
             linebreakCount += 1;
           }
-          charCount += node.textContent.length;
+          charCount += (node.textContent || '').length;
         } else {
           node = node.parentNode;
           if (node === null) {
@@ -278,6 +336,7 @@ class JSONInput extends Component {
     if (viewOnly) {
       return {};
     }
+
     return {
       contentEditable: true,
       onKeyPress: this.onKeyPress,
@@ -297,51 +356,71 @@ class JSONInput extends Component {
     const {
       colors, confirmGood, height, onKeyPressUpdate, reset, style, theme, waitAfterKeyPress, width
     } = this.props;
-    let themeMix = themes.dark_vscode_tribute;
+
+    let colorsMix: ColorProps;
+    let styleMix: StyleProps = {
+      outerBox: {},
+      container: {},
+      warningBox: {},
+      errorMessage: {},
+      body: {},
+      labelColumn: {},
+      labels: {},
+      contentBox: {}
+    };
+    let themeMix = themes.light_mitsuketa_tribute;
 
     if (theme && typeof theme === 'string' && theme in themes) {
-      themeMix = themes[theme];
+      themeMix = safeGet(themes, theme, themes.light_mitsuketa_tribute) as ColorProps;
     }
 
-    this.colors = {
-      default: safeGet(colors, 'default', themeMix.default),
-      string: safeGet(colors, 'string', themeMix.string),
-      number: safeGet(colors, 'number', themeMix.number),
-      colon: safeGet(colors, 'colon', themeMix.colon),
-      keys: safeGet(colors, 'keys', themeMix.keys),
-      keys_whiteSpace: safeGet(colors, 'keys_whiteSpace', themeMix.keys_whiteSpace),
-      primitive: safeGet(colors, 'primitive', themeMix.primitive),
-      error: safeGet(colors, 'error', themeMix.error),
-      background: safeGet(colors, 'background', themeMix.background),
-      background_warning: safeGet(colors, 'background_warning', themeMix.background_warning),
-    };
+    colorsMix = themeMix;
+    if (colors) {
+      colorsMix = {
+        default: safeGet(colors, 'default', colorsMix.default) as string,
+        string: safeGet(colors, 'string', colorsMix.string) as string,
+        number: safeGet(colors, 'number', colorsMix.number) as string,
+        colon: safeGet(colors, 'colon', colorsMix.colon) as string,
+        keys: safeGet(colors, 'keys', colorsMix.keys) as string,
+        keys_whiteSpace: safeGet(colors, 'keys_whiteSpace', colorsMix.keys_whiteSpace) as string,
+        primitive: safeGet(colors, 'primitive', colorsMix.primitive) as string,
+        error: safeGet(colors, 'error', colorsMix.error) as string,
+        background: safeGet(colors, 'background', colorsMix.background) as string,
+        background_warning: safeGet(colors, 'background_warning', colorsMix.background_warning) as string
+      };
+    }
+    this.colors = colorsMix;
 
-    this.style = {
-      outerBox: safeGet(style, 'outerBox', {}),
-      container: safeGet(style, 'container', {}),
-      warningBox: safeGet(style, 'warningBox', {}),
-      errorMessage: safeGet(style, 'errorMessage', {}),
-      body: safeGet(style, 'body', {}),
-      labelColumn: safeGet(style, 'labelColumn', {}),
-      labels: safeGet(style, 'labels', {}),
-      contentBox: safeGet(style, 'contentBox', {})
-    };
+    if (style) {
+      styleMix = {
+        outerBox: safeGet(style, 'outerBox', {}) as ObjectCSS,
+        container: safeGet(style, 'container', {}) as ObjectCSS,
+        warningBox: safeGet(style, 'warningBox', {}) as ObjectCSS,
+        errorMessage: safeGet(style, 'errorMessage', {}) as ObjectCSS,
+        body: safeGet(style, 'body', {}) as ObjectCSS,
+        labelColumn: safeGet(style, 'labelColumn', {}) as ObjectCSS,
+        labels: safeGet(style, 'labels', {}) as ObjectCSS,
+        contentBox: safeGet(style, 'contentBox', {}) as ObjectCSS
+      };
+    }
+    this.style = styleMix;
 
     this.confirmGood = confirmGood || true;
     this.totalHeight = height || '610px';
     this.totalWidth = width || '479px';
 
-    if (!('onKeyPressUpdate' in this.props) || onKeyPressUpdate) {
+    if (onKeyPressUpdate === undefined || onKeyPressUpdate) {
       if (!this.timer) {
         this.timer = setInterval(this.scheduledUpdate, 100);
       }
     } else if (this.timer) {
       clearInterval(this.timer);
-      this.timer = false;
+      this.timer = undefined;
     }
-    this.updateTime = false;
-    this.waitAfterKeyPress = 'waitAfterKeyPress' in this.props ? waitAfterKeyPress : 1000;
-    this.resetConfiguration = 'reset' in this.props ? reset : false;
+
+    this.updateTime = undefined;
+    this.waitAfterKeyPress = waitAfterKeyPress || 1000;
+    this.resetConfiguration = reset || false;
   }
 
   createMarkup() {
@@ -361,8 +440,18 @@ class JSONInput extends Component {
     const container = this.refContent;
     const data = this.tokenize(container);
 
-    if (onChange) {
-      onChange({
+    if (data) {
+      if (onChange) {
+        onChange({
+          plainText: data.indented,
+          markupText: data.markup,
+          json: data.json,
+          jsObject: data.jsObject,
+          lines: data.lines,
+          error: data.error
+        });
+      }
+      this.setState({
         plainText: data.indented,
         markupText: data.markup,
         json: data.json,
@@ -370,40 +459,32 @@ class JSONInput extends Component {
         lines: data.lines,
         error: data.error
       });
-    }
-    this.setState({
-      plainText: data.indented,
-      markupText: data.markup,
-      json: data.json,
-      jsObject: data.jsObject,
-      lines: data.lines,
-      error: data.error
-    });
-    this.updateTime = false;
-    if (updateCursorPosition) {
-      const cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
-      this.setCursorPosition(cursorPosition);
+      this.updateTime = undefined;
+      if (updateCursorPosition) {
+        const cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
+        this.setCursorPosition(cursorPosition);
+      }
     }
   }
 
   scheduledUpdate() {
     const { onKeyPressUpdate } = this.props;
-    if (onKeyPressUpdate && onKeyPressUpdate === false) {
+    if (onKeyPressUpdate !== undefined && !onKeyPressUpdate) {
       return;
     }
-    if (this.updateTime === false || this.updateTime > new Date().getTime()) {
+    if (this.updateTime === undefined || this.updateTime > new Date().getTime()) {
       return;
     }
     this.update();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  stopEvent(e) {
-    if (!e) {
+  stopEvent(event: SyntheticEvent) {
+    if (!event) {
       return;
     }
-    e.preventDefault();
-    e.stopPropagation();
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   showPlaceholder() {
@@ -412,7 +493,8 @@ class JSONInput extends Component {
       return;
     }
 
-    const placeholderHasEmptyValues = [undefined, null].includes(placeholder);
+    // const placeholderHasEmptyValues = [undefined, null].includes(placeholder);
+    const placeholderHasEmptyValues = Object.keys(placeholder).some(key => [undefined, null].includes(placeholder[key]));
     if (placeholderHasEmptyValues) {
       return;
     }
@@ -445,26 +527,28 @@ class JSONInput extends Component {
     }
 
     const data = this.tokenize(placeholder);
-    this.setState({
-      prevPlaceholder: placeholder,
-      plainText: data.indentation,
-      markupText: data.markup,
-      lines: data.lines,
-      error: data.error
-    });
+    if (data) {
+      this.setState({
+        prevPlaceholder: placeholder,
+        plainText: data.indented,
+        markupText: data.markup,
+        lines: data.lines,
+        error: data.error
+      });
+    }
   }
 
-  tokenize(obj) {
+  tokenize(obj: Record<string, any>|React.RefObject<HTMLSpanElement>): null|DomNodeTokenize|PlaceholderTokenize {
     if (typeof obj !== 'object') {
-      return console.error(`tokenize() expects object type properties only. Got '${typeof obj}' type instead.`);
+      throw new TypeError(`tokenize() expects object type properties only. Got '${typeof obj}' type instead.`);
     }
     const { locale } = this.props;
     const lang = locale || defaultLocale;
 
     // DOM NODE || ONBLUR OR UPDATE
     if ('nodeType' in obj) {
-      return this.tokenizeDomNodeUpdate(obj, lang);
-    };
+      return this.tokenizeDomNodeUpdate(obj as HTMLElement, lang);
+    }
 
     // JS OBJECTS || PLACEHOLDER
     if (!('nodeType' in obj)) {
@@ -515,7 +599,7 @@ class JSONInput extends Component {
     const { labels } = this.style;
     const errorLine = error ? error.line : -1;
     const lineCount = lines || 1;
-    const lineNumbers = Array.from({length: lineCount-1}, Number.call, i => i);
+    const lineNumbers = Array.from<number, number>({length: lineCount-1}, Number.call, (i: number) => i);
 
     return lineNumbers.map(line => {
       const number = line + 1;
@@ -547,7 +631,7 @@ class JSONInput extends Component {
     const hasError = error ? 'token' in error : false;
     this.renderCount += 1;
 
-    const renderStyles = {
+    const renderStyles: ObjectCSS = {
       body: {
         display: 'flex',
         overflow: 'none',
@@ -636,7 +720,7 @@ class JSONInput extends Component {
       }
     };
 
-    let confirmation = '';
+    let confirmation: null|JSX.Element = null;
     if (this.confirmGood) {
       confirmation = (
         <div
@@ -648,10 +732,10 @@ class JSONInput extends Component {
             viewBox='0 0 100 100'
           >
             <path
-              fillRule='evenodd' 
+              fillRule='evenodd'
               clipRule='evenodd'
               fill='green'
-              opacity ='0.85'
+              opacity='0.85'
               d='M39.363,79L16,55.49l11.347-11.419L39.694,56.49L72.983,23L84,34.085L39.363,79z'
             />
           </svg>
@@ -661,19 +745,19 @@ class JSONInput extends Component {
 
     return (
       <div
-        name='outer-box'
+        // name='outer-box'
         id={ id && `${id}-outer-box` }
         style={ renderStyles.outerBox }
       >
         { confirmation }
         <div
-          name='container'
+          // name='container'
           id={ id && `${id}-container` }
           style={ renderStyles.container }
           // onClick={ this.onClick }
         >
           <div
-            name='warning-box'
+            // name='warning-box'
             id={ id && `${id}-warning-box` }
             style={ renderStyles.warningBox }
             // onClick={ this.onClick }
@@ -724,11 +808,11 @@ class JSONInput extends Component {
                     width='25px'
                     viewBox='0 0 100 100'
                   >
-                    <path 
+                    <path
                       fillRule='evenodd'
                       clipRule='evenodd'
                       fill='red'
-                      d= 'M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z'
+                      d='M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z'
                     />
                   </svg>
                 </div>
@@ -755,15 +839,15 @@ class JSONInput extends Component {
           </div>
 
           <div
-            name='body'
+            // name='body'
             id={ id && `${id}-body` }
             style={ renderStyles.body }
             // onClick={ this.onClick }
           >
             <span
-              name='labels'
+              // name='labels'
               id={ id && `${id}-labels` }
-              ref={ ref => { this.refLabels = ref; } }
+              ref={ this.refLabels }
               style={ renderStyles.labels }
               // onClick={ this.onClick }
             >
@@ -772,9 +856,10 @@ class JSONInput extends Component {
 
             <span
               id={ id }
-              ref={ ref => { this.refContent = ref; } }
+              ref={ this.refContent }
               style={ renderStyles.contentBox }
               dangerouslySetInnerHTML={ this.createMarkup() }
+              // eslint-disable-next-line react/jsx-props-no-spreading
               { ...this.getEditProps() }
             />
           </div>
@@ -783,58 +868,5 @@ class JSONInput extends Component {
     );
   }
 }
-
-JSONInput.propTypes = {
-  locale: PropTypes.object.isRequired,
-  id: PropTypes.string,
-  placeholder: PropTypes.object,
-  reset: PropTypes.bool,
-  viewOnly: PropTypes.bool,
-  onChange: PropTypes.func,
-  confirmGood: PropTypes.bool,
-  height: PropTypes.string,
-  width: PropTypes.string,
-  onKeyPressUpdate: PropTypes.bool,
-  waitAfterKeyPress: PropTypes.number,
-  theme: PropTypes.string,
-  colors: PropTypes.shape({
-    default: PropTypes.string,
-    string: PropTypes.string,
-    number: PropTypes.string,
-    colon: PropTypes.string,
-    keys: PropTypes.string,
-    keys_whiteSpace: PropTypes.string,
-    primitive: PropTypes.string,
-    error: PropTypes.string,
-    background: PropTypes.string,
-    background_warning: PropTypes.string
-  }),
-  style: PropTypes.shape({
-    outerBox: PropTypes.object,
-    container: PropTypes.object,
-    warningBox: PropTypes.object,
-    errorMessage: PropTypes.object,
-    body: PropTypes.object,
-    labelColumn: PropTypes.object,
-    labels: PropTypes.object,
-    contentBox: PropTypes.object
-  })
-};
-
-JSONInput.defaultProps = {
-  id: '',
-  placeholder: {},
-  reset: false,
-  viewOnly: false,
-  onChange: () => {},
-  confirmGood: true,
-  height: '',
-  width: '',
-  onKeyPressUpdate: true,
-  waitAfterKeyPress: 1000,
-  theme: 'light_mitsuketa_tribute',
-  colors: {},
-  style: {}
-};
 
 export default JSONInput;
