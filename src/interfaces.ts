@@ -16,7 +16,7 @@ export interface ColorProps {
   string: string;
 }
 
-export type ObjectCSS = { [key: string]: CSSProperties };
+export type ObjectCSS = Record<string, CSSProperties>;
 
 export interface StyleProps {
   body?: ObjectCSS;

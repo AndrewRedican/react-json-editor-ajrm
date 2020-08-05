@@ -31,11 +31,6 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all'
-        },
-        utils: {
-          test: /src\/jadnschema[\\/]/,
-          name: 'jadnschema',
-          chunks: 'all'
         }
       }
     }

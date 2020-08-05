@@ -259,7 +259,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # Packed files
-lib
+dist
 
 # Non-packaged files
 config

@@ -373,7 +373,7 @@ $RECYCLE.BIN/
 tests/schema_gen
 
 # Built Files
-/lib/
+/dist/
 /src/**/*.d.ts
 /src/**/*.js
 

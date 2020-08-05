@@ -25,11 +25,12 @@
     "declaration": true,
     "removeComments": true,
     "jsx": "react",
-    "outDir": "lib"
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "exclude": [
     ".eslintrc.js",
-    "config/",
+    "config",
     "test"
   ],
   "include": [
