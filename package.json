@@ -8,8 +8,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run build:dist && npm run test",
-    "build:dist": "rimraf dist && npm run build:tsc && npm run build:commonjs",
-    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
+    "build:dist": "rimraf lib && npm run build:tsc && npm run build:commonjs",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./lib/ --ignore *.test.js",
     "build:tsc": "tsc",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
@@ -120,7 +120,7 @@
     "preset": "ts-jest",
     "verbose": true,
     "modulePathIgnorePatterns": [
-      "<rootDir>/dist/"
+      "<rootDir>/lib/"
     ],
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/test/jest.transform.js"
@@ -141,10 +141,10 @@
     ]
   },
   "directories": {
-    "lib": "dist"
+    "lib": "lib"
   },
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "lib/**/*.js",
+    "lib/**/*.d.ts"
   ]
 }

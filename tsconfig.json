@@ -26,7 +26,7 @@
     "removeComments": true,
     "jsx": "react",
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "lib"
   },
   "exclude": [
     ".eslintrc.js",
