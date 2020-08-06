@@ -370,20 +370,10 @@ $RECYCLE.BIN/
 *.lnk
 
 # Test Files
-tests/schema_gen
+test/schema_gen
 
 # Built Files
-/lib/
-/src/**/*.d.ts
-/src/**/*.js
-
-# Definitions
-!src/@types/**/*.d.ts
-
-# Unconverted files
-!src/tokenize/todo.js
-!src/tokenize/todo.d.ts
-
+dist
 
 # Assorted Files
 lint_*.txt

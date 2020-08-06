@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "CommonJS",
+    "target": "ES2020",
+    "module": "ES2020",
     "strict": true,
     "pretty": true,
     "sourceMap": false,
@@ -26,11 +26,12 @@
     "removeComments": true,
     "jsx": "react",
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "dist"
   },
   "exclude": [
     ".eslintrc.js",
     "config",
+    "scripts",
     "test"
   ],
   "include": [

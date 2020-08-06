@@ -8,8 +8,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run build:dist && npm run test",
-    "build:dist": "rimraf lib && npm run build:tsc && npm run build:commonjs",
-    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./lib/ --ignore *.test.js",
+    "build:dist": "rimraf dist && npm run build:tsc && npm run build:commonjs",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
     "build:tsc": "tsc",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
@@ -141,10 +141,9 @@
     ]
   },
   "directories": {
-    "lib": "lib"
+    "lib": "dist"
   },
   "files": [
-    "lib/**/*.js",
-    "lib/**/*.d.ts"
+    "dist"
   ]
 }

@@ -3,7 +3,7 @@ const path = require('path');
 
 const NODE_ENV = 'production';
 const ROOT_DIR = path.join(__dirname, '..');
-const DIST_DIR = path.join(ROOT_DIR, 'lib');
+const DIST_DIR = path.join(ROOT_DIR, 'dist');
 const SRC_DIR = path.join(ROOT_DIR, 'src');
 
 module.exports = {
