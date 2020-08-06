@@ -2,7 +2,6 @@
   "name": "react-json-editor",
   "version": "2.6.0",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
-  "author": "andrew.redican.mejia@gmail.com",
   "homepage": "https://github.com/czack425/react-json-editor#readme",
   "license": "MIT",
   "main": "dist/index.js",

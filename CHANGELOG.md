@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.6.0] - 2020-08-06
+### Added
+- Converted to Typescript
+- EsLint added to project @JustFly1984.
+
 ## [2.5.9] - 2018-12-08
 ### Added
 - EsLint added to project @JustFly1984.
