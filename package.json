@@ -16,7 +16,6 @@
     "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "lint-errors": "eslint . --cache --quiet --ext .js,.jsx,.ts,.tsx",
     "prepare": "npm run build:dist",
-    "preinstall": "npm run prepare",
     "test": "npm run test:start && npm run test:clear",
     "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --updateSnapshot",
     "test:clear": "del-cli test/__snapshots__",
@@ -140,6 +139,9 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
+  },
+  "directories": {
+    "lib": "dist"
   },
   "files": [
     "dist/**/*.js",
