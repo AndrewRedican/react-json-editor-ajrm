@@ -5,6 +5,8 @@ import err                    from './err';
 import { format }             from './locale';
 import defaultLocale          from './locale/en';
 
+let cursorPosition = 0;
+
 class JSONInput extends Component {
     constructor(props){
         super(props);
@@ -502,7 +504,7 @@ class JSONInput extends Component {
             lines      : data.lines,
             error      : data.error
         });
-        let cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
+        cursorPosition = cursorPosition == 0 ? this.getCursorPosition(data.error) + cursorOffset : cursorPosition;
         this.setState({
             plainText  : data.indented,
             markupText : data.markup,
