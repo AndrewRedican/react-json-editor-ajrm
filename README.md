@@ -1,5 +1,3 @@
-*NOTE: This library is currently (since 02.01.2019 - today) **unmaintained**. You may want to [look around for an alternative](https://www.google.com/search?q=json+editor+react) until a new maintainer can be found.*
-
 # react-json-editor-ajrm
 
 ![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors)
@@ -61,10 +59,9 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.9] - December 8, 2018
+## Latest Spotlight Release Notes [v2.5.10] - August 25, 2020
 
-1. EsLint added to project.
-2. Fixed security vulnerability alert.
+1. New lines are now accepted in strings.
 
 ## Upcoming Features
 
