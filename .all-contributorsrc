@@ -157,6 +157,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rm-hull",
+      "name": "Richard Hull",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1915543?v=4",
+      "profile": "https://github.com/rm-hull",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
