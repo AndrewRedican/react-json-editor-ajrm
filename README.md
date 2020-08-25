@@ -62,11 +62,11 @@ The `./examples` folder contains two examples:
 ## Latest Spotlight Release Notes [v2.5.10] - August 25, 2020
 
 1. New lines are now accepted in strings.
+2. Error details can now be provided through error props for custom messages.
 
 ## Upcoming Features
 
-1. Collapsible nodes to partially display contents of an object.
-2. Even more QA tests.
+1. Bug fixes.
 
 ## Features
 
