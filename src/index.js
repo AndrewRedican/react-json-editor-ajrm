@@ -110,13 +110,13 @@ class JSONInput extends Component {
         const
             id           = this.props.id,
             markupText   = this.state.markupText,
-            error        = this.state.error,
+            error        = this.props.error || this.state.error,
             colors       = this.colors,
             style        = this.style,
             confirmGood  = this.confirmGood,
             totalHeight  = this.totalHeight,
             totalWidth   = this.totalWidth,
-            hasError     = error ? 'token' in error : false;
+            hasError     = !!this.props.error || (error ? 'token' in error : false);
         this.renderCount++;
         return (
             <div
@@ -342,7 +342,7 @@ class JSONInput extends Component {
     renderErrorMessage(){
         const
             locale = this.props.locale || defaultLocale,
-            error  = this.state.error,
+            error  = this.props.error || this.state.error,
             style  = this.style;
         if(!error) return void(0);
         return (
@@ -372,7 +372,8 @@ class JSONInput extends Component {
         const
             colors    = this.colors,
             style     = this.style,
-            errorLine = this.state.error ? this.state.error.line : -1,
+            error     = this.props.error || this.state.error,
+            errorLine = error ? error.line : -1,
             lines     = this.state.lines ? this.state.lines : 1;
         let
             labels    = new Array(lines);

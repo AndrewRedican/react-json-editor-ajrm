@@ -71,7 +71,7 @@ The `./examples` folder contains two examples:
 ## Features
 
 1. Write as if you are in a text editor.
-2. Checks for syntax mistakes and provides feedback.
+2. Checks for syntax mistakes and provides feedback; Custom errors can also be overlaid on the editor.
 3. You can customize color palette as you please.
 4. Accepts a javascript object in `placeholder` property to display after component mounts.
 5. For any valid textContent, calculates and makes available in this.state as plain text, markup text, and javascript object.
@@ -93,6 +93,9 @@ The `./examples` folder contains two examples:
 | [onKeyPressUpdate]()          | Send `false` if you would like for component not to automatically update on key press.                                                                                                                                                                                                          | boolean  | Optional  |
 | [waitAfterKeyPress]()         | Amount of milliseconds to wait before re-rendering content after keypress. Value defaults to `1000` when not specified. In other words, component will update if there is no additional keystroke after the last one within 1 second. Less than `100` milliseconds does not makes a difference. |  number  | Optional  |
 | [modifyErrorText]()           | A custom function to modify the component's original warning text. This function will receive a single parameter of type `string` and must equally return a `string`.                                                                                                                           | function | Optional  |
+| [error]()                     | **Contains the following properties:**                                                                                                                                                                                                                                                          |  object  | Optional  |
+| error.[reason]()              | A string containing a custom error messsage                                                                                                                                                                                                                                                     |  string  | Optional  |
+| error.[line]()                | A number indicating the line number related to the custom error message                                                                                                                                                                                                                         |  number  | Optional  |
 | [theme]()                     | Specify which [built-in theme](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes) to use.                                                                                                                                                                            |  string  | Optional  |
 | [colors]()                    | **Contains the following properties:**                                                                                                                                                                                                                                                          |  object  | Optional  |
 | colors.[default]()            | Hex color code for any symbols, like curly `braces`, and `comma`.                                                                                                                                                                                                                               |  string  | Optional  |
