@@ -7,7 +7,7 @@ import { deepRemoveAll_Key }  from 'mitsuketa';
 function removeKeys(identity={},keys=[]){
     let newIdentity = identity;
     keys.forEach( keyName => { newIdentity = deepRemoveAll_Key(newIdentity,keyName); });
-    return newIdentity;  
+    return newIdentity;
 };
 
 function createElementFromHTML(htmlString='') {
@@ -23,7 +23,7 @@ function testSyntaxLogic(language='JS',scope,input,output){
     err.isNotType('output',output,'object');
     err.isUndefined('input',input);
 
-    let markup; 
+    let markup;
 
 
 
@@ -40,7 +40,7 @@ function testSyntaxLogic(language='JS',scope,input,output){
             trimmedResults = removeKeys(results,['indented','markup']);
         markup = results.markup;
         expect(trimmedResults).toEqual(output);
-    }); 
+    });
 
 
 
@@ -52,11 +52,11 @@ function testSyntaxLogic(language='JS',scope,input,output){
                 ...newResults,
                 tokens : (tokens => {
                     tokens = removeKeys(tokens,['tokens']);
-                    let 
+                    let
                         noWhiteSpaceTokens = [],
                         noColonTypeTokens  = [];
                     tokens.forEach( token => { if(['space','linebreak'].indexOf(token.type)===-1) noWhiteSpaceTokens.push(token); });
-                    noColonTypeTokens = noWhiteSpaceTokens.map( token => { 
+                    noColonTypeTokens = noWhiteSpaceTokens.map( token => {
                         if(token.type!=='colon') return token;
                         return { ...token, type : 'symbol' };
                     });

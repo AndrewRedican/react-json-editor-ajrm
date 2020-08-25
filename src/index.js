@@ -31,7 +31,7 @@ class JSONInput extends Component {
         this.refLabels      = null;
         this.updateInternalProps();
         this.renderCount         = 1;
-        this.state  = { 
+        this.state  = {
             prevPlaceholder : '',
             markupText      : '',
             plainText       : '',
@@ -74,7 +74,7 @@ class JSONInput extends Component {
                 body         : 'body'         in this.props.style ?  this.props.style.body         : {},
                 labelColumn  : 'labelColumn'  in this.props.style ?  this.props.style.labelColumn  : {},
                 labels       : 'labels'       in this.props.style ?  this.props.style.labels       : {},
-                contentBox   : 'contentBox'   in this.props.style ?  this.props.style.contentBox   : {} 
+                contentBox   : 'contentBox'   in this.props.style ?  this.props.style.contentBox   : {}
             };
         else
             style = {
@@ -97,7 +97,7 @@ class JSONInput extends Component {
         if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
             if(!this.timer) this.timer = setInterval(this.scheduledUpdate,100);
         }
-        else 
+        else
             if(this.timer){
                 clearInterval(this.timer);
                 this.timer = false;
@@ -107,7 +107,7 @@ class JSONInput extends Component {
         this.resetConfiguration = 'reset' in this.props ? this.props.reset : false;
     }
     render(){
-        const 
+        const
             id           = this.props.id,
             markupText   = this.state.markupText,
             error        = this.state.error,
@@ -155,7 +155,7 @@ class JSONInput extends Component {
                                 viewBox = '0 0 100 100'
                             >
                                 <path
-                                    fillRule = 'evenodd' 
+                                    fillRule = 'evenodd'
                                     clipRule = 'evenodd'
                                     fill     = 'green'
                                     opacity  = '0.85'
@@ -236,7 +236,7 @@ class JSONInput extends Component {
                                         width   = '25px'
                                         viewBox = '0 0 100 100'
                                     >
-                                        <path 
+                                        <path
                                             fillRule ='evenodd'
                                             clipRule ='evenodd'
                                             fill     = 'red'
@@ -257,7 +257,7 @@ class JSONInput extends Component {
                                 position      : 'absolute',
                                 pointerEvents : 'none'
                             }}
-                            onClick = { this.onClick }  
+                            onClick = { this.onClick }
                         >
                             { this.renderErrorMessage() }
                         </span>
@@ -304,7 +304,7 @@ class JSONInput extends Component {
                         <span
                             id              = { id }
                             ref             = { ref => this.refContent = ref }
-                            contentEditable = { true }  
+                            contentEditable = { true }
                             style = {{
                                 display       : 'inline-block',
                                 boxSizing     : 'border-box',
@@ -330,7 +330,7 @@ class JSONInput extends Component {
                             onScroll       = { this.onScroll }
                             onPaste        = { this.onPaste }
                             autoComplete   = 'off'
-                            autoCorrect    = 'off' 
+                            autoCorrect    = 'off'
                             autoCapitalize = 'off'
                             spellCheck     = { false }
                         />
@@ -380,7 +380,7 @@ class JSONInput extends Component {
         return labels.map( number => {
             const color = number !== errorLine ? colors.default : 'red';
             return (
-                <div 
+                <div
                     key   = {number}
                     style = {{
                         ...style.labels,
@@ -418,7 +418,7 @@ class JSONInput extends Component {
             '>'                   + string   +
             '</span>'
         );
-    } 
+    }
     getCursorPosition(countBR){
         /**
          * Need to deprecate countBR
@@ -433,13 +433,13 @@ class JSONInput extends Component {
             }
             return false;
         };
-        let 
+        let
             selection      = window.getSelection(),
             charCount      = -1,
             linebreakCount = 0,
             node;
         if (selection.focusNode && isChildOf(selection.focusNode)) {
-            node = selection.focusNode; 
+            node = selection.focusNode;
             charCount = selection.focusOffset;
             while (node) {
                 if (node === this.refContent) break;
@@ -472,7 +472,7 @@ class JSONInput extends Component {
                 } else
                 for (var lp = 0; lp < node.childNodes.length; lp++) {
                     range = createRange(node.childNodes[lp], chars, range);
-                    if (chars.count === 0) break; 
+                    if (chars.count === 0) break;
                 }
             }
             return range;
@@ -487,7 +487,7 @@ class JSONInput extends Component {
             selection.removeAllRanges();
             selection.addRange(range);
         };
-        if(nextPosition > 0) setPosition(nextPosition); 
+        if(nextPosition > 0) setPosition(nextPosition);
         else this.refContent.focus();
     }
     update(cursorOffset=0,updateCursorPosition=true){
@@ -508,7 +508,7 @@ class JSONInput extends Component {
             markupText : data.markup,
             json       : data.json,
             jsObject   : data.jsObject,
-            lines      : data.lines, 
+            lines      : data.lines,
             error      : data.error
         });
         this.updateTime = false;
@@ -557,7 +557,7 @@ class JSONInput extends Component {
             case 'a'         : case 'c'          :
                 if (viewOnly && !ctrlOrMetaIsPressed) this.stopEvent(event);
                 break;
-            default : 
+            default :
                 if (viewOnly) this.stopEvent(event);
                 break;
         }
@@ -572,7 +572,7 @@ class JSONInput extends Component {
         }
         this.update();
     }
-    onClick(){ 
+    onClick(){
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
     }
     onBlur(){
@@ -598,7 +598,7 @@ class JSONInput extends Component {
         if(placeholderDoesNotExist) return;
 
         const { placeholder } = this.props;
-        
+
         const placeholderHasEmptyValues = [undefined,null].indexOf(placeholder) > -1;
         if(placeholderHasEmptyValues) return;
 
@@ -610,8 +610,8 @@ class JSONInput extends Component {
         if(unexpectedDataType) err.throwError('showPlaceholder','placeholder','either an object or an array');
 
         const samePlaceholderValues = identical(placeholder,prevPlaceholder);
-        
-        // Component will always re-render when new placeholder value is any different from previous placeholder value. 
+
+        // Component will always re-render when new placeholder value is any different from previous placeholder value.
         let componentShouldUpdate = !samePlaceholderValues;
 
         if(!componentShouldUpdate){
@@ -632,7 +632,7 @@ class JSONInput extends Component {
             prevPlaceholder : placeholder,
             plainText       : data.indentation,
             markupText      : data.markup,
-            lines           : data.lines, 
+            lines           : data.lines,
             error           : data.error
         });
 
@@ -641,6 +641,7 @@ class JSONInput extends Component {
         if(typeof something !== 'object') return console.error('tokenize() expects object type properties only. Got \'' + typeof something + '\' type instead.');
         const locale = this.props.locale || defaultLocale;
         const newSpan = this.newSpan;
+
         /**
          *     DOM NODE || ONBLUR OR UPDATE
          */
@@ -651,7 +652,7 @@ class JSONInput extends Component {
                 hasChildren   = containerNode.hasChildNodes();
             if(!hasChildren) return '';
             const children = containerNode.childNodes;
-            
+
             let buffer = {
                 tokens_unknown   : [],
                 tokens_proto     : [],
@@ -673,7 +674,7 @@ class JSONInput extends Component {
                         info = {
                             string : child.textContent,
                             type   : child.attributes.type.textContent
-                        };  
+                        };
                         buffer.tokens_unknown.push(info);
                     break;
                     case 'DIV' :
@@ -702,9 +703,9 @@ class JSONInput extends Component {
                         number    : '',
                         symbol    : '',
                         space     : '',
-                        delimiter : '', 
+                        delimiter : '',
                         quarks    : []
-                    };  
+                    };
                 function pushAndStore(char,type){
                     switch(type){
                         case 'symbol' : case 'delimiter' :
@@ -764,7 +765,7 @@ class JSONInput extends Component {
                             }
                         case '.' :
                             if(i < text.length - 1 && i > 0)
-                            if( 
+                            if(
                                 '0123456789'.indexOf(text.charAt(i + 1)) > -1 &&
                                 '0123456789'.indexOf(text.charAt(i - 1)) > -1
                             ){
@@ -783,7 +784,7 @@ class JSONInput extends Component {
             }
             function validToken(string,type){
                 const quotes = '\'"';
-                let 
+                let
                     firstChar = '',
                     lastChar  = '',
                     quoteType = false;
@@ -834,7 +835,7 @@ class JSONInput extends Component {
                             else if('.'!==string.charAt(i)) return false;
                         }
                     break;
-                    case 'symbol' : 
+                    case 'symbol' :
                         if(string.length > 1) return false;
                         if('{[:]},'.indexOf(string)===-1) return false;
                     break;
@@ -871,7 +872,7 @@ class JSONInput extends Component {
                     string   : string,
                     length   : length,
                     type     : type,
-                    fallback : fallback 
+                    fallback : fallback
                 };
                 buffer.tokens_fallback.push(tokul);
             }
@@ -909,7 +910,7 @@ class JSONInput extends Component {
                             break;
                         }
                         switch(string){
-                            case '[' : case '{' : 
+                            case '[' : case '{' :
                                 buffer2.brackets.push(string);
                                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1]==='[';
                             break;
@@ -973,7 +974,7 @@ class JSONInput extends Component {
                         else normalToken.type = 'key';
                         break;
                     default :
-                    
+
                     break;
                 }
                 buffer.tokens_normalize.push(normalToken);
@@ -999,7 +1000,7 @@ class JSONInput extends Component {
                 }
                 buffer.tokens_merge.push(mergedToken);
             }
-            const 
+            const
                 quotes = '\'"',
                 alphanumeric = (
                     'abcdefghijklmnopqrstuvwxyz' +
@@ -1077,13 +1078,14 @@ class JSONInput extends Component {
                     string = token.string,
                     type   = token.type,
                     found  = false;
+
                 switch(type){
                     case 'space' : break;
                     case 'linebreak' : line++; break;
                     case 'symbol' :
                         switch(string){
-                            case '{' : 
-                            case '[' : 
+                            case '{' :
+                            case '[' :
                                 found = followsSymbol(i,['}',']']);
                                 if(found){
                                     setError(i,format(locale.invalidToken.tokenSequence.prohibited, {
@@ -1111,7 +1113,7 @@ class JSONInput extends Component {
                                 buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1]==='[';
                                 bracketList.push({ i : i, line : line, string : string });
                                 break;
-                            case '}' : 
+                            case '}' :
                             case ']' :
                                 if(string==='}')
                                 if(buffer2.brackets[buffer2.brackets.length-1]!=='{'){
@@ -1220,7 +1222,7 @@ class JSONInput extends Component {
                         buffer2.isValue = true;
                         buffer.json += string;
                         break;
-                    case 'key' : 
+                    case 'key' :
                     case 'string' :
                         let
                             firstChar     = string.charAt(0),
@@ -1364,7 +1366,7 @@ class JSONInput extends Component {
             buffer.json = noEscapedSingleQuote;
             if(!error){
                 const maxIterations = Math.ceil(bracketList.length / 2);
-                let 
+                let
                     round = 0,
                     delta = false;
                 function removePair(index){
@@ -1397,7 +1399,7 @@ class JSONInput extends Component {
                 buffer.jsObject = JSON.parse(buffer.json);
             }
             catch(err){
-                const 
+                const
                     errorMessage = err.message,
                     subsMark   = errorMessage.indexOf('position');
                 if(subsMark===-1) throw new Error('Error parsing failed');
@@ -1443,8 +1445,8 @@ class JSONInput extends Component {
                 _line   = 1,
                 _depth  = 0;
             function newIndent(){
-                var space = []; 
-                for (var i = 0; i < _depth * 2; i++) space.push('&nbsp;'); 
+                var space = [];
+                for (var i = 0; i < _depth * 2; i++) space.push('&nbsp;');
                 return space.join('');
             }
             function newLineBreak(byPass=false){
@@ -1452,7 +1454,7 @@ class JSONInput extends Component {
                 if(_depth > 0 || byPass){ return '<br>'; }
                 return '';
             }
-            function newLineBreakAndIndent(byPass=false){ 
+            function newLineBreakAndIndent(byPass=false){
                 return newLineBreak(byPass) + newIndent();
             };
             if(!error)
@@ -1463,8 +1465,8 @@ class JSONInput extends Component {
                     type   = token.type;
                 switch(type){
                     case 'space' : case 'linebreak' : break;
-                    case 'string' : case 'number'    : case 'primitive' : case 'error' : 
-                        buffer.markup += ((followsSymbol(i,[',','[']) ? newLineBreakAndIndent() : '') + newSpan(i,token,_depth)); 
+                    case 'string' : case 'number'    : case 'primitive' : case 'error' :
+                        buffer.markup += ((followsSymbol(i,[',','[']) ? newLineBreakAndIndent() : '') + newSpan(i,token,_depth));
                     break;
                     case 'key' :
                         buffer.markup += (newLineBreakAndIndent() + newSpan(i,token,_depth));
@@ -1556,23 +1558,23 @@ class JSONInput extends Component {
                 stringStart     : 0,
                 tokens          : []
             };
+
             function escape_character(){
                 if(buffer.currentChar!=='\\') return false;
-                buffer.inputText = deleteCharAt(buffer.inputText,buffer.position);
                 return true;
             }
-            function deleteCharAt(string,position){
+            function extract(string,position){
                 return string.slice(0, position) + string.slice(position + 1);
             }
             function determine_string(){
                 if('\'"'.indexOf(buffer.currentChar)===-1) return false;
-                if(!buffer.stringOpen){ 
+                if(!buffer.stringOpen){
                     add_tokenSecondary();
                     buffer.stringStart = buffer.position;
                     buffer.stringOpen = buffer.currentChar;
                     return true;
                 }
-                if(buffer.stringOpen===buffer.currentChar){ 
+                if(buffer.stringOpen===buffer.currentChar){
                     add_tokenSecondary();
                     const stringToken = buffer.inputText.substring(buffer.stringStart,buffer.position + 1);
                     add_tokenPrimary(stringToken);
@@ -1587,7 +1589,7 @@ class JSONInput extends Component {
                 add_tokenSecondary();
                 add_tokenPrimary(buffer.currentChar);
                 switch(buffer.currentChar){
-                    case ':' : buffer.isValue = true; return true; break; 
+                    case ':' : buffer.isValue = true; return true; break;
                     case '{' : case '[' : buffer.brackets.push(buffer.currentChar); break;
                     case '}' : case ']' : buffer.brackets.pop(); break;
                 }
@@ -1621,26 +1623,26 @@ class JSONInput extends Component {
                     string = '',
                     value  = '';
                 switch(token){
-                    case ',' : 
+                    case ',' :
                         type   = 'symbol';
                         string = token;
                         value  = token;
                         buffer2.isValue = (buffer2.brackets[buffer2.brackets.length-1]==='[');
                         break;
-                    case ':' : 
+                    case ':' :
                         type   = 'symbol';
                         string = token;
                         value  = token;
                         buffer2.isValue = true;
-                        break; 
-                    case '{' : case '[' : 
+                        break;
+                    case '{' : case '[' :
                         type   = 'symbol';
                         string = token;
                         value  = token;
                         buffer2.brackets.push(token);
                         buffer2.isValue = (buffer2.brackets[buffer2.brackets.length-1]==='[');
                         break;
-                    case '}' : case ']' : 
+                    case '}' : case ']' :
                         type   = 'symbol';
                         string = token;
                         value  = token;
@@ -1676,7 +1678,7 @@ class JSONInput extends Component {
                             for(var i = 0; i < 2; i++){
                                 if([text.charAt(0),text.charAt(text.length-1)].indexOf(['"',"'"][i])>-1){
                                     wrappedInQuotes = true;
-                                    break; 
+                                    break;
                                 }
                             }
                             if(wrappedInQuotes && text.length >= 2) text = text.slice(1, -1);
@@ -1694,7 +1696,7 @@ class JSONInput extends Component {
                                     }
                                     return !(nonAlphaNumeric.length > 0 || numberAndLetter);
                                 })(nonAlphaNumeric,text),
-                                hasQuotes = (string => { 
+                                hasQuotes = (string => {
                                     for(var i = 0; i < string.length; i++){
                                         if(["'",'"'].indexOf(string.charAt(i))>-1) return true;
                                     }
@@ -1732,7 +1734,7 @@ class JSONInput extends Component {
                             break;
                         }
                         if(!isNaN(token)){
-                            type   = 'number'; 
+                            type   = 'number';
                             string = token;
                             value  = Number(token);
                             break;
@@ -1758,7 +1760,7 @@ class JSONInput extends Component {
                 let token = buffer2.tokens[i];
                 clean += token.string;
             }
-            function indent(number) { 
+            function indent(number) {
                 var space = [];
                 for (var i = 0; i < number * 2; i++) space.push(' ');
                 return (number > 0 ? '\n' : '') + space.join('');
@@ -1767,7 +1769,7 @@ class JSONInput extends Component {
             for(var i = 0; i < buffer2.tokens.length; i++){
                 let token = buffer2.tokens[i];
                 switch(token.string){
-                    case '[' : case '{' : 
+                    case '[' : case '{' :
                         const nextToken = i < (buffer2.tokens.length - 1) - 1 ? buffer2.tokens[i+1] : '';
                         if('}]'.indexOf(nextToken.string)===-1)
                             indentation += token.string + indent(token.depth);
@@ -1787,13 +1789,13 @@ class JSONInput extends Component {
                 }
             }
             let lines = 1;
-            function indentII(number){ 
-                var space = []; 
+            function indentII(number){
+                var space = [];
                 if(number > 0 ) lines++;
-                for (var i = 0; i < number * 2; i++) space.push('&nbsp;'); 
+                for (var i = 0; i < number * 2; i++) space.push('&nbsp;');
                 return (number > 0 ? '<br>' : '') + space.join('');
             };
-            let markup = ''; 
+            let markup = '';
             const lastIndex = buffer2.tokens.length - 1;
             for(var i = 0; i < buffer2.tokens.length; i++){
                 let token =  buffer2.tokens[i];
