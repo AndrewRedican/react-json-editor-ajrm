@@ -1797,6 +1797,7 @@ class JSONInput extends Component {
                 return (number > 0 ? '<br>' : '') + space.join('');
             };
             let markup = '';
+            const isEmptyObject = Object.keys(something).length === 0;
             const lastIndex = buffer2.tokens.length - 1;
             for(var i = 0; i < buffer2.tokens.length; i++){
                 let token =  buffer2.tokens[i];
@@ -1805,14 +1806,14 @@ class JSONInput extends Component {
                     case '{' : case '[' :
                         const nextToken = i < (buffer2.tokens.length - 1) - 1 ? buffer2.tokens[i+1] : '';
                         if('}]'.indexOf(nextToken.string)===-1)
-                            markup += span + indentII(token.depth);
+                            markup += span + indentII(isEmptyObject ? 0 :token.depth);
                         else
                             markup += span;
                         break;
                     case '}' : case ']' :
                         const prevToken = i > 0 ? buffer2.tokens[i-1] : '';
                         if('[{'.indexOf(prevToken.string)===-1)
-                            markup += indentII(token.depth) + ( lastIndex === i ? '<br>' : '' ) + span;
+                            markup += indentII(isEmptyObject ? 0 : token.depth) + ( lastIndex === i ? '<br>' : '' ) + span;
                         else
                             markup += span;
                         break;
