@@ -30,6 +30,7 @@ function run() {
         placeholder={sampleData}
         viewOnly={true}
         onChange={sampleFunctions.getResults}
+        onBlur={sampleFunctions.getResults}
         confirmGood={false}
         height='500px'
         width='100%'
@@ -61,6 +62,7 @@ function run() {
         placeholder={sampleData}
         viewOnly={false}
         onChange={sampleFunctions.getResults}
+        onBlur={sampleFunctions.getResults}
         confirmGood={true}
         height='500px'
         width='100%'

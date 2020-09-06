@@ -578,7 +578,17 @@ class JSONInput extends Component {
     }
     onBlur(){
         if('viewOnly' in this.props) if(this.props.viewOnly) return;
-        this.update(0,false);
+        const
+            container = this.refContent,
+            data      = this.tokenize(container);
+        if('onBlur' in this.props) this.props.onBlur({
+            plainText  : data.indented,
+            markupText : data.markup,
+            json       : data.json,
+            jsObject   : data.jsObject,
+            lines      : data.lines,
+            error      : data.error
+        });
     }
     onScroll(event){
         this.refLabels.scrollTop = event.target.scrollTop;
