@@ -192,6 +192,7 @@ Thanks goes to these wonderful people :smile::
     <td align="center"><a href="https://github.com/JustFly1984"><img src="https://avatars3.githubusercontent.com/u/2255993?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexey Lyakhov</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=JustFly1984" title="Code">💻</a></td>
     <td align="center"><a href="http://terencehuynh.com/"><img src="https://avatars1.githubusercontent.com/u/1747517?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Terence Huynh</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=terencehuynh" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/rm-hull"><img src="https://avatars3.githubusercontent.com/u/1915543?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Richard Hull</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=rm-hull" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tonynguyenit18"><img src="https://avatars2.githubusercontent.com/u/37351890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tonynguyenit18</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=tonynguyenit18" title="Code">💻</a></td>
   </tr>
 </table>
 
