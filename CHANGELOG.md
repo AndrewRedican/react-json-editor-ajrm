@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.11] - 2020-09-14
+### Added
+- onBlur property. @tonynguyenit18.
+
 ## [2.5.10] - 2020-08-25
 ### Added
 - Custom errors can now be displayed on editor from props. @rm-hull.

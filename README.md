@@ -59,10 +59,9 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.10] - August 25, 2020
+## Latest Spotlight Release Notes [v2.5.11] - September 14, 2020
 
-1. New lines are now accepted in strings.
-2. Error details can now be provided through error props for custom messages.
+1. `onBlur` property is now available.
 
 ## Upcoming Features
 
