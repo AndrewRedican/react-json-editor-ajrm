@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ES6",
+    "strict": true,
+    "pretty": true,
+    "sourceMap": false,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny" : true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "src/@types",
+      "node_modules/@types"
+    ],
+    /* Additional Options */
+    "baseUrl": "src",
+    "declaration": true,
+    "removeComments": true,
+    "jsx": "react",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "exclude": [
+    ".eslintrc.js",
+    "config",
+    "scripts",
+    "test"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}

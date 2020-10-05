@@ -10,6 +10,15 @@
   "commit": true,
   "contributors": [
     {
+      "login": "czack425",
+      "name": "Jerry",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11284326?v=4",
+      "profile": "https://github.com/czack425",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "AndrewRedican",
       "name": "Andrew Redican",
       "avatar_url": "https://avatars2.githubusercontent.com/u/24832471?v=4",

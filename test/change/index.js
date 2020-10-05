@@ -14,10 +14,11 @@ function run() {
     );
     expect(wrapper).toMatchSnapshot();
 
-    function checkState(componentState){
-        Object.keys(componentState).forEach( keyName => {
-            expect(wrapper.state()[keyName]).toEqual(componentState[keyName]);
-        });
+    function checkState(componentState) {
+      const wrapperState = wrapper.state();
+      Object.keys(componentState).forEach( keyName => {
+        expect(wrapperState[keyName]).toEqual(componentState[keyName]);
+      });
     }
 
     // Note: markupText not evaluated
@@ -28,7 +29,7 @@ function run() {
         jsObject: undefined,
         json: '',
         lines: 4,
-        plainText: undefined,
+        plainText: "{\n  valueToChange: false}",
         prevPlaceholder: {
             valueToChange : false
         }
@@ -42,7 +43,7 @@ function run() {
         jsObject: undefined,
         json: '',
         lines: 4,
-        plainText: undefined,
+        plainText: "{\n  valueToChange: true}",
         prevPlaceholder: {
             valueToChange : true
         }

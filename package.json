@@ -14,31 +14,39 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "build": "npm run build:commonjs && npm run build:commonts && npm run build:es && npm run build:ts && npm run build:copy-files && npm run test",
+    "build:clean": "rimraf dist",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
+    "build:commonts": "cross-env NODE_ENV=production tsc --outDir ./dist/ --module CommonJS",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
+    "build:ts": "cross-env NODE_ENV=production tsc --outDir ./dist/es --module ES6",
+    "build:copy-files": "node ./scripts/copy-files.js",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
+    "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx",
+    "lint-errors": "eslint . --cache --quiet --ext .js,.jsx,.ts,.tsx",
+    "release": "npm run build && npm publish ./dist",
     "test": "npm run test:start && npm run test:clear",
     "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --updateSnapshot",
     "test:clear": "del-cli test/__snapshots__",
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
-    "test:release": "npm run build && npm pack ./dist",
-    "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files && npm run test",
-    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
-    "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js",
-    "build:copy-files": "node ./scripts/copy-files.js",
-    "release": "npm run build && npm publish ./dist"
+    "test:release": "npm run build && npm pack ./dist"
   },
   "jest": {
+    "preset": "ts-jest",
     "verbose": true,
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
     ],
     "transform": {
-      "^.+\\.js$": "<rootDir>/test/jest.transform.js"
+      "^.+\\.jsx?$": "<rootDir>/test/jest.transform.js"
     },
     "moduleFileExtensions": [
       "js",
-      "jsx"
+      "jsx",
+      "ts",
+      "tsx"
     ],
     "testURL": "http://localhost",
     "setupFiles": [
@@ -94,35 +102,50 @@
     "react-dom": ">=16.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-rc.0",
-    "@babel/core": "^7.0.0-beta.55",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-rc.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.0.0-rc.0",
-    "@babel/plugin-transform-object-assign": "^7.0.0-rc.0",
-    "@babel/plugin-transform-runtime": "^7.0.0-rc.0",
-    "@babel/preset-env": "^7.0.0-rc.0",
-    "@babel/preset-react": "^7.0.0-rc.0",
-    "all-contributors-cli": "^6.17.2",
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@babel/plugin-transform-object-assign": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@types/node": "^14.11.2",
+    "@types/react": "^16.9.50",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "all-contributors-cli": "^6.18.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.4.2",
-    "babel-loader": "^8.0.0-beta.4",
-    "babel-plugin-extensible-destructuring": "^4.2.3",
-    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-jest": "^26.5.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-extensible-destructuring": "^4.3.1",
+    "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
-    "cross-env": "^5.2.0",
+    "cross-env": "^7.0.2",
     "del-cli": "^1.1.0",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
-    "enzyme-to-json": "^3.3.4",
-    "fs-extra": "^7.0.0",
-    "jest": "^26.4.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "enzyme-to-json": "^3.6.1",
+    "eslint": "^7.10.0",
+    "eslint-import-resolver-webpack": "^0.13.0",
+    "eslint-plugin-compat": "^3.8.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-eslint-plugin": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.3",
+    "fs-extra": "^9.0.1",
+    "jest": "^26.5.0",
     "mitsuketa": "^1.4.3",
     "react": ">=16.2.0",
     "react-dom": ">=16.2.0",
-    "react-test-renderer": "^16.4.1",
-    "rimraf": "^2.6.2"
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-rc.0"
+    "@babel/runtime": "^7.10.5"
   }
 }
