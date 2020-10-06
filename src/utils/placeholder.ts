@@ -59,7 +59,7 @@ export function stripQuotesFromKey(text: string): string {
   if (hasQuotes) {
     val = val.split('').map(char => ["'", '"'].includes(char) ? `\\${char}` : char ).join('');
   }
-  return mayRemoveQuotes ? val : `'${val}'`;
+  return mayRemoveQuotes ? val : `"${val}"`;
 }
 
 function addTokenPrimary(buffer: PrimaryBuffer, value: string): boolean {

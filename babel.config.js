@@ -7,7 +7,10 @@ const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV
 // For the ES configuration only transpile react to valid JavaScript.
 // For commonjs transpile to old JS versions.
 const presets = moduleSystem === "es"
-  ? ['@babel/preset-react']
+  ? [
+    '@babel/preset-react',
+    '@babel/preset-typescript'
+  ]
   : [
     ['@babel/preset-env', {
       targets: {
@@ -20,6 +23,7 @@ const presets = moduleSystem === "es"
       },
       modules: moduleSystem,
     }],
+    '@babel/preset-typescript',
     '@babel/preset-react'
   ];
 
@@ -40,7 +44,16 @@ module.exports = {
     '@babel/plugin-transform-object-assign',
     '@babel/plugin-proposal-object-rest-spread',
     'babel-plugin-extensible-destructuring',
-    ['@babel/plugin-transform-runtime', transformOptions]
+
+    // Stage 0
+    ['@babel/plugin-transform-runtime', transformOptions],
+
+    // Stage 1
+
+    // Stage 2
+
+    // Stage 3
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],
   env: {
     production: {

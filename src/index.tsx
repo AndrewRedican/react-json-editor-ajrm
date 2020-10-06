@@ -3,6 +3,7 @@
 import React, {
   ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent, UIEvent
 } from 'react';
+import { css } from 'emotion';
 import * as ErrorVal from './error';
 import * as Themes from './themes';
 import { format, Locale } from './locale';
@@ -56,6 +57,8 @@ interface JSONInputProps {
   colors?: Partial<Themes.ThemeColors>;
   style?: Partial<InputStyles>;
   error?: Tokens.ErrorMsg;
+  // New Props
+  stripQuotes?: boolean;
 }
 
 interface JSONInputState {
@@ -99,6 +102,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   totalHeight = '610px';
   totalWidth = '479px';
   resetConfiguration = false;
+  stripQuotes = true;
   waitAfterKeyPress = 1000;
 
   // Properties without default
@@ -120,6 +124,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.setUpdateTime            = this.setUpdateTime.bind(this);
     this.getCursorPosition        = this.getCursorPosition.bind(this);
     this.getEditProps             = this.getEditProps.bind(this);
+    this.getEditStyles            = this.getEditStyles.bind(this);
     this.updateInternalProps      = this.updateInternalProps.bind(this);
     this.update                   = this.update.bind(this);
     this.createMarkup             = this.createMarkup.bind(this);
@@ -130,7 +135,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.tokenize                 = this.tokenize.bind(this);
     this.tokenizeDomNodeUpdate    = this.tokenizeDomNodeUpdate.bind(this);
     this.tokenizePlaceholderJSON  = this.tokenizePlaceholderJSON.bind(this);
-    this.renderLabels             = this.renderLabels.bind(this);
     this.renderErrorMessage       = this.renderErrorMessage.bind(this);
     this.updateInternalProps();
     this.renderCount = 1;
@@ -403,9 +407,36 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     };
   }
 
+  getEditStyles() {
+    const { labelColumn } = this.style;
+    return css({
+      counterReset: 'line',
+      '> div': {
+        counterIncrement: 'line',
+        paddingLeft: '4.5em',
+        position: 'relative',
+        '&:before': {
+          content: 'counter(line)',
+          display: 'inline-block',
+          boxSizing: 'border-box',
+          verticalAlign: 'top',
+          height: '100%',
+          width: '3.5em',
+          margin: 0,
+          paddingRight: '.5em',
+          overflow: 'hidden',
+          color: '#D4D4D4',
+          position: 'absolute',
+          left: 0,
+          ...labelColumn
+        }
+      }
+    });
+  }
+
   updateInternalProps() {
     const {
-      colors, confirmGood, height, onKeyPressUpdate, reset, style, theme, waitAfterKeyPress, width
+      colors, confirmGood, height, onKeyPressUpdate, reset, stripQuotes, style, theme, waitAfterKeyPress, width
     } = this.props;
 
     let colorMix: Themes.ThemeColors;
@@ -457,6 +488,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.style = styleMix;
 
     this.confirmGood = typeof confirmGood === 'boolean' ? confirmGood : true;
+    this.stripQuotes = typeof stripQuotes === 'boolean' ? stripQuotes : true;
     this.totalHeight = height || '610px';
     this.totalWidth = width || '479px';
     if (onKeyPressUpdate === undefined || onKeyPressUpdate) {
@@ -1278,13 +1310,15 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     const newIndent = () => Array(depth * 2).fill('&nbsp;').join('');
     const newLineBreak = (byPass = false) => {
       lines += 1;
-      return (depth > 0 || byPass) ? '<br>' : '';
+      return (depth > 0 || byPass) ? '</div><div>' : '';
     };
     const newLineBreakAndIndent = (byPass = false) => `${newLineBreak(byPass)}${newIndent()}`;
 
     if (errorMsg === undefined) {
       const lastMergeIdx = buffer.tokens_merge.length - 1;
+      buffer.markup += '<div>';
 
+      // Format by Token
       buffer.tokens_merge.forEach((token, i) => {
         const { string, type } = token;
         const span = this.newSpan(i, token, depth);
@@ -1329,6 +1363,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           // no default
         }
       });
+      buffer.markup += '</div>';
     }
 
     if (errorMsg) {
@@ -1475,10 +1510,10 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
                 const char = charList2[ii];
                 rtnToken.string += '\'"'.includes(char) ? `\\${char}` : char;
               }
-              rtnToken.string = `'${rtnToken.string}'`;
+              rtnToken.string = `"${rtnToken.string}"`;
             }
             if (rtnToken.type === 'key') {
-              rtnToken.string = Placeholder.stripQuotesFromKey(token);
+              rtnToken.string = this.stripQuotes ? Placeholder.stripQuotesFromKey(token) : token;
             }
             rtnToken.value = rtnToken.string;
           } else if (!Number.isNaN(Number(token))) {
@@ -1487,7 +1522,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             rtnToken.value = Number(token);
           } else if (token.length > 0 && !buffer2.isValue) {
             rtnToken.type = 'key';
-            rtnToken.string = token.includes(' ') ? `'${token}'` : token;
+            rtnToken.string = token.includes(' ') ? `"${token}"` : token;
             rtnToken.value = rtnToken.string;
           }
       }
@@ -1499,12 +1534,12 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     const lastIndex = buffer2.tokens.length - 1;
     let indentation = '';
     let lines = 1;
-    let markup = '';
+    let markup = '<div>';
 
     const indent = (num: number) => `${num > 0 ? '\n' : ''}${Array(num * 2).fill(' ').join('')}`;
     const indentII = (num: number) => {
       lines += num > 0 ? 1 : 0;
-      return `${num > 0 ? '</br>' : ''}${Array(num * 2).fill('&nbsp;').join('')}`;
+      return `${num > 0 ? '</div><div>' : ''}${Array(num * 2).fill('&nbsp;').join('')}`;
     };
 
     // Format by Token
@@ -1533,7 +1568,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             markup += span;
           } else {
             indentation += `${indent(depth)}${string}`;
-            markup += `${indentII(depth)}${lastIndex === i ? '</br>' : ''}${span}`;
+            markup += `${indentII(depth)}${lastIndex === i ? '</div><div>' : ''}${span}`;
           }
           break;
         case ':':
@@ -1551,6 +1586,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     });
 
     lines += 2;
+    markup += '</div>';
     return {
       tokens: buffer2.tokens,
       noSpaces: clean,
@@ -1569,60 +1605,45 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     const errorMsg = this.props.error || this.state.error;
     const lang = locale || defaultLocale;
 
-    if (errorMsg) {
-      return (
+    if (errorMsg === undefined) {
+      return '';
+    }
+    return (
+      <span
+        style={{
+          display: 'inline-block',
+          height: '60px',
+          width: 'calc(100% - 60px)',
+          margin: 0,
+          overflow: 'hidden',
+          verticalAlign: 'top',
+          position: 'absolute',
+          pointerEvents: 'none'
+        }}
+        onClick={ this.onClick }
+      >
         <p
-          style={
-            {
-              color: 'red',
-              fontSize: '12px',
-              position: 'absolute',
-              width: 'calc(100% - 60px)',
-              height: '60px',
-              boxSizing: 'border-box',
-              margin: 0,
-              padding: 0,
-              paddingRight: '10px',
-              overflowWrap: 'break-word',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              ...errorMessage
-            }
-          }
+          style={{
+            color: 'red',
+            fontSize: '12px',
+            position: 'absolute',
+            width: 'calc(100% - 60px)',
+            height: '60px',
+            boxSizing: 'border-box',
+            margin: 0,
+            padding: 0,
+            paddingRight: '10px',
+            overflowWrap: 'break-word',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            ...errorMessage
+          }}
         >
           { format(lang.format, errorMsg) }
         </p>
-      );
-    }
-    return '';
-  }
-
-  renderLabels() {
-    const { lines } = this.state;
-    const { labels } = this.style;
-    // eslint-disable-next-line react/destructuring-assignment
-    const errorMsg = this.props.error || this.state.error;
-    const errorLine = errorMsg ? errorMsg.line : -1;
-    const lineCount = lines || 1;
-
-    return Array.from<number, number>({length: lineCount-1}, Number.call, (i: number) => {
-      const line = i + 1;
-      const color = line === errorLine ? 'red' : this.colors.default;
-      return (
-        <div
-          key={ line }
-          style={
-            {
-              ...labels,
-              color
-            }
-          }
-        >
-          { line }
-        </div>
-      );
-    });
+      </span>
+    );
   }
 
   render() {
@@ -1630,7 +1651,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { background, background_warning } = this.colors;
     const {
-      body, container, contentBox, labelColumn, outerBox, warningBox
+      body, container, contentBox, outerBox, warningBox
     } = this.style;
     // eslint-disable-next-line react/destructuring-assignment
     const errorMsg = error || this.state.error;
@@ -1690,18 +1711,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         color: '#D4D4D4',
         outline: 'none',
         ...contentBox
-      },
-      labelColumn: {
-        display: 'inline-block',
-        boxSizing: 'border-box',
-        verticalAlign: 'top',
-        height: '100%',
-        width: '44px',
-        margin: 0,
-        padding: '5px 0px 5px 10px',
-        overflow: 'hidden',
-        color: '#D4D4D4',
-        ...labelColumn
       },
       outerBox: {
         display: 'block',
@@ -1769,44 +1778,38 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             onClick={ this.onClick }
           >
             <span
-              style={
-                {
-                  display: 'inline-block',
-                  height: '60px',
-                  width: '60px',
-                  margin: 0,
-                  boxSizing: 'border-box',
-                  overflow: 'hidden',
-                  verticalAlign: 'top',
-                  pointerEvents: 'none'
-                }
-              }
+              style={{
+                display: 'inline-block',
+                height: '60px',
+                width: '60px',
+                margin: 0,
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+                verticalAlign: 'top',
+                pointerEvents: 'none'
+              }}
               onClick={ this.onClick }
             >
               <div
-                style={
-                  {
-                    position: 'relative',
-                    top: 0,
-                    left: 0,
-                    height: '60px',
-                    width: '60px',
-                    margin: 0,
-                    pointerEvents: 'none'
-                  }
-                }
+                style={{
+                  position: 'relative',
+                  top: 0,
+                  left: 0,
+                  height: '60px',
+                  width: '60px',
+                  margin: 0,
+                  pointerEvents: 'none'
+                }}
                 onClick={ this.onClick }
               >
                 <div
-                  style={
-                    {
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      pointerEvents: 'none'
-                    }
-                  }
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'none'
+                  }}
                   onClick={ this.onClick }
                 >
                   <svg
@@ -1825,23 +1828,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               </div>
             </span>
 
-            <span
-              style={
-                {
-                  display: 'inline-block',
-                  height: '60px',
-                  width: 'calc(100% - 60px)',
-                  margin: 0,
-                  overflow: 'hidden',
-                  verticalAlign: 'top',
-                  position: 'absolute',
-                  pointerEvents: 'none'
-                }
-              }
-              onClick={ this.onClick }
-            >
-              { this.renderErrorMessage() }
-            </span>
+            { this.renderErrorMessage() }
           </div>
 
           <div
@@ -1851,18 +1838,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             onClick={ this.onClick }
           >
             <span
-              // name='labels'
-              id={ id && `${id}-labels` }
-              ref={ ref => { this.refLabels = ref || undefined; } }
-              style={ renderStyles.labelColumn }
-              onClick={ this.onClick }
-            >
-              { this.renderLabels() }
-            </span>
-
-            <span
               id={ id }
               ref={ ref => { this.refContent = ref || undefined; } }
+              className={ this.getEditStyles() }
               style={ renderStyles.contentBox }
               dangerouslySetInnerHTML={ this.createMarkup() }
               // eslint-disable-next-line react/jsx-props-no-spreading
