@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 # 2020-09-25
+- Fix line number alignment @czack425
 - Configured eslint @czack425
 - Update to Typescript @czack425
 

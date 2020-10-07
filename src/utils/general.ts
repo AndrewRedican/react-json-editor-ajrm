@@ -81,7 +81,7 @@ export function safeGet(obj: Record<string, any>, key: string, def?: any): any {
 }
 
 /**
- * Count hte line breaks of the given string
+ * Count the line breaks of the given string
  * @param {string} str - string to count line breaks of
  * @returns {number} - line break count
  */

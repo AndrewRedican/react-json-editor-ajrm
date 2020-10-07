@@ -59,7 +59,7 @@ export function stripQuotesFromKey(text: string): string {
   if (hasQuotes) {
     val = val.split('').map(char => ["'", '"'].includes(char) ? `\\${char}` : char ).join('');
   }
-  return mayRemoveQuotes ? val : `"${val}"`;
+  return mayRemoveQuotes ? val : `'${val}'`;
 }
 
 function addTokenPrimary(buffer: PrimaryBuffer, value: string): boolean {
@@ -131,7 +131,7 @@ export function determineValue(buffer: PrimaryBuffer): boolean {
   return true;
 }
 
-// TODO: dead code??
+// TODO: Remove dead code??
 export function extract(str: string, position: number): string {
   return str.slice(0, position) + str.slice(position + 1);
 }

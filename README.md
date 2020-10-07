@@ -117,7 +117,6 @@ The `./examples` folder contains two examples:
 | style.[labelColumn]()         | Property to modify the default style of the container div of row labels.                                                                                                                                                                                                                        |  object  | Optional  |
 | style.[labels]()              | Property to modify the default style of each row label.                                                                                                                                                                                                                                         |  object  | Optional  |
 | style.[contentBox]()          | Property to modify the default style of the container div of the code.                                                                                                                                                                                                                          |  object  | Optional  |
-| [stripQuotes]() 	            | Send `false` if you would like quotes to not be automatically removed where applicable (strings without spaces and escaped/special characters).                                                                                                                                                 |  boolean | Optional  |
 
 ## Component Sections
 

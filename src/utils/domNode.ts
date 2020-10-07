@@ -160,7 +160,7 @@ export function validToken(str: string, type: TokenType): boolean {
         return false;
       }
       for (let i = 0; i < str.length; i++) {
-        if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i - 1) !== '\\') {
+        if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i-1) !== '\\') {
           return false;
         }
       }
@@ -174,7 +174,7 @@ export function validToken(str: string, type: TokenType): boolean {
           return false;
         }
         for (let i = 0; i < str.length; i++) {
-          if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i - 1) !== '\\') {
+          if (i > 0 && i < str.length - 1 && str.charAt(i) === quotes[quoteType] && str.charAt(i-1) !== '\\') {
             return false;
           }
         }
@@ -190,11 +190,13 @@ export function validToken(str: string, type: TokenType): boolean {
     case 'number':
       for (let i = 0; i < str.length; i++) {
         if (!'0123456789'.includes(str.charAt(i))) {
-          if (i === 0 && !str.startsWith('-')) {
+          if (i === 0) {
+            if (!str.startsWith('-')) {
+              return false;
+            }
+          } else if (str.charAt(i) !== '.') {
             return false;
           }
-        } else if (str.charAt(i) !== '.') {
-          return false;
         }
       }
       break;

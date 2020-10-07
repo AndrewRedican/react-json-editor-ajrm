@@ -22,7 +22,6 @@ export function format(str: string, args: Record<string, any> = {}): string {
     Should be translated for the specific locale with the exception of the contents of the curly brackets
     format as Spanish -> '{reason} en la línea {line}'
 */
-
 export interface Locale {
   format: string; // formatted as '{reason} at line {line}'
   symbols: {

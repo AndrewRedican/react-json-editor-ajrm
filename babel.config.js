@@ -6,12 +6,15 @@ const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV
 
 // For the ES configuration only transpile react to valid JavaScript.
 // For commonjs transpile to old JS versions.
-const presets = moduleSystem === "es"
-  ? [
-    '@babel/preset-react',
-    '@babel/preset-typescript'
-  ]
-  : [
+const presets  = [
+  ['@babel/preset-typescript', {
+    allExtensions: true,
+    isTSX: true
+  }],
+  '@babel/preset-react'
+];
+if (moduleSystem !== "es") {
+  presets.splice(0, 0,
     ['@babel/preset-env', {
       targets: {
         ie: 11,
@@ -22,21 +25,15 @@ const presets = moduleSystem === "es"
         node: '6.11',
       },
       modules: moduleSystem,
-    }],
-    '@babel/preset-typescript',
-    '@babel/preset-react'
-  ];
+    }]
+  );
+}
 
 // The ES system does not polyfill etc, while the others do.
-const transformOptions = moduleSystem === "es"
-  ? {
-    helpers: true,
-    useESModules: true
-  }
-  : {
-    helpers: true,
-    useESModules: false
-  };
+const transformOptions = {
+  helpers: true,
+  useESModules: moduleSystem === "es"
+};
 
 module.exports = {
   presets,

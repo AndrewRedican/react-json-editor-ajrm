@@ -1,10 +1,10 @@
 /* global JSX, NodeJS */
 /* eslint react/no-unused-state: 0, @typescript-eslint/lines-between-class-members: 1 */
 import React, {
-  ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent, UIEvent
+  ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent
 } from 'react';
 import { css } from 'emotion';
-import * as ErrorVal from './error';
+import * as Err from './error';
 import * as Themes from './themes';
 import { format, Locale } from './locale';
 import defaultLocale from './locale/en';
@@ -19,7 +19,7 @@ import {
 // Interfaces
 type ObjectCSS = Record<string, CSSProperties>;
 
- interface InputStyles {
+interface InputStyles {
   body: ObjectCSS;
   container: ObjectCSS;
   contentBox: ObjectCSS;
@@ -57,8 +57,6 @@ interface JSONInputProps {
   colors?: Partial<Themes.ThemeColors>;
   style?: Partial<InputStyles>;
   error?: Tokens.ErrorMsg;
-  // New Props
-  stripQuotes?: boolean;
 }
 
 interface JSONInputState {
@@ -77,7 +75,14 @@ interface Chars {
 
 // Defaults
 const defaultProps = {
-  locale: defaultLocale
+  // Required
+  locale: defaultLocale,
+  // Optional with defaults
+  id: 'JSON-Input',
+  reset: false,
+  viewOnly: false,
+  confirmGood: true,
+  onKeyPressUpdate: true  
 };
 
 const defaultStyles: InputStyles = {
@@ -102,40 +107,37 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   totalHeight = '610px';
   totalWidth = '479px';
   resetConfiguration = false;
-  stripQuotes = true;
   waitAfterKeyPress = 1000;
 
   // Properties without default
   renderCount: number;
   refContent?: HTMLSpanElement;
-  refLabels?: HTMLSpanElement;
   timer?: NodeJS.Timer;
   updateTime?: number;
 
   constructor(props: JSONInputProps) {
     super(props);
-    this.onBlur                   = this.onBlur.bind(this);
-    this.onClick                  = this.onClick.bind(this);
-    this.onKeyDown                = this.onKeyDown.bind(this);
-    this.onKeyPress               = this.onKeyPress.bind(this);
-    this.onPaste                  = this.onPaste.bind(this);
-    this.onScroll                 = this.onScroll.bind(this);
-    this.setCursorPosition        = this.setCursorPosition.bind(this);
-    this.setUpdateTime            = this.setUpdateTime.bind(this);
-    this.getCursorPosition        = this.getCursorPosition.bind(this);
-    this.getEditProps             = this.getEditProps.bind(this);
-    this.getEditStyles            = this.getEditStyles.bind(this);
-    this.updateInternalProps      = this.updateInternalProps.bind(this);
-    this.update                   = this.update.bind(this);
-    this.createMarkup             = this.createMarkup.bind(this);
-    this.newSpan                  = this.newSpan.bind(this);
-    this.scheduledUpdate          = this.scheduledUpdate.bind(this);
-    this.showPlaceholder          = this.showPlaceholder.bind(this);
-    this.stopEvent                = this.stopEvent.bind(this);
-    this.tokenize                 = this.tokenize.bind(this);
-    this.tokenizeDomNodeUpdate    = this.tokenizeDomNodeUpdate.bind(this);
-    this.tokenizePlaceholderJSON  = this.tokenizePlaceholderJSON.bind(this);
-    this.renderErrorMessage       = this.renderErrorMessage.bind(this);
+    this.onBlur              = this.onBlur.bind(this);
+    this.onClick             = this.onClick.bind(this);
+    this.onKeyDown           = this.onKeyDown.bind(this);
+    this.onKeyPress          = this.onKeyPress.bind(this);
+    this.onPaste             = this.onPaste.bind(this);
+    this.setCursorPosition   = this.setCursorPosition.bind(this);
+    this.setUpdateTime       = this.setUpdateTime.bind(this);
+    this.getCursorPosition   = this.getCursorPosition.bind(this);
+    this.getEditProps        = this.getEditProps.bind(this);
+    this.getEditStyles       = this.getEditStyles.bind(this);
+    this.updateInternalProps = this.updateInternalProps.bind(this);
+    this.update              = this.update.bind(this);
+    this.createMarkup        = this.createMarkup.bind(this);
+    this.newSpan             = this.newSpan.bind(this);
+    this.scheduledUpdate     = this.scheduledUpdate.bind(this);
+    this.showPlaceholder     = this.showPlaceholder.bind(this);
+    this.stopEvent           = this.stopEvent.bind(this);
+    this.tokenize            = this.tokenize.bind(this);
+    this.tokenizeDomNode     = this.tokenizeDomNode.bind(this);
+    this.tokenizePlaceholder = this.tokenizePlaceholder.bind(this);
+    this.renderErrorMessage  = this.renderErrorMessage.bind(this);
     this.updateInternalProps();
     this.renderCount = 1;
     this.state = {
@@ -173,7 +175,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (viewOnly !== undefined && viewOnly) {
       return;
     }
-    if (onBlur !== undefined && isFunction(onBlur)) {
+    if (onBlur && isFunction(onBlur)) {
       const container = this.refContent;
       if (container) {
         const data = this.tokenize(container);
@@ -262,13 +264,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.update();
   }
 
-  onScroll(event: UIEvent<HTMLSpanElement>) {
-    const { currentTarget } = event;
-    if (this.refLabels) {
-      this.refLabels.scrollTop = currentTarget.scrollTop;
-    }
-  }
-
   setCursorPosition(nextPosition: any) {
     // TODO: Fix the typing of nextPosition
     if ([false, null, undefined].includes(nextPosition)) {
@@ -331,10 +326,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
   setUpdateTime() {
     const { onKeyPressUpdate } = this.props;
-    if (onKeyPressUpdate !== undefined && onKeyPressUpdate === false) {
-      return;
+    if (onKeyPressUpdate !== undefined && onKeyPressUpdate) {
+      this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
     }
-    this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
   }
 
   getCursorPosition(countBR?: Tokens.ErrorMsg) {
@@ -393,16 +387,15 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     }
 
     return {
-      contentEditable: true,
-      onKeyPress: this.onKeyPress,
-      onKeyDown: this.onKeyDown,
-      onClick: this.onClick,
-      onBlur: this.onBlur,
-      onScroll: this.onScroll,
-      onPaste: this.onPaste,
+      autoCapitalize: 'off',
       autoComplete: 'off',
       autoCorrect: 'off',
-      autoCapitalize: 'off',
+      contentEditable: true,
+      onBlur: this.onBlur,
+      onClick: this.onClick,
+      onKeyDown: this.onKeyDown,
+      onKeyPress: this.onKeyPress,
+      onPaste: this.onPaste,
       spellCheck: false
     };
   }
@@ -436,7 +429,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
   updateInternalProps() {
     const {
-      colors, confirmGood, height, onKeyPressUpdate, reset, stripQuotes, style, theme, waitAfterKeyPress, width
+      colors, confirmGood, height, onKeyPressUpdate, reset, style, theme, waitAfterKeyPress, width
     } = this.props;
 
     let colorMix: Themes.ThemeColors;
@@ -488,7 +481,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.style = styleMix;
 
     this.confirmGood = typeof confirmGood === 'boolean' ? confirmGood : true;
-    this.stripQuotes = typeof stripQuotes === 'boolean' ? stripQuotes : true;
     this.totalHeight = height || '610px';
     this.totalWidth = width || '479px';
     if (onKeyPressUpdate === undefined || onKeyPressUpdate) {
@@ -545,7 +537,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     };
   }
 
-  newSpan(i: number, token: Tokens.SimpleToken, depth: number) {
+  newSpan(key: number, token: Tokens.SimpleToken, depth: number) {
     const { string, type } = token;
     let color = this.colors.default;
 
@@ -560,7 +552,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         color = string === ' ' ? this.colors.keys_whiteSpace : this.colors.keys;
         break;
       case 'symbol':
-        color = string === ':' ? this.colors.colon : this.colors.default;
+        color = string === ':' ? this.colors.colon : color;
         break;
       // no default
     }
@@ -569,7 +561,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (val.length !== val.replace(/</g, '').replace(/>/g, '').length) {
       val = `<xmp style=display:inline;>${val}</xmp>`;
     }
-    return `<span data-key="${i}" data-type="${type}" data-value="${val}" data-depth="${depth}" style="color: ${color}">${val}</span>`;
+    return `<span data-key="${key}" data-type="${type}" data-value="${val}" data-depth="${depth}" style="color: ${color}">${val}</span>`;
   }
 
   scheduledUpdate() {
@@ -577,7 +569,10 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (onKeyPressUpdate !== undefined && onKeyPressUpdate === false) {
       return;
     }
-    if (this.updateTime === undefined || this.updateTime > new Date().getTime()) {
+    if (this.updateTime === undefined) {
+      return;
+    }
+    if (this.updateTime > new Date().getTime()) {
       return;
     }
     this.update();
@@ -585,18 +580,17 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
   showPlaceholder() {
     const { placeholder } = this.props;
-    if (placeholder === undefined || placeholder === null) {
+    if (placeholder === null || placeholder === undefined) {
       return;
     }
 
     const placeholderDataType = getType(placeholder);
     const unexpectedDataType = !['object', 'array'].includes(placeholderDataType);
     if (unexpectedDataType) {
-      ErrorVal.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
+      Err.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
     }
 
     const { jsObject, prevPlaceholder } = this.state;
-
     // Component will always re-render when new placeholder value is any different from previous placeholder value.
     let componentShouldUpdate = !identical(placeholder, prevPlaceholder);
 
@@ -637,22 +631,23 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (typeof obj !== 'object') {
       throw new TypeError(`tokenize() expects object type properties only. Got '${typeof obj}' type instead.`);
     }
+    
 
     // DOM NODE || ONBLUR OR UPDATE
     if (obj instanceof HTMLSpanElement && 'nodeType' in obj) {
-      return this.tokenizeDomNodeUpdate(obj as HTMLElement);
+      return this.tokenizeDomNode(obj);
     }
 
     // JS OBJECTS || PLACEHOLDER
     if (!('nodeType' in obj)) {
-      return this.tokenizePlaceholderJSON(obj);
+      return this.tokenizePlaceholder(obj);
     }
 
     console.error('Tokenize Error: Oops....');
     return null;
   }
 
-  tokenizeDomNodeUpdate(obj: HTMLElement): null|DomNode.DomNodeTokenize {
+  tokenizeDomNode(obj: HTMLElement): null|DomNode.DomNodeTokenize {
     const { locale } = this.props;
     const lang = locale || defaultLocale;
     const containerNode = obj.cloneNode(true);
@@ -675,22 +670,24 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       markup: ''
     };
 
-    children.forEach(child => {
+    const setChildToken = (child: ChildNode): void => {
       switch (child.nodeName) {
         case 'SPAN':
           const dataset = (child as HTMLSpanElement).dataset;
           buffer.tokens_unknown.push({
             string: child.textContent || '',
-            type: dataset.type || 'unknown'
+            type: dataset.type || 'unknown'  // child.attributes.type.textContent
           } as Tokens.SimpleToken);
           break;
         case 'DIV':
+          child.childNodes.forEach(c => setChildToken(c));
           buffer.tokens_unknown.push({
-            string: child.textContent || '',
+            string: '\n',
             type: 'unknown'
           } as Tokens.SimpleToken);
           break;
         case 'BR':
+          console.log('BR')
           if (child.textContent === '') {
             buffer.tokens_unknown.push({
               string: '\n',
@@ -715,7 +712,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             child
           });
       }
-    });
+    }
+
+    children.forEach(child => setChildToken(child));
 
     buffer.tokens_proto = buffer.tokens_unknown.map(token => DomNode.quarkize(token.string, 'proto')).reduce((all, quarks) => all.concat(quarks));
 
@@ -778,18 +777,18 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             case '[':
             case '{':
               buffer2.brackets.push(normalToken.string);
-              buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
               break;
             case ']':
             case '}':
               buffer2.brackets.pop();
-              buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
               break;
             case ',':
               if (lastType === 'colon') {
                 break;
               }
-              buffer2.isValue = buffer2.brackets[buffer2.brackets.length - 1] === '[';
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
               break;
             case ':':
               normalToken.type = 'colon';
@@ -893,7 +892,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         line,
         reason
       };
-      buffer.tokens_merge[tokenID + offset].type = 'error';
+      buffer.tokens_merge[tokenID+offset].type = 'error';
     };
 
     // TODO: Simplify loop
@@ -1146,13 +1145,13 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               break;
             }
           }
-          let tmpStr = string;
           if (firstChar === "'") {
-            tmpStr = `"${string.slice(1, -1)}"`;
+            buffer.json += `"${string.slice(1, -1)}"`;
           } else if (firstChar !== '"') {
-            tmpStr = `"${string}"`;
+            buffer.json += `"${string}"`;
+          } else {
+            buffer.json += string;
           }
-          buffer.json += tmpStr;
           break;
         case 'number':
         case 'primitive':
@@ -1222,7 +1221,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
       while (bracketList.length > 0) {
         delta = false;
-        for (let tokenCount = 0; tokenCount < bracketList.length - 1; tokenCount++) {
+        for (let tokenCount = 0; tokenCount < bracketList.length-1; tokenCount++) {
           const pair = bracketList[tokenCount].string + bracketList[tokenCount+1].string;
           if (['[]', '{}'].includes(pair)) {
             removePair(tokenCount);
@@ -1369,14 +1368,20 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (errorMsg) {
       let lineFallback = 1;
       lines = 1;
+      buffer.markup += '<div>';
 
       buffer.tokens_merge.forEach((token, i) => {
         const { string, type } = token;
-        lines += type === 'linebreak' ? 1 : 0;
-        buffer.markup += this.newSpan(i, token, depth);
+        if (type === 'linebreak') {
+          lines += 1;
+          buffer.markup += '</div><div>';
+        } else {
+          buffer.markup += this.newSpan(i, token, depth);
+        }
         lineFallback += countCarrigeReturn(string);
       });
 
+      buffer.markup += '</div>';
       lines += 1;
       lineFallback += 1;
       if (lines < lineFallback) {
@@ -1410,7 +1415,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     };
   }
 
-  tokenizePlaceholderJSON(obj: Record<string, any>): null|Placeholder.PlaceholderTokenize {
+  tokenizePlaceholder(obj: Record<string, any>): null|Placeholder.PlaceholderTokenize {
     const buffer: Placeholder.PrimaryBuffer = {
       inputText: JSON.stringify(obj),
       position: 0,
@@ -1510,10 +1515,10 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
                 const char = charList2[ii];
                 rtnToken.string += '\'"'.includes(char) ? `\\${char}` : char;
               }
-              rtnToken.string = `"${rtnToken.string}"`;
+              rtnToken.string = `'${rtnToken.string}'`;
             }
             if (rtnToken.type === 'key') {
-              rtnToken.string = this.stripQuotes ? Placeholder.stripQuotesFromKey(token) : token;
+              rtnToken.string = Placeholder.stripQuotesFromKey(token);
             }
             rtnToken.value = rtnToken.string;
           } else if (!Number.isNaN(Number(token))) {
@@ -1522,7 +1527,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             rtnToken.value = Number(token);
           } else if (token.length > 0 && !buffer2.isValue) {
             rtnToken.type = 'key';
-            rtnToken.string = token.includes(' ') ? `"${token}"` : token;
+            rtnToken.string = token.includes(' ') ? `'${token}'` : token;
             rtnToken.value = rtnToken.string;
           }
       }
@@ -1551,8 +1556,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       const prevString = prevToken ? prevToken.string : '';
 
       switch (string) {
-        case '[':
         case '{':
+        case '[':
           if ('}]'.includes(nextString)) {
             indentation += string;
             markup += span;
@@ -1561,8 +1566,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             markup += `${span}${indentII(depth)}`;
           }
           break;
-        case ']':
         case '}':
+        case ']':
           if ('[{'.includes(prevString)) {
             indentation += string;
             markup += span;
@@ -1609,40 +1614,26 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       return '';
     }
     return (
-      <span
+      <p
         style={{
-          display: 'inline-block',
-          height: '60px',
-          width: 'calc(100% - 60px)',
-          margin: 0,
-          overflow: 'hidden',
-          verticalAlign: 'top',
+          color: 'red',
+          fontSize: '12px',
           position: 'absolute',
-          pointerEvents: 'none'
+          width: 'calc(100% - 60px)',
+          height: '60px',
+          boxSizing: 'border-box',
+          margin: 0,
+          padding: 0,
+          paddingRight: '10px',
+          overflowWrap: 'break-word',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          ...errorMessage
         }}
-        onClick={ this.onClick }
       >
-        <p
-          style={{
-            color: 'red',
-            fontSize: '12px',
-            position: 'absolute',
-            width: 'calc(100% - 60px)',
-            height: '60px',
-            boxSizing: 'border-box',
-            margin: 0,
-            padding: 0,
-            paddingRight: '10px',
-            overflowWrap: 'break-word',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            ...errorMessage
-          }}
-        >
-          { format(lang.format, errorMsg) }
-        </p>
-      </span>
+        { format(lang.format, errorMsg) }
+      </p>
     );
   }
 
@@ -1828,7 +1819,21 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               </div>
             </span>
 
-            { this.renderErrorMessage() }
+            <span
+              style={{
+                display: 'inline-block',
+                height: '60px',
+                width: 'calc(100% - 60px)',
+                margin: 0,
+                overflow: 'hidden',
+                verticalAlign: 'top',
+                position: 'absolute',
+                pointerEvents: 'none'
+              }}
+              onClick={ this.onClick }
+            >
+              { this.renderErrorMessage() }
+            </span>
           </div>
 
           <div
