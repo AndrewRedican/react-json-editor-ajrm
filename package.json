@@ -1,79 +1,52 @@
 {
-  "name": "react-json-editor",
-  "version": "2.6.0",
+  "name": "react-json-editor-ajrm",
+  "version": "2.5.11",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "homepage": "https://github.com/czack425/react-json-editor#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build:dist && npm run test",
-    "build:dist": "rimraf dist && npm run build:tsc && npm run build:commonjs",
-    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js",
-    "build:tsc": "tsc",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files && npm run test",
+    "build:clean": "rimraf dist && npm run build",
+    "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js && npm run build:commonts",
+    "build:commonts": "tsc --declaration --outDir ./dist/ --module CommonJS",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js && npm run build:ts",
+    "build:ts": "tsc --declaration -outDir ./dist/es --module ES6",
+    "build:copy-files": "node ./scripts/copy-files.js",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "lint-errors": "eslint . --cache --quiet --ext .js,.jsx,.ts,.tsx",
-    "prepare": "npm run build:dist",
+    "release": "npm run build && npm publish ./dist",
     "test": "npm run test:start && npm run test:clear",
     "test:start": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --updateSnapshot",
     "test:clear": "del-cli test/__snapshots__",
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
-    "test:release": "npm run build && npm pack .",
-    "release": "npm run build && npm publish ."
+    "test:release": "npm run build && npm pack ./dist"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.10.5",
-    "mitsuketa": "^1.4.3"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
-    "@babel/plugin-transform-object-assign": "^7.10.4",
-    "@babel/plugin-transform-runtime": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.10.4",
-    "@types/react": "^16.9.43",
-    "@typescript-eslint/eslint-plugin": "^3.7.1",
-    "@typescript-eslint/parser": "^3.7.1",
-    "all-contributors-cli": "^5.3.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-extensible-destructuring": "^4.3.1",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "babel-plugin-transform-react-constant-elements": "^6.23.0",
-    "cross-env": "^7.0.2",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2",
-    "enzyme-to-json": "^3.5.0",
-    "eslint": "^7.5.0",
-    "eslint-import-resolver-webpack": "^0.12.2",
-    "eslint-plugin-compat": "^3.8.0",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-eslint-plugin": "^2.3.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.20.5",
-    "fs-extra": "^9.0.1",
-    "jest": "^26.1.0",
-    "react": ">=16.13.0",
-    "react-dom": ">=16.13.0",
-    "react-test-renderer": "^16.13.1",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^26.1.3",
-    "typescript": "^3.9.7"
-  },
-  "peerDependencies": {
-    "react": ">=16.2.0",
-    "react-dom": ">=16.2.0"
-  },
-  "repository": "git@github.com:czack425/react-json-editor.git",
-  "bugs": {
-    "url": "https://github.com/czack425/react-json-editor/issues"
+  "jest": {
+    "preset": "ts-jest",
+    "verbose": true,
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "<rootDir>/test/jest.transform.js"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "testURL": "http://localhost",
+    "setupFiles": [
+      "./test/jest.setup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "keywords": [
     "react-json-editor",
@@ -115,34 +88,52 @@
     "japanese",
     "tamil"
   ],
-  "jest": {
-    "preset": "ts-jest",
-    "verbose": true,
-    "modulePathIgnorePatterns": [
-      "<rootDir>/lib/"
-    ],
-    "transform": {
-      "^.+\\.jsx?$": "<rootDir>/test/jest.transform.js"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "testURL": "http://localhost",
-    "setupFiles": [
-      "./test/jest.setup.js"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ]
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-transform-object-assign": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/node": "^14.11.5",
+    "@types/react": "^16.9.51",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "all-contributors-cli": "^6.18.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^26.5.2",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-extensible-destructuring": "^4.3.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "cross-env": "^7.0.2",
+    "del-cli": "^3.0.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "enzyme-to-json": "^3.6.1",
+    "eslint": "^7.10.0",
+    "eslint-import-resolver-webpack": "^0.13.0",
+    "eslint-plugin-compat": "^3.8.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-eslint-plugin": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.3",
+    "fs-extra": "^9.0.1",
+    "jest": "^26.5.2",
+    "mitsuketa": "^1.4.3",
+    "react": ">=16.2.0",
+    "react-dom": ">=16.2.0",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^3.9.7"
   },
-  "directories": {
-    "lib": "dist"
-  },
-  "files": [
-    "dist"
-  ]
+  "dependencies": {
+    "@babel/runtime": "^7.10.5",
+    "emotion": "^10.0.27"
+  }
 }

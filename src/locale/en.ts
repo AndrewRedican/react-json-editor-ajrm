@@ -1,4 +1,4 @@
-import Locale from './interface';
+import { Locale } from '.';
 
 // English
 const locale: Locale = {

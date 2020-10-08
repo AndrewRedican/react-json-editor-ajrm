@@ -1,4 +1,4 @@
-import Locale from './interface';
+import { Locale } from '.';
 
 // German
 const locale: Locale = {
@@ -45,7 +45,7 @@ const locale: Locale = {
     boolean: 'boolescher Wert',
     character: 'Schriftzeichen',
     integer: 'ganze Zahl',
-    array: 'Feld', // <- This translation is the Java term, there is probably a better translation
+    array: 'Feld',  // <- This translation is the Java term, there is probably a better translation
     float: 'Kommazahl'
   },
   invalidToken: {

@@ -30,6 +30,7 @@ function run() {
         placeholder={sampleData}
         viewOnly={true}
         onChange={sampleFunctions.getResults}
+        onBlur={sampleFunctions.getResults}
         confirmGood={false}
         height='500px'
         width='100%'
@@ -61,6 +62,7 @@ function run() {
         placeholder={sampleData}
         viewOnly={false}
         onChange={sampleFunctions.getResults}
+        onBlur={sampleFunctions.getResults}
         confirmGood={true}
         height='500px'
         width='100%'
@@ -79,6 +81,18 @@ function run() {
             pointerEvents: 'none'
           }
         }}
+      />,
+      { attachTo: window.domNode }
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  test(`Custom Error Render`, () => {
+    let wrapper = mount(
+      <JSONInput
+        locale={locale}
+        placeholder={sampleData}
+        error={{reason: "My custom error", line: 5}}
       />,
       { attachTo: window.domNode }
     );

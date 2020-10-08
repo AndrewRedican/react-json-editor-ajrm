@@ -13,14 +13,10 @@ function run() {
     );
     expect(wrapper).toMatchSnapshot();
 
-    function checkState(componentState){
+    function checkState(componentState) {
       const wrapperState = wrapper.state();
-      Object.keys(componentState).forEach(keyName => {
-        try {
-          expect(wrapperState[keyName]).toEqual(componentState[keyName]);
-        } catch (err) {
-          throw new Error(`State key '${keyName}'\n${err}`);
-        }
+      Object.keys(componentState).forEach( keyName => {
+        expect(wrapperState[keyName]).toEqual(componentState[keyName]);
       });
     }
 
@@ -32,7 +28,7 @@ function run() {
         jsObject: {},
         json: '',
         lines: 4,
-        plainText: '{\n  valueToChange: false}',
+        plainText: "{\n  valueToChange: false}",
         prevPlaceholder: {
             valueToChange : false
         }
@@ -46,7 +42,7 @@ function run() {
         jsObject: {},
         json: '',
         lines: 4,
-        plainText: '{\n  valueToChange: true}',
+        plainText: "{\n  valueToChange: true}",
         prevPlaceholder: {
             valueToChange : true
         }

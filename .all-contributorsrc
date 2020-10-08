@@ -15,7 +15,8 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/11284326?v=4",
       "profile": "https://github.com/czack425",
       "contributions": [
-        "code"
+        "code",
+        "test"
       ]
     },
     {
@@ -157,6 +158,34 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "terencehuynh",
+      "name": "Terence Huynh",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1747517?v=4",
+      "profile": "http://terencehuynh.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "rm-hull",
+      "name": "Richard Hull",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1915543?v=4",
+      "profile": "https://github.com/rm-hull",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tonynguyenit18",
+      "name": "tonynguyenit18",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/37351890?v=4",
+      "profile": "https://github.com/tonynguyenit18",
+      "contributions": [
+        "code"
+      ]
     }
-  ]
+  ],
+  "commitConvention": "none"
 }

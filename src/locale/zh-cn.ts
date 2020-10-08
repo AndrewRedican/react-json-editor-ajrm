@@ -1,6 +1,6 @@
-import Locale from './interface';
+import { Locale } from '.';
 
-// Chinese (China)
+// Chinese (Mainland China, simplified characters)
 const locale: Locale = {
   format: '{reason} 位于第 {line} 行',
   symbols: {

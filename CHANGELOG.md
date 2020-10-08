@@ -5,6 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+# 2020-09-25
+- Fix line number alignment @czack425
+- Configured eslint @czack425
+- Update to Typescript @czack425
+
+## [2.5.11] - 2020-09-14
+### Added
+- onBlur property. @tonynguyenit18.
+
+## [2.5.10] - 2020-08-25
+### Added
+- Custom errors can now be displayed on editor from props. @rm-hull.
+
+### Changed
+- Newline is now accepted in strings @terencehuynh.
 
 ## [2.6.0] - 2020-08-06
 ### Added

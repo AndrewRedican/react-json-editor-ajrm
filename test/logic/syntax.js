@@ -22,9 +22,9 @@ function run() {
 
   testSyntaxLogic('JS', 'Common Sample', sampleData.common, {
     jsObject: { ...sampleData.common },
-    json: "{\"strings\":[\"xyz\",\"This is a test\",\"+_)(*&^%$#@!~/|}{:?/.,;][=-`\"],\"numbers\":[0,1,-100,-7.5,500,1.823],\"primitives\":[false,true]}",
-    lines: 20,
-    noSpaces: "{strings:['xyz','This is a test','+_)(*&^%$#@!~/|}{:?/.,;][=-`'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true]}",
+    json: "{\"strings\":[\"xyz\",\"This is a test\",\"+_)(*&^%$#@!~/|}{:?/.,;][=-`\",\"This is a test with a newline\\n\"],\"numbers\":[0,1,-100,-7.5,500,1.823],\"primitives\":[false,true],\"escape\":[\"\\n\",\"\\r\"]}",
+    lines: 25,
+    noSpaces: "{strings:['xyz','This is a test','+_)(*&^%$#@!~/|}{:?/.,;][=-`','This is a test with a newline\\n'],numbers:[0,1,-100,-7.5,500,1.823],primitives:[false,true],escape:['\\n','\\r']}",
     tokens: [
       { depth: 1, string: '{', type: 'symbol', value: '{' },
       { depth: 1, string: 'strings', type: 'key', value: 'strings' },
@@ -35,6 +35,8 @@ function run() {
       { depth: 2, string: "'This is a test'", type: 'string', value: "'This is a test'" },
       { depth: 2, string: ',', type: 'symbol', value: ',' },
       { depth: 2, string: "'+_)(*&^%$#@!~/|}{:?/.,;][=-`'", type: 'string', value: "'+_)(*&^%$#@!~/|}{:?/.,;][=-`'" },
+      { depth: 2, string: ',', type: 'symbol', value: ',' },
+      { depth: 2, string: "'This is a test with a newline\\n'", type: 'string', value: "'This is a test with a newline\\n'" },
       { depth: 1, string: ']', type: 'symbol', value: ']' },
       { depth: 1, string: ',', type: 'symbol', value: ',' },
       { depth: 1, string: 'numbers', type: 'key', value: 'numbers' },
@@ -60,7 +62,15 @@ function run() {
       { depth: 2, string: ',', type: 'symbol', value: ',' },
       { depth: 2, string: 'true', type: 'primitive', value: true },
       { depth: 1, string: ']', type: 'symbol', value: ']' },
-      { depth: 0, string: '}', type: 'symbol', value: '}' }
+      { depth: 1, string: ',', type: 'symbol', value: ',' },
+      { depth: 1, string: 'escape', type: 'key', value: 'escape' },
+      { depth: 1, string: ':', type: 'symbol', value: ':' },
+      { depth: 2, string: '[', type: 'symbol', value: '[' },
+      { depth: 2, string: '\'\\n\'', type: 'string', value: '\'\\n\'' },
+      { depth: 2, string: ',', type: 'symbol', value: ',' },
+      { depth: 2, string: '\'\\r\'', type: 'string', value: '\'\\r\'' },
+      { depth: 1, string: ']', type: 'symbol', value: ']' },
+      { depth: 0, string: '}', type: 'symbol', value: '}' },
     ]
   });
 
@@ -152,6 +162,6 @@ export default run;
  * 1. Quotes in key and string notations and nested. I.e.   "" ''  ``
  * 2. Escape character. I.e \
  * 3. Html Tags and stand alone reserved words I.e. <pre> <div>  <> >< <br/>
- * 
+ *
  * 6. Provide invalid information, validate warnings
  **/

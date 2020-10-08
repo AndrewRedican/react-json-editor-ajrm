@@ -1,4 +1,4 @@
-import Locale from './interface';
+import { Locale } from '.';
 
 // Tamil
 const locale: Locale = {

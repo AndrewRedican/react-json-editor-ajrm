@@ -1,0 +1,13 @@
+sudo: false
+language: node_js
+cache:
+  directories:
+  - node_modules
+node_js: 12
+branches:
+  only:
+    - master
+notifications:
+  email: false
+script:
+  - npm run test

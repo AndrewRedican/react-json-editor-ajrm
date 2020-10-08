@@ -261,6 +261,9 @@ $RECYCLE.BIN/
 # Packed files
 dist
 
+# Typescript definitions
+*.d.ts
+
 # Non-packaged files
 config
 example

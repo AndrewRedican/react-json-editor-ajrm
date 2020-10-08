@@ -1,46 +1,99 @@
+/* global JSX, NodeJS */
 /* eslint react/no-unused-state: 0, @typescript-eslint/lines-between-class-members: 1 */
 import React, {
-  Component, ClipboardEvent, KeyboardEvent, SyntheticEvent, UIEvent
+  ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent
 } from 'react';
-import { getType, identical } from 'mitsuketa';
-import * as err from './err';
-import * as themes from './themes';
-import { safeGet } from './utils';
-
-// Locale/Language
-import { format } from './locale';
+import { css } from 'emotion';
+import * as Err from './err';
+import * as Themes from './themes';
+import { format, Locale } from './locale';
 import defaultLocale from './locale/en';
-
-// Tokenize
-import { DomNodeUpdate, PlaceholderJSON } from './tokenize';
-import { formatDomNodeTokens, formatPlaceholderTokens } from './tokenize/utils';
-import { ErrorMsg, DomNodeTokenize, PlaceholderTokenize } from './tokenize/interfaces';
+import { getType, identical } from './mitsuketa';
+import {
+  // Helpers
+  countCarrigeReturn, isFunction, mergeObjects, safeGet,
+  // Helper/Interfaces
+  DomNode, Placeholder, Tokens
+} from './utils';
 
 // Interfaces
-import {
-  ColorProps, JSONInputProps, JSONInputState, StyleProps, ObjectCSS
-} from './interfaces';
+type ObjectCSS = Record<string, CSSProperties>;
+
+interface InputStyles {
+  body: ObjectCSS;
+  container: ObjectCSS;
+  contentBox: ObjectCSS;
+  errorMessage: ObjectCSS;
+  labels: ObjectCSS;
+  labelColumn: ObjectCSS;
+  outerBox: ObjectCSS;
+  warningBox: ObjectCSS;
+}
+
+interface ChangeProps {
+  plainText: string;
+  markupText: string;
+  json: string;
+  jsObject: Record<string, any>,
+  lines: number;
+  error?: Tokens.ErrorMsg;
+}
+
+interface JSONInputProps {
+  locale: Locale,
+  id?: string;
+  placeholder?: Record<string, any>;
+  reset?: boolean;
+  viewOnly?: boolean;
+  onBlur?: (tokens: ChangeProps) => void;
+  onChange?: (changes: ChangeProps) => void;
+  modifyErrorText?: (msg: string) => string;
+  confirmGood?: boolean;
+  height?: string;
+  width?: string;
+  onKeyPressUpdate?: boolean;
+  waitAfterKeyPress?: number;
+  theme?: string;
+  colors?: Partial<Themes.ThemeColors>;
+  style?: Partial<InputStyles>;
+  error?: Tokens.ErrorMsg;
+}
+
+interface JSONInputState {
+  prevPlaceholder: undefined|Record<string, any>;
+  markupText: string;
+  plainText: string;
+  json: string;
+  jsObject: Record<string, any>;
+  lines: number;
+  error?: Tokens.ErrorMsg;
+}
 
 interface Chars {
   count: number
 }
 
-// Default Props
+// Defaults
 const defaultProps = {
+  // Required
   locale: defaultLocale,
-  id: '',
-  placeholder: {},
+  // Optional with defaults
+  id: 'JSON-Input',
   reset: false,
   viewOnly: false,
-  // onChange: (changes: ChangeProps) => { console.log(`Input Change - [${Object.keys(changes).join(', ')}]`); },
   confirmGood: true,
-  height: '610px',
-  width: '479px',
-  onKeyPressUpdate: true,
-  waitAfterKeyPress: 1000,
-  theme: 'light_mitsuketa_tribute',
-  colors: themes.light_mitsuketa_tribute,
-  style: {}
+  onKeyPressUpdate: true  
+};
+
+const defaultStyles: InputStyles = {
+  body: {},
+  container: {},
+  contentBox: {},
+  errorMessage: {},
+  labels: {},
+  labelColumn: {},
+  outerBox: {},
+  warningBox: {}
 };
 
 class JSONInput extends Component<JSONInputProps, JSONInputState> {
@@ -48,66 +101,57 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   static defaultProps: JSONInputProps = defaultProps;
 
   // Properties with default
-  colors = defaultProps.colors;
-  confirmGood = defaultProps.confirmGood;
-  style: StyleProps = defaultProps.style;
-  totalHeight = defaultProps.height;
-  totalWidth = defaultProps.width;
-  resetConfiguration = defaultProps.reset;
-  waitAfterKeyPress = defaultProps.waitAfterKeyPress;
+  colors: Themes.ThemeColors = Themes.dark_vscode_tribute;
+  confirmGood = true;
+  style = defaultStyles;
+  totalHeight = '610px';
+  totalWidth = '479px';
+  resetConfiguration = false;
+  waitAfterKeyPress = 1000;
 
   // Properties without default
   renderCount: number;
-  refContent = React.createRef<HTMLSpanElement>();
-  refLabels = React.createRef<HTMLSpanElement>();
-  timer?: NodeJS.Timeout;
+  refContent?: HTMLSpanElement;
+  timer?: NodeJS.Timer;
   updateTime?: number;
-
-  // Tokenize Functions
-  tokenizeDomNodeUpdate = DomNodeUpdate;
-  tokenizePlaceholderJSON = PlaceholderJSON;
-  formatDomNodeUpdate?: typeof formatDomNodeTokens;
-  formatPlaceholderJSON?: typeof formatPlaceholderTokens;
 
   constructor(props: JSONInputProps) {
     super(props);
+    this.onBlur              = this.onBlur.bind(this);
+    this.onClick             = this.onClick.bind(this);
+    this.onKeyDown           = this.onKeyDown.bind(this);
+    this.onKeyPress          = this.onKeyPress.bind(this);
+    this.onPaste             = this.onPaste.bind(this);
+    this.setCursorPosition   = this.setCursorPosition.bind(this);
+    this.setUpdateTime       = this.setUpdateTime.bind(this);
+    this.getCursorPosition   = this.getCursorPosition.bind(this);
+    this.getEditProps        = this.getEditProps.bind(this);
+    this.getEditStyles       = this.getEditStyles.bind(this);
     this.updateInternalProps = this.updateInternalProps.bind(this);
-    this.createMarkup = this.createMarkup.bind(this);
-    this.onClick = this.onClick.bind(this);
-    this.onBlur = this.onBlur.bind(this);
-    this.update = this.update.bind(this);
-    this.getCursorPosition = this.getCursorPosition.bind(this);
-    this.setCursorPosition = this.setCursorPosition.bind(this);
-    this.scheduledUpdate = this.scheduledUpdate.bind(this);
-    this.setUpdateTime = this.setUpdateTime.bind(this);
-    this.renderLabels = this.renderLabels.bind(this);
-    this.renderErrorMessage = this.renderErrorMessage.bind(this);
-    this.onScroll = this.onScroll.bind(this);
-    this.showPlaceholder = this.showPlaceholder.bind(this);
-    this.onKeyPress = this.onKeyPress.bind(this);
-    this.onKeyDown = this.onKeyDown.bind(this);
-    this.onPaste = this.onPaste.bind(this);
-    this.stopEvent = this.stopEvent.bind(this);
-    // Tokenize Functions
-    this.tokenize = this.tokenize.bind(this);
-    this.tokenizeDomNodeUpdate = this.tokenizeDomNodeUpdate.bind(this);
-    this.tokenizePlaceholderJSON = this.tokenizePlaceholderJSON.bind(this);
-
+    this.update              = this.update.bind(this);
+    this.createMarkup        = this.createMarkup.bind(this);
+    this.newSpan             = this.newSpan.bind(this);
+    this.scheduledUpdate     = this.scheduledUpdate.bind(this);
+    this.showPlaceholder     = this.showPlaceholder.bind(this);
+    this.stopEvent           = this.stopEvent.bind(this);
+    this.tokenize            = this.tokenize.bind(this);
+    this.tokenizeDomNode     = this.tokenizeDomNode.bind(this);
+    this.tokenizePlaceholder = this.tokenizePlaceholder.bind(this);
+    this.renderErrorMessage  = this.renderErrorMessage.bind(this);
     this.updateInternalProps();
-
     this.renderCount = 1;
     this.state = {
-      prevPlaceholder: {},
+      prevPlaceholder: undefined,
       markupText: '',
       plainText: '',
       json: '',
       jsObject: {},
-      lines: 2
+      lines: 0
     };
 
     const { locale } = this.props;
     if (!locale) {
-      console.warn("[Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
+      console.warn("[react-json-editor-ajrm - Deprecation Warning] You did not provide a 'locale' prop for your JSON input - This will be required in a future version. English has been set as a default.");
     }
   }
 
@@ -127,16 +171,31 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   }
 
   onBlur() {
-    const { viewOnly } = this.props;
-    if (viewOnly) {
+    const { onBlur, viewOnly } = this.props;
+    if (viewOnly !== undefined && viewOnly) {
       return;
     }
-    this.update(0, false);
+    if (onBlur && isFunction(onBlur)) {
+      const container = this.refContent;
+      if (container) {
+        const data = this.tokenize(container);
+        if (data) {
+          onBlur({
+            plainText: data.indented,
+            markupText: data.markup,
+            json: data.json,
+            jsObject: data.jsObject,
+            lines: data.lines,
+            error: data.error
+          });
+        }
+      }
+    }
   }
 
   onClick() {
     const { viewOnly } = this.props;
-    if (viewOnly) {
+    if (viewOnly !== undefined && viewOnly) {
       // eslint-disable-next-line no-useless-return
       return;
     }
@@ -185,7 +244,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   onKeyPress(event: KeyboardEvent) {
     const { viewOnly } = this.props;
     const ctrlOrMetaIsPressed = event.ctrlKey || event.metaKey;
-    if (viewOnly && !ctrlOrMetaIsPressed) {
+    if (viewOnly !== undefined && viewOnly && !ctrlOrMetaIsPressed) {
       this.stopEvent(event);
     }
     if (!ctrlOrMetaIsPressed) {
@@ -195,7 +254,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
   onPaste(event: ClipboardEvent) {
     const { viewOnly } = this.props;
-    if (viewOnly) {
+    if (viewOnly !== undefined && viewOnly) {
       this.stopEvent(event);
     } else {
       event.preventDefault();
@@ -205,16 +264,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.update();
   }
 
-  onScroll(event: UIEvent) {
-    const { target } = event;
-    const { current } = this.refLabels;
-    if (target && current) {
-      // current.scrollTop = target.scrollTop;
-    }
-  }
-
   setCursorPosition(nextPosition: any) {
-    console.log(nextPosition);
+    // TODO: Fix the typing of nextPosition
     if ([false, null, undefined].includes(nextPosition)) {
       return;
     }
@@ -226,7 +277,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         rtnRange.selectNode(node);
         rtnRange.setStart(node, 0);
       }
-
       if (chars.count === 0) {
         rtnRange.setEnd(node, chars.count);
       } else if (node && chars.count > 0) {
@@ -252,16 +302,14 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
     const setPosition = (chars: number) => {
       if (chars >= 0) {
-        const range = createRange(this.refContent.current as Node, { count: chars });
-
-        if (!range) {
-          return;
-        }
-        range.collapse(false);
-        const selection = window.getSelection();
-        if (selection) {
-          selection.removeAllRanges();
-          selection.addRange(range);
+        const range = createRange(this.refContent as Node, { count: chars });
+        if (range) {
+          range.collapse(false);
+          const selection = window.getSelection();
+          if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
         }
       }
     };
@@ -269,7 +317,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (nextPosition > 0) {
       setPosition(nextPosition);
     } else {
-      const contents = this.refContent.current;
+      const contents = this.refContent;
       if (contents) {
         contents.focus();
       }
@@ -278,23 +326,22 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
   setUpdateTime() {
     const { onKeyPressUpdate } = this.props;
-    if (onKeyPressUpdate !== undefined && !onKeyPressUpdate) {
-      return;
+    if (onKeyPressUpdate !== undefined && onKeyPressUpdate) {
+      this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
     }
-    this.updateTime = new Date().getTime() + this.waitAfterKeyPress;
   }
 
-  getCursorPosition(countBR?: ErrorMsg) {
+  getCursorPosition(countBR?: Tokens.ErrorMsg) {
     /**
       * Need to deprecate countBR
       * It is used to differenciate between good markup render, and aux render when error found
       * Adjustments based on coundBR account for usage of <br> instead of <span> for linebreaks to determine acurate cursor position
       * Find a way to consolidate render styles
       */
-    const isChildOf = (node: Node) => {
+    const isChildOf = (node: Node): boolean => {
       let n: null|Node = node;
       while (n !== null) {
-        if (n === this.refContent.current) {
+        if (n === this.refContent) {
           return true;
         }
         n = n.parentNode;
@@ -306,12 +353,11 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     let charCount = -1;
     let linebreakCount = 0;
     let node;
-
     if (selection && selection.focusNode && isChildOf(selection.focusNode)) {
       node = selection.focusNode;
       charCount = selection.focusOffset;
       while (node) {
-        if (node === this.refContent.current) {
+        if (node === this.refContent) {
           break;
         }
         if (node.previousSibling) {
@@ -332,24 +378,53 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   }
 
   getEditProps() {
+    /**
+      * Props for if the JSON Input is editable
+      */
     const { viewOnly } = this.props;
-    if (viewOnly) {
+    if (viewOnly !== undefined && viewOnly === true) {
       return {};
     }
 
     return {
-      contentEditable: true,
-      onKeyPress: this.onKeyPress,
-      onKeyDown: this.onKeyDown,
-      onClick: this.onClick,
-      onBlur: this.onBlur,
-      onScroll: this.onScroll,
-      onPaste: this.onPaste,
+      autoCapitalize: 'off',
       autoComplete: 'off',
       autoCorrect: 'off',
-      autoCapitalize: 'off',
+      contentEditable: true,
+      onBlur: this.onBlur,
+      onClick: this.onClick,
+      onKeyDown: this.onKeyDown,
+      onKeyPress: this.onKeyPress,
+      onPaste: this.onPaste,
       spellCheck: false
     };
+  }
+
+  getEditStyles() {
+    const { labelColumn } = this.style;
+    return css({
+      counterReset: 'line',
+      '> div': {
+        counterIncrement: 'line',
+        paddingLeft: '4.5em',
+        position: 'relative',
+        '&:before': {
+          content: 'counter(line)',
+          display: 'inline-block',
+          boxSizing: 'border-box',
+          verticalAlign: 'top',
+          height: '100%',
+          width: '3.5em',
+          margin: 0,
+          paddingRight: '.5em',
+          overflow: 'hidden',
+          color: '#D4D4D4',
+          position: 'absolute',
+          left: 0,
+          ...labelColumn
+        }
+      }
+    });
   }
 
   updateInternalProps() {
@@ -357,8 +432,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       colors, confirmGood, height, onKeyPressUpdate, reset, style, theme, waitAfterKeyPress, width
     } = this.props;
 
-    let colorsMix: ColorProps;
-    let styleMix: StyleProps = {
+    let colorMix: Themes.ThemeColors;
+    let styleMix: InputStyles = {
       outerBox: {},
       container: {},
       warningBox: {},
@@ -368,47 +443,46 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       labels: {},
       contentBox: {}
     };
-    let themeMix = themes.light_mitsuketa_tribute;
+    let themeMix = Themes.dark_vscode_tribute;
 
-    if (theme && typeof theme === 'string' && theme in themes) {
-      themeMix = safeGet(themes, theme, themes.light_mitsuketa_tribute) as ColorProps;
+    if (theme !== undefined && typeof theme === 'string' && theme in Themes) {
+      themeMix = safeGet(Themes, theme, themeMix) as Themes.ThemeColors;
     }
 
-    colorsMix = themeMix;
-    if (colors) {
-      colorsMix = {
-        default: safeGet(colors, 'default', colorsMix.default) as string,
-        string: safeGet(colors, 'string', colorsMix.string) as string,
-        number: safeGet(colors, 'number', colorsMix.number) as string,
-        colon: safeGet(colors, 'colon', colorsMix.colon) as string,
-        keys: safeGet(colors, 'keys', colorsMix.keys) as string,
-        keys_whiteSpace: safeGet(colors, 'keys_whiteSpace', colorsMix.keys_whiteSpace) as string,
-        primitive: safeGet(colors, 'primitive', colorsMix.primitive) as string,
-        error: safeGet(colors, 'error', colorsMix.error) as string,
-        background: safeGet(colors, 'background', colorsMix.background) as string,
-        background_warning: safeGet(colors, 'background_warning', colorsMix.background_warning) as string
+    colorMix = themeMix;
+    if (colors !== undefined) {
+      colorMix = {
+        default:            safeGet(colors, 'default', colorMix.default) as string,
+        string:             safeGet(colors, 'string', colorMix.string) as string,
+        number:             safeGet(colors, 'number', colorMix.number) as string,
+        colon:              safeGet(colors, 'colon', colorMix.colon) as string,
+        keys:               safeGet(colors, 'keys', colorMix.keys) as string,
+        keys_whiteSpace:    safeGet(colors, 'keys_whiteSpace', colorMix.keys_whiteSpace) as string,
+        primitive:          safeGet(colors, 'primitive', colorMix.primitive) as string,
+        error:              safeGet(colors, 'error', colorMix.error) as string,
+        background:         safeGet(colors, 'background', colorMix.background) as string,
+        background_warning: safeGet(colors, 'background_warning', colorMix.background_warning) as string
       };
     }
-    this.colors = colorsMix;
+    this.colors = colorMix;
 
-    if (style) {
+    if (style !== undefined) {
       styleMix = {
-        outerBox: safeGet(style, 'outerBox', {}) as ObjectCSS,
-        container: safeGet(style, 'container', {}) as ObjectCSS,
-        warningBox: safeGet(style, 'warningBox', {}) as ObjectCSS,
+        outerBox:     safeGet(style, 'outerBox', {}) as ObjectCSS,
+        container:    safeGet(style, 'container', {}) as ObjectCSS,
+        warningBox:   safeGet(style, 'warningBox', {}) as ObjectCSS,
         errorMessage: safeGet(style, 'errorMessage', {}) as ObjectCSS,
-        body: safeGet(style, 'body', {}) as ObjectCSS,
-        labelColumn: safeGet(style, 'labelColumn', {}) as ObjectCSS,
-        labels: safeGet(style, 'labels', {}) as ObjectCSS,
-        contentBox: safeGet(style, 'contentBox', {}) as ObjectCSS
+        body:         safeGet(style, 'body', {}) as ObjectCSS,
+        labelColumn:  safeGet(style, 'labelColumn', {}) as ObjectCSS,
+        labels:       safeGet(style, 'labels', {}) as ObjectCSS,
+        contentBox:   safeGet(style, 'contentBox', {}) as ObjectCSS
       };
     }
     this.style = styleMix;
 
-    this.confirmGood = confirmGood || true;
+    this.confirmGood = typeof confirmGood === 'boolean' ? confirmGood : true;
     this.totalHeight = height || '610px';
     this.totalWidth = width || '479px';
-
     if (onKeyPressUpdate === undefined || onKeyPressUpdate) {
       if (!this.timer) {
         this.timer = setInterval(this.scheduledUpdate, 100);
@@ -417,32 +491,29 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       clearInterval(this.timer);
       this.timer = undefined;
     }
-
     this.updateTime = undefined;
-    this.waitAfterKeyPress = waitAfterKeyPress || 1000;
-    this.resetConfiguration = reset || false;
-  }
-
-  createMarkup() {
-    const { markupText } = this.state;
-    if (markupText === undefined) {
-      return {
-        __html: ''
-      };
-    }
-    return {
-      __html: `${markupText}`
-    };
+    this.waitAfterKeyPress = typeof waitAfterKeyPress === 'number' ? waitAfterKeyPress : 1000;
+    this.resetConfiguration = typeof reset === 'boolean' ? reset : false;
   }
 
   update(cursorOffset = 0, updateCursorPosition = true) {
     const { onChange } = this.props;
     const container = this.refContent;
-    const data = this.tokenize(container);
+    if (container) {
+      const data = this.tokenize(container);
 
-    if (data) {
-      if (onChange) {
-        onChange({
+      if (data) {
+        if (onChange && isFunction(onChange)) {
+          onChange({
+            plainText: data.indented,
+            markupText: data.markup,
+            json: data.json,
+            jsObject: data.jsObject,
+            lines: data.lines,
+            error: data.error
+          });
+        }
+        this.setState({
           plainText: data.indented,
           markupText: data.markup,
           json: data.json,
@@ -450,185 +521,1132 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           lines: data.lines,
           error: data.error
         });
-      }
-      this.setState({
-        plainText: data.indented,
-        markupText: data.markup,
-        json: data.json,
-        jsObject: data.jsObject,
-        lines: data.lines,
-        error: data.error
-      });
-      this.updateTime = undefined;
-      if (updateCursorPosition) {
-        const cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
-        this.setCursorPosition(cursorPosition);
+        this.updateTime = undefined;
+        if (updateCursorPosition) {
+          const cursorPosition = this.getCursorPosition(data.error) + cursorOffset;
+          this.setCursorPosition(cursorPosition);
+        }
       }
     }
   }
 
+  createMarkup() {
+    const { markupText } = this.state;
+    return {
+      __html: markupText === undefined ? '' : `${markupText}`
+    };
+  }
+
+  newSpan(key: number, token: Tokens.SimpleToken, depth: number) {
+    const { string, type } = token;
+    let color = this.colors.default;
+
+    switch (type) {
+      case 'string':
+      case 'number':
+      case 'primitive':
+      case 'error':
+        color = safeGet(this.colors, token.type, color) as string;
+        break;
+      case 'key':
+        color = string === ' ' ? this.colors.keys_whiteSpace : this.colors.keys;
+        break;
+      case 'symbol':
+        color = string === ':' ? this.colors.colon : color;
+        break;
+      // no default
+    }
+
+    let val = string;
+    if (val.length !== val.replace(/</g, '').replace(/>/g, '').length) {
+      val = `<xmp style=display:inline;>${val}</xmp>`;
+    }
+    return `<span data-key="${key}" data-type="${type}" data-value="${val}" data-depth="${depth}" style="color: ${color}">${val}</span>`;
+  }
+
   scheduledUpdate() {
     const { onKeyPressUpdate } = this.props;
-    if (onKeyPressUpdate !== undefined && !onKeyPressUpdate) {
+    if (onKeyPressUpdate !== undefined && onKeyPressUpdate === false) {
       return;
     }
-    if (this.updateTime === undefined || this.updateTime > new Date().getTime()) {
+    if (this.updateTime === undefined) {
+      return;
+    }
+    if (this.updateTime > new Date().getTime()) {
       return;
     }
     this.update();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  stopEvent(event: SyntheticEvent) {
-    if (!event) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
   showPlaceholder() {
     const { placeholder } = this.props;
-    if (!placeholder) {
+    if (placeholder === null || placeholder === undefined) {
       return;
     }
 
-    // const placeholderHasEmptyValues = [undefined, null].includes(placeholder);
-    const placeholderHasEmptyValues = Object.keys(placeholder).some(key => [undefined, null].includes(placeholder[key]));
-    if (placeholderHasEmptyValues) {
-      return;
-    }
-
-    const { jsObject, prevPlaceholder } = this.state;
     const placeholderDataType = getType(placeholder);
     const unexpectedDataType = !['object', 'array'].includes(placeholderDataType);
     if (unexpectedDataType) {
-      err.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
+      Err.throwError('showPlaceholder', 'placeholder', 'either an object or an array');
     }
 
+    const { jsObject, prevPlaceholder } = this.state;
     // Component will always re-render when new placeholder value is any different from previous placeholder value.
     let componentShouldUpdate = !identical(placeholder, prevPlaceholder);
 
-    if (!componentShouldUpdate) {
-      if (this.resetConfiguration) {
-        /**
-          * If 'reset' property is set true or is truthy,
-          * any difference between placeholder and current value
-          * should trigger component re-render
-          */
-        if (jsObject !== undefined) {
-          componentShouldUpdate = !identical(placeholder, jsObject);
-        }
+    if (!componentShouldUpdate && this.resetConfiguration) {
+      /**
+        * If 'reset' property is set true or is truthy,
+        * any difference between placeholder and current value
+        * should trigger component re-render
+        */
+      if (jsObject !== undefined) {
+        componentShouldUpdate = !identical(placeholder, jsObject);
       }
     }
 
-    if (!componentShouldUpdate) {
-      return;
-    }
-
-    const data = this.tokenize(placeholder);
-    if (data) {
-      this.setState({
-        prevPlaceholder: placeholder,
-        plainText: data.indented,
-        markupText: data.markup,
-        lines: data.lines,
-        error: data.error
-      });
+    if (componentShouldUpdate) {
+      const data = this.tokenize(placeholder);
+      if (data) {
+        this.setState({
+          prevPlaceholder: placeholder,
+          plainText: data.indented,
+          markupText: data.markup,
+          lines: data.lines,
+          error: data.error
+        });
+      }
     }
   }
 
-  tokenize(obj: Record<string, any>|React.RefObject<HTMLSpanElement>): null|DomNodeTokenize|PlaceholderTokenize {
+  // eslint-disable-next-line class-methods-use-this
+  stopEvent(event: SyntheticEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  tokenize(obj: Record<string, any>|HTMLSpanElement): null|DomNode.DomNodeTokenize|Placeholder.PlaceholderTokenize {
     if (typeof obj !== 'object') {
       throw new TypeError(`tokenize() expects object type properties only. Got '${typeof obj}' type instead.`);
     }
-    const { locale } = this.props;
-    const lang = locale || defaultLocale;
+    
 
     // DOM NODE || ONBLUR OR UPDATE
-    if ('nodeType' in obj) {
-      return this.tokenizeDomNodeUpdate(obj as HTMLElement, lang);
+    if (obj instanceof HTMLSpanElement && 'nodeType' in obj) {
+      return this.tokenizeDomNode(obj);
     }
 
     // JS OBJECTS || PLACEHOLDER
     if (!('nodeType' in obj)) {
-      return this.tokenizePlaceholderJSON(obj);
+      return this.tokenizePlaceholder(obj);
     }
 
     console.error('Tokenize Error: Oops....');
     return null;
   }
 
-  renderErrorMessage() {
+  tokenizeDomNode(obj: HTMLElement): null|DomNode.DomNodeTokenize {
     const { locale } = this.props;
-    const { error } = this.state;
-    const { errorMessage } = this.style;
     const lang = locale || defaultLocale;
+    const containerNode = obj.cloneNode(true);
+    if (!containerNode.hasChildNodes()) {
+      return null;
+    }
 
-    if (error) {
-      return (
-        <p
-          style={
-            {
-              color: 'red',
-              fontSize: '12px',
-              position: 'absolute',
-              width: 'calc(100% - 60px)',
-              height: '60px',
-              boxSizing: 'border-box',
-              margin: 0,
-              padding: 0,
-              paddingRight: '10px',
-              overflowWrap: 'break-word',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              ...errorMessage
+    const children = containerNode.childNodes;
+    const buffer: DomNode.PrimaryBuffer = {
+      tokens_unknown: [],
+      tokens_proto: [],
+      tokens_split: [],
+      tokens_fallback: [],
+      tokens_normalize: [],
+      tokens_merge: [],
+      tokens_plainText: '',
+      indented: '',
+      json: '',
+      jsObject: {},
+      markup: ''
+    };
+
+    const setChildToken = (child: ChildNode): void => {
+      switch (child.nodeName) {
+        case 'SPAN':
+          const dataset = (child as HTMLSpanElement).dataset;
+          buffer.tokens_unknown.push({
+            string: child.textContent || '',
+            type: dataset.type || 'unknown'  // child.attributes.type.textContent
+          } as Tokens.SimpleToken);
+          break;
+        case 'DIV':
+          child.childNodes.forEach(c => setChildToken(c));
+          buffer.tokens_unknown.push({
+            string: '\n',
+            type: 'unknown'
+          } as Tokens.SimpleToken);
+          break;
+        case 'BR':
+          console.log('BR')
+          if (child.textContent === '') {
+            buffer.tokens_unknown.push({
+              string: '\n',
+              type: 'unknown'
+            } as Tokens.SimpleToken);
+          }
+          break;
+        case '#text':
+          buffer.tokens_unknown.push({
+            string: child.textContent || '',  // child.wholeText,
+            type: 'unknown'
+          } as Tokens.SimpleToken);
+          break;
+        case 'FONT':
+          buffer.tokens_unknown.push({
+            string: child.textContent || '',
+            type: 'unknown'
+          } as Tokens.SimpleToken);
+          break;
+        default:
+          console.error('Unrecognized node:', {
+            child
+          });
+      }
+    }
+
+    children.forEach(child => setChildToken(child));
+
+    buffer.tokens_proto = buffer.tokens_unknown.map(token => DomNode.quarkize(token.string, 'proto')).reduce((all, quarks) => all.concat(quarks));
+
+    buffer.tokens_proto.forEach(token => {
+      if (!token.type.includes('proto')) {
+        if (!DomNode.validToken(token.string, token.type as Tokens.TokenType)) {
+          buffer.tokens_split = buffer.tokens_split.concat(DomNode.quarkize(token.string, 'split'));
+        } else {
+          buffer.tokens_split.push(token);
+        }
+      } else {
+        buffer.tokens_split.push(token);
+      }
+    });
+
+    buffer.tokens_fallback = buffer.tokens_split.map<Tokens.FallbackToken>(token => {
+      const fallback = [];
+      let { type } = token;
+
+      if (type.includes('-')) {
+        type = type.slice(type.indexOf('-') + 1);
+        if (type !== 'string') {
+          fallback.push('string');
+        }
+        fallback.push('key');
+        fallback.push('error');
+      }
+      return {
+        string: token.string,
+        length: token.string.length,
+        fallback,
+        type
+      } as Tokens.FallbackToken;
+    });
+
+    const buffer2: DomNode.SecondaryBuffer = {
+      brackets: [],
+      isValue: false,
+      stringOpen: false
+    };
+
+    // Sort tokens for push -> buffer.tokens_normalize
+    for (let i = 0; i < buffer.tokens_fallback.length; i++) {
+      const token = buffer.tokens_fallback[i];
+      const lastIndex = buffer.tokens_normalize.length - 1;
+      const lastType = safeGet(Tokens.tokenFollowed(buffer.tokens_normalize) || {}, 'type', 'string') as Tokens.TokenType;
+      const normalToken = {
+        string: token.string,
+        type: token.type
+      };
+
+      switch (normalToken.type) {
+        case 'symbol':
+        case 'colon':
+          if (buffer2.stringOpen) {
+            normalToken.type = buffer2.isValue ? 'string' : 'key';
+            break;
+          }
+          switch (normalToken.string) {
+            case '[':
+            case '{':
+              buffer2.brackets.push(normalToken.string);
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              break;
+            case ']':
+            case '}':
+              buffer2.brackets.pop();
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              break;
+            case ',':
+              if (lastType === 'colon') {
+                break;
+              }
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              break;
+            case ':':
+              normalToken.type = 'colon';
+              buffer2.isValue = true;
+              break;
+            // no default
+          }
+          break;
+        case 'delimiter':
+          normalToken.type = buffer2.isValue ? 'string' : 'key';
+          if (!buffer2.stringOpen) {
+            buffer2.stringOpen = normalToken.string;
+            break;
+          }
+          if (i > 0) {
+            const prevToken = Tokens.precedingToken(buffer.tokens_fallback, i) || {};
+            const prevTokenString = safeGet(prevToken, 'string', '') as string;
+            const prevTokenType = safeGet(prevToken, 'type', '') as Tokens.TokenType;
+            const prevTokenChar = prevTokenString.charAt(prevTokenString.length - 1);
+            if (prevTokenType === 'string' && prevTokenChar === '\\') {
+              break;
             }
           }
-        >
-          { format(lang.format, error) }
-        </p>
-      );
+          if (buffer2.stringOpen === normalToken.string) {
+            buffer2.stringOpen = false;
+            break;
+          }
+          break;
+        case 'primitive':
+        case 'string':
+          if (['false', 'true', 'null', 'undefined'].includes(normalToken.string)) {
+            if (lastIndex >= 0) {
+              if (buffer.tokens_normalize[lastIndex].type !== 'string') {
+                normalToken.type = 'primitive';
+                break;
+              }
+              normalToken.type = 'string';
+              break;
+            }
+            normalToken.type = 'primitive';
+            break;
+          }
+          if (normalToken.string === '\n') {
+            if (!buffer2.stringOpen) {
+              normalToken.type = 'linebreak';
+              break;
+            }
+          }
+          normalToken.type = buffer2.isValue ? 'string' : 'key';
+          break;
+        case 'space':
+        case 'number':
+          if (buffer2.stringOpen) {
+            normalToken.type = buffer2.isValue ? 'string' : 'key';
+          }
+          break;
+        // no default
+      }
+      buffer.tokens_normalize.push(normalToken);
     }
-    return '';
+
+    // Sort tokens for push -> buffer.tokens_merge
+    for (let i = 0; i < buffer.tokens_normalize.length; i++) {
+      const token = buffer.tokens_normalize[i];
+      const mergedToken: Tokens.MergeToken = {
+        string: token.string,
+        tokens: [i],
+        type: token.type
+      };
+
+      if (!['symbol', 'colon'].includes(token.type) && i + 1 < buffer.tokens_normalize.length) {
+        let count = 0;
+        for (let u = i + 1; u < buffer.tokens_normalize.length; u++) {
+          const nextToken = buffer.tokens_normalize[u];
+          if (token.type !== nextToken.type) {
+            break;
+          }
+          mergedToken.string += nextToken.string;
+          mergedToken.tokens.push(u);
+          count += 1;
+        }
+        i += count;
+      }
+      buffer.tokens_merge.push(mergedToken);
+    }
+
+    const alphanumeric = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$';
+    const bracketList: Array<DomNode.Bracket> = [];
+    const quotes = '\'"';
+    let errorMsg: undefined|Tokens.ErrorMsg;
+    let line = buffer.tokens_merge.length > 0 ? 1 : 0;
+
+    // Reset Buffer2
+    buffer2.brackets = [];
+    buffer2.isValue = false;
+    buffer2.stringOpen = false;
+
+    const setError = (tokenID: number, reason: string, offset = 0): void => {
+      errorMsg = {
+        token: tokenID,
+        line,
+        reason
+      };
+      buffer.tokens_merge[tokenID+offset].type = 'error';
+    };
+
+    // TODO: Simplify loop
+    for (let i = 0; i < buffer.tokens_merge.length; i++) {
+      if (errorMsg) {
+        break;
+      }
+      const token = buffer.tokens_merge[i];
+      let { string, type } = token;
+      let found = false;
+
+      switch (type) {
+        case 'space':
+          break;
+        case 'linebreak':
+          line += 1;
+          break;
+        case 'symbol':
+          switch (string) {
+            case '{':
+            case '[':
+              found = Tokens.followsSymbol(buffer.tokens_merge, i, ['}', ']']);
+              if (found) {
+                setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+                  firstToken: buffer.tokens_merge[i].string,  // TODO: should `i` be `found`??
+                  secondToken: string
+                }));
+                break;
+              }
+              if (string === '[' && i > 0) {
+                if (!Tokens.followsSymbol(buffer.tokens_merge, i, [':', '[', ','])) {
+                  setError(i, format(lang.invalidToken.tokenSequence.permitted, {
+                    firstToken: '[',
+                    secondToken: [':', '[', ',']
+                  }));
+                  break;
+                }
+              }
+              if (string === '{') {
+                if (Tokens.followsSymbol(buffer.tokens_merge, i, ['{'])) {
+                  setError(i, format(lang.invalidToken.double, {
+                    token: '{'
+                  }));
+                  break;
+                }
+              }
+              buffer2.brackets.push(string);
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              bracketList.push({ i, line, string });
+              break;
+            case '}':
+            case ']':
+              if (string === '}') {
+                if (buffer2.brackets[buffer2.brackets.length-1] !== '{') {
+                  setError(i, format(lang.brace.curly.missingOpen));
+                  break;
+                }
+                if (Tokens.followsSymbol(buffer.tokens_merge, i, [','])) {
+                  setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+                    firstToken: ',',
+                    secondToken: '}'
+                  }));
+                  break;
+                }
+              }
+              if (string === ']') {
+                if (buffer2.brackets[buffer2.brackets.length-1] !== '[') {
+                  setError(i, format(lang.brace.square.missingOpen));
+                  break;
+                }
+                if (Tokens.followsSymbol(buffer.tokens_merge, i, [':'])) {
+                  setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+                    firstToken: ':',
+                    secondToken: ']'
+                  }));
+                  break;
+                }
+              }
+              buffer2.brackets.pop();
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              bracketList.push({ i, line, string });
+              break;
+            case ',':
+              found = Tokens.followsSymbol(buffer.tokens_merge, i, ['{']);
+              if (found) {
+                if (Tokens.followedBySymbol(buffer.tokens_merge, i, ['}'])) {
+                  setError(i, format(lang.brace.curly.cannotWrap, {
+                    token: ','
+                  }));
+                  break;
+                }
+                setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+                  firstToken: '{',
+                  secondToken: ','
+                }));
+                break;
+              }
+              if (Tokens.followedBySymbol(buffer.tokens_merge, i, ['}', ',', ']'])) {
+                setError(i, format(lang.noTrailingOrLeadingComma));
+                break;
+              }
+              const typeFollow = Tokens.typeFollowed(buffer.tokens_merge, i);
+              switch (typeFollow) {
+                case 'key':
+                case 'colon':
+                  setError(i, format(lang.invalidToken.termSequence.prohibited, {
+                    firstTerm: typeFollow === 'key' ? lang.types.key : lang.symbols.colon,
+                    secondTerm: lang.symbols.comma
+                  }));
+                  break;
+                case 'symbol':
+                  if (Tokens.followsSymbol(buffer.tokens_merge, i, ['{'])) {
+                    setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+                      firstToken: '{',
+                      secondToken: ','
+                    }));
+                    break;
+                  }
+                  break;
+                // no default
+              }
+              buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+              break;
+            // no default
+          }
+          buffer.json += string;
+          break;
+        case 'colon':
+          found = Tokens.followsSymbol(buffer.tokens_merge, i, ['[']);
+          if (found) {
+            if (Tokens.followedBySymbol(buffer.tokens_merge, i, [']'])) {
+              setError(i, format(lang.brace.square.cannotWrap, {
+                token: ':'
+              }));
+              break;
+            }
+            setError(i, format(lang.invalidToken.tokenSequence.prohibited, {
+              firstToken: '[',
+              secondToken: ':'
+            }));
+            break;
+          }
+          if (Tokens.typeFollowed(buffer.tokens_merge, i) !== 'key') {
+            setError(i, format(lang.invalidToken.termSequence.permitted, {
+              firstTerm: lang.symbols.colon,
+              secondTerm: lang.types.key
+            }));
+            break;
+          }
+          if (Tokens.followedBySymbol(buffer.tokens_merge, i, ['}', ']'])) {
+            setError(i, format(lang.invalidToken.termSequence.permitted, {
+              firstTerm: lang.symbols.colon,
+              secondTerm: lang.types.value
+            }));
+            break;
+          }
+          buffer2.isValue = true;
+          buffer.json += string;
+          break;
+        case 'key':
+        case 'string':
+          const firstChar = string.charAt(0);
+          const lastChar = string.charAt(string.length-1);
+          if (!quotes.includes(firstChar)) {
+            if (quotes.includes(lastChar)) {
+              setError(i, format(lang.string.missingOpen, {
+                quote: firstChar
+              }));
+              break;
+            }
+          }
+          if (!quotes.includes(lastChar)) {
+            if (quotes.includes(firstChar)) {
+              setError(i, format(lang.string.missingClose, {
+                quote: firstChar
+              }));
+              break;
+            }
+          }
+          if (quotes.includes(firstChar)) {
+            if (firstChar !== lastChar) {
+              setError(i, format(lang.string.missingClose, {
+                quote: firstChar
+              }));
+              break;
+            }
+          }
+          if (type === 'string') {
+            if (!quotes.includes(firstChar) && !quotes.includes(lastChar)) {
+              setError(i, format(lang.string.mustBeWrappedByQuotes));
+              break;
+            }
+          }
+          if (type === 'key') {
+            if (Tokens.followedBySymbol(buffer.tokens_merge, i, ['}', ']'])) {
+              setError(i, format(lang.invalidToken.termSequence.permitted, {
+                firstTerm: lang.types.key,
+                secondTerm: lang.symbols.colon
+              }));
+            }
+          }
+          if (!quotes.includes(firstChar) && !quotes.includes(lastChar)) {
+            for (let h = 0; h < string.length; h++) {
+              if (errorMsg) {
+                break;
+              }
+              const c = string.charAt(h);
+              if (!alphanumeric.includes(c)) {
+                setError(i, format(lang.string.nonAlphanumeric, {
+                  token: c
+                }));
+                break;
+              }
+            }
+          }
+          if (type === 'key') {
+            if (Tokens.typeFollowed(buffer.tokens_merge, i) === 'key') {
+              if (i > 0) {
+                if (!Number.isNaN(Number(buffer.tokens_merge[i-1]))) {
+                  mergeObjects(buffer.tokens_merge[i-1], buffer.tokens_merge[i]);
+                  setError(i, format(lang.key.numberAndLetterMissingQuotes));
+                  break;
+                }
+              }
+              setError(i, format(lang.key.spaceMissingQuotes));
+              break;
+            }
+            if (!Tokens.followsSymbol(buffer.tokens_merge, i, ['{', ','])) {
+              setError(i, format(lang.invalidToken.tokenSequence.permitted, {
+                firstToken: type,
+                secondToken: ['{', ',']
+              }));
+              break;
+            }
+            if (buffer2.isValue) {
+              setError(i, format(lang.string.unexpectedKey));
+              break;
+            }
+          }
+          if (type === 'string') {
+            if (!Tokens.followsSymbol(buffer.tokens_merge, i, ['[', ':', ','])) {
+              setError(i, format(lang.invalidToken.tokenSequence.permitted, {
+                firstToken: type,
+                secondToken: ['[', ':', ',']
+              }));
+              break;
+            }
+            if (!buffer2.isValue) {
+              setError(i, format(lang.key.unexpectedString));
+              break;
+            }
+          }
+          if (firstChar === "'") {
+            buffer.json += `"${string.slice(1, -1)}"`;
+          } else if (firstChar !== '"') {
+            buffer.json += `"${string}"`;
+          } else {
+            buffer.json += string;
+          }
+          break;
+        case 'number':
+        case 'primitive':
+          if (Tokens.followsSymbol(buffer.tokens_merge, i, ['{'])) {
+            buffer.tokens_merge[i].type = 'key';
+            type = buffer.tokens_merge[i].type;
+            string = `"${string}"`;
+          } else if (Tokens.typeFollowed(buffer.tokens_merge, i) === 'key') {
+            buffer.tokens_merge[i].type = 'key';
+            type = buffer.tokens_merge[i].type;
+          } else if (!Tokens.followsSymbol(buffer.tokens_merge, i, ['[', ':', ','])) {
+            setError(i, format(lang.invalidToken.tokenSequence.permitted, {
+              firstToken: type,
+              secondToken: ['[', ':', ',']
+            }));
+            break;
+          }
+          if (type !== 'key') {
+            if (!buffer2.isValue) {
+              buffer.tokens_merge[i].type = 'key';
+              type = buffer.tokens_merge[i].type;
+              string = `"${string}"`;
+            }
+          }
+          if (type === 'primitive') {
+            if (string === 'undefined') {
+              setError(i, format(lang.invalidToken.useInstead, {
+                badToken: 'undefined',
+                goodToken: 'null'
+              }));
+            }
+          }
+          buffer.json += string;
+          break;
+        // no default
+      }
+    }
+
+    let noEscapedSingleQuote = '';
+    for (let i = 0; i < buffer.json.length; i++) {
+      const current = buffer.json.charAt(i);
+      const next = buffer.json.charAt(i+1) || '';
+      if (i + 1 < buffer.json.length) {
+        if (current === '\\' && next === "'") {
+          noEscapedSingleQuote += next;
+          i += 1;
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+      }
+      noEscapedSingleQuote += current;
+    }
+
+    buffer.json = noEscapedSingleQuote;
+    if (errorMsg === undefined) {
+      const maxIterations = Math.ceil(bracketList.length / 2);
+      let round = 0;
+      let delta = false;
+
+      const removePair = (index: number) => {
+        bracketList.splice(index+1, 1);
+        bracketList.splice(index, 1);
+        if (!delta) {
+          delta = true;
+        }
+      };
+
+      while (bracketList.length > 0) {
+        delta = false;
+        for (let tokenCount = 0; tokenCount < bracketList.length-1; tokenCount++) {
+          const pair = bracketList[tokenCount].string + bracketList[tokenCount+1].string;
+          if (['[]', '{}'].includes(pair)) {
+            removePair(tokenCount);
+          }
+        }
+        round += 1;
+        if (!delta || round >= maxIterations) {
+          break;
+        }
+      }
+
+      if (bracketList.length > 0) {
+        const bracketString = bracketList[0].string;
+        const bracketPosition = bracketList[0].i;
+        const closingBracketType = bracketString === '[' ? ']' : '}';
+        line = bracketList[0].line;
+        setError(bracketPosition, format(lang.brace[closingBracketType === ']' ? 'square' : 'curly'].missingClose));
+      }
+    }
+
+    if (errorMsg === undefined) {
+      if (![undefined, ''].includes(buffer.json)) {
+        try {
+          buffer.jsObject = JSON.parse(buffer.json) as Record<string, any>;
+        } catch (err) {
+          const errorMessage = err.message as string;
+          const subsMark = errorMessage.indexOf('position');
+          if (subsMark === -1) {
+            throw new Error('Error parsing failed');
+          }
+
+          const errPositionStr = errorMessage.substring(subsMark + 9, errorMessage.length);
+          const errPosition = parseInt(errPositionStr, 10);
+          let charTotal = 0;
+          let tokenIndex = 0;
+          let token: Tokens.MergeToken = buffer.tokens_merge[tokenIndex];
+          let lineCount = 1;
+          let exitWhile = false;
+
+          while (charTotal < errPosition && !exitWhile) {
+            token = buffer.tokens_merge[tokenIndex];
+            if (token.type === 'linebreak') {
+              lineCount += 1;
+            }
+            if (!['space', 'linebreak'].includes(token.type)) {
+              charTotal += token.string.length;
+            }
+            if (charTotal >= errPosition) {
+              break;
+            }
+            tokenIndex += 1;
+            if (!buffer.tokens_merge[tokenIndex+1]) {
+              exitWhile = true;
+            }
+          }
+
+          line = lineCount;
+          let backslashCount = 0;
+          for (let i = 0; i < token.string.length; i++) {
+            const char = token.string.charAt(i);
+            if (char === '\\') {
+              backslashCount = backslashCount > 0 ? backslashCount + 1 : 1;
+            } else {
+              if (backslashCount % 2 !== 0 || backslashCount === 0) {
+                if (!'\'"bfnrt'.includes(char)) {
+                  setError(tokenIndex, format(lang.invalidToken.unexpected, {
+                    token: '\\'
+                  }));
+                }
+              }
+              backslashCount = 0;
+            }
+          }
+          if (!errorMsg) {
+            setError(tokenIndex, format(lang.invalidToken.unexpected, {
+              token: token.string
+            }));
+          }
+        }
+      }
+    }
+
+    let lines = 1;
+    let depth = 0;
+    const newIndent = () => Array(depth * 2).fill('&nbsp;').join('');
+    const newLineBreak = (byPass = false) => {
+      lines += 1;
+      return (depth > 0 || byPass) ? '</div><div>' : '';
+    };
+    const newLineBreakAndIndent = (byPass = false) => `${newLineBreak(byPass)}${newIndent()}`;
+
+    if (errorMsg === undefined) {
+      const lastMergeIdx = buffer.tokens_merge.length - 1;
+      buffer.markup += '<div>';
+
+      // Format by Token
+      buffer.tokens_merge.forEach((token, i) => {
+        const { string, type } = token;
+        const span = this.newSpan(i, token, depth);
+        const islastToken = i === lastMergeIdx;
+
+        switch (type) {
+          case 'space':
+          case 'linebreak':
+            break;
+          case 'string':
+          case 'number':
+          case 'primitive':
+          case 'error':
+            buffer.markup += `${Tokens.followsSymbol(buffer.tokens_merge, i, [',', '[']) ? newLineBreakAndIndent() : ''}${span}`;
+            break;
+          case 'key':
+            buffer.markup += `${newLineBreakAndIndent()}${span}`;
+            break;
+          case 'colon':
+            buffer.markup += `${span}&nbsp;`;
+            break;
+          case 'symbol':
+            switch (string) {
+              case '[':
+              case '{':
+                buffer.markup += `${!Tokens.followsSymbol(buffer.tokens_merge, i, [':']) ? newLineBreakAndIndent() : ''}${span}`;
+                depth += 1;
+                break;
+              case ']':
+              case '}':
+                depth -= 1;
+                const prevToken = Tokens.precedingToken(buffer.tokens_merge, i);
+                const lineAdjust = i > 0 && prevToken && ['[', '{'].includes(prevToken.string) ? '' : newLineBreakAndIndent(islastToken);
+                buffer.markup += `${lineAdjust}${this.newSpan(i, token, depth)}`;
+                break;
+              case ',':
+                buffer.markup += span;
+                break;
+              // no default
+            }
+            break;
+          // no default
+        }
+      });
+      buffer.markup += '</div>';
+    }
+
+    if (errorMsg) {
+      let lineFallback = 1;
+      lines = 1;
+      buffer.markup += '<div>';
+
+      buffer.tokens_merge.forEach((token, i) => {
+        const { string, type } = token;
+        if (type === 'linebreak') {
+          lines += 1;
+          buffer.markup += '</div><div>';
+        } else {
+          buffer.markup += this.newSpan(i, token, depth);
+        }
+        lineFallback += countCarrigeReturn(string);
+      });
+
+      buffer.markup += '</div>';
+      lines += 1;
+      lineFallback += 1;
+      if (lines < lineFallback) {
+        lines = lineFallback;
+      }
+    }
+
+    buffer.tokens_merge.forEach(token => {
+      buffer.indented += token.string;
+      if (!['space', 'linebreak'].includes(token.type)) {
+        buffer.tokens_plainText += token.string;
+      }
+    });
+
+    if (errorMsg) {
+      const { modifyErrorText } = this.props;
+      if (modifyErrorText && isFunction(modifyErrorText)) {
+        errorMsg.reason = modifyErrorText(errorMsg.reason);
+      }
+    }
+
+    return {
+      tokens: buffer.tokens_merge,
+      noSpaces: buffer.tokens_plainText,
+      indented: buffer.indented,
+      json: buffer.json,
+      jsObject: buffer.jsObject,
+      markup: buffer.markup,
+      lines,
+      error: errorMsg
+    };
   }
 
-  renderLabels() {
-    const { error, lines } = this.state;
-    const { labels } = this.style;
-    const errorLine = error ? error.line : -1;
-    const lineCount = lines || 1;
-    const lineNumbers = Array.from<number, number>({length: lineCount-1}, Number.call, (i: number) => i);
+  tokenizePlaceholder(obj: Record<string, any>): null|Placeholder.PlaceholderTokenize {
+    const buffer: Placeholder.PrimaryBuffer = {
+      inputText: JSON.stringify(obj),
+      position: 0,
+      currentChar: '',
+      tokenPrimary: '',
+      tokenSecondary: '',
+      brackets: [],
+      isValue: false,
+      stringOpen: null,
+      stringStart: 0,
+      tokens: []
+    };
 
-    return lineNumbers.map(line => {
-      const number = line + 1;
-      const color = number !== errorLine ? this.colors.default : 'red';
-      return (
-        <div
-          key={ number }
-          style={
-            {
-              ...labels,
-              color
+    for (let i = 0; i < buffer.inputText.length; i++) {
+      buffer.position = i;
+      buffer.currentChar = buffer.inputText.charAt(buffer.position);
+      const a = Placeholder.determineValue(buffer);
+      const b = Placeholder.determineString(buffer);
+      const c = Placeholder.escapeCharacter(buffer);
+      if (!a && !b && !c) {
+        if (!buffer.stringOpen) {
+          buffer.tokenSecondary += buffer.currentChar;
+        }
+      }
+    }
+
+    const buffer2: Placeholder.SecondaryBuffer = {
+      brackets: [],
+      isValue: false,
+      tokens: []
+    };
+
+    buffer2.tokens = buffer.tokens.map<Tokens.MarkupToken>(token => {
+      const rtnToken: Tokens.MarkupToken = {
+        depth: 0,
+        string: '',
+        type: 'undefined',
+        value: ''
+      };
+
+      switch (token) {
+        case ',':
+          rtnToken.type = 'symbol';
+          rtnToken.string = token;
+          rtnToken.value = token;
+          buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+          break;
+        case ':':
+          rtnToken.type = 'symbol';
+          rtnToken.string = token;
+          rtnToken.value = token;
+          buffer2.isValue = true;
+          break;
+        case '{':
+        case '[':
+          rtnToken.type = 'symbol';
+          rtnToken.string = token;
+          rtnToken.value = token;
+          buffer2.brackets.push(token);
+          buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+          break;
+        case '}':
+        case ']':
+          rtnToken.type = 'symbol';
+          rtnToken.string = token;
+          rtnToken.value = token;
+          buffer2.brackets.pop();
+          buffer2.isValue = buffer2.brackets[buffer2.brackets.length-1] === '[';
+          break;
+        case 'undefined':
+          rtnToken.type = 'primitive';
+          rtnToken.string = token;
+          rtnToken.value = undefined;
+          break;
+        case 'null':
+          rtnToken.type = 'primitive';
+          rtnToken.string = token;
+          rtnToken.value = null;
+          break;
+        case 'false':
+          rtnToken.type = 'primitive';
+          rtnToken.string = token;
+          rtnToken.value = false;
+          break;
+        case 'true':
+          rtnToken.type = 'primitive';
+          rtnToken.string = token;
+          rtnToken.value = true;
+          break;
+        default:
+          if ('\'"'.includes(token.charAt(0))) {
+            rtnToken.type = buffer2.isValue ? 'string' : 'key';
+            if (rtnToken.type === 'string') {
+              rtnToken.string = '';
+              const charList2 = token.slice(1, -1).split('');
+              for (let ii = 0; ii < charList2.length; ii++) {
+                const char = charList2[ii];
+                rtnToken.string += '\'"'.includes(char) ? `\\${char}` : char;
+              }
+              rtnToken.string = `'${rtnToken.string}'`;
             }
+            if (rtnToken.type === 'key') {
+              rtnToken.string = Placeholder.stripQuotesFromKey(token);
+            }
+            rtnToken.value = rtnToken.string;
+          } else if (!Number.isNaN(Number(token))) {
+            rtnToken.type = 'number';
+            rtnToken.string = token;
+            rtnToken.value = Number(token);
+          } else if (token.length > 0 && !buffer2.isValue) {
+            rtnToken.type = 'key';
+            rtnToken.string = token.includes(' ') ? `'${token}'` : token;
+            rtnToken.value = rtnToken.string;
           }
-        >
-          { number }
-        </div>
-      );
+      }
+      rtnToken.depth = buffer2.brackets.length;
+      return rtnToken;
     });
+
+    const clean = buffer2.tokens.map(t => t.string).join('');
+    const lastIndex = buffer2.tokens.length - 1;
+    let indentation = '';
+    let lines = 1;
+    let markup = '<div>';
+
+    const indent = (num: number) => `${num > 0 ? '\n' : ''}${Array(num * 2).fill(' ').join('')}`;
+    const indentII = (num: number) => {
+      lines += num > 0 ? 1 : 0;
+      return `${num > 0 ? '</div><div>' : ''}${Array(num * 2).fill('&nbsp;').join('')}`;
+    };
+
+    // Format by Token
+    buffer2.tokens.forEach((token, i) => {
+      const { depth, string } = token;
+      const span = this.newSpan(i, token, depth);
+      const [prevToken, nextToken] = Tokens.surroundingTokens(buffer2.tokens, i);
+      const nextString = nextToken ? nextToken.string : '';
+      const prevString = prevToken ? prevToken.string : '';
+
+      switch (string) {
+        case '{':
+        case '[':
+          if ('}]'.includes(nextString)) {
+            indentation += string;
+            markup += span;
+          } else {
+            indentation += `${string}${indent(depth)}`;
+            markup += `${span}${indentII(depth)}`;
+          }
+          break;
+        case '}':
+        case ']':
+          if ('[{'.includes(prevString)) {
+            indentation += string;
+            markup += span;
+          } else {
+            indentation += `${indent(depth)}${string}`;
+            markup += `${indentII(depth)}${lastIndex === i ? '</div><div>' : ''}${span}`;
+          }
+          break;
+        case ':':
+          indentation += `${string} `;
+          markup += `${span} `;
+          break;
+        case ',':
+          indentation += `${string}${indent(depth)}`;
+          markup += `${span}${indentII(depth)}`;
+          break;
+        default:
+          indentation += string;
+          markup += span;
+      }
+    });
+
+    lines += 2;
+    markup += '</div>';
+    return {
+      tokens: buffer2.tokens,
+      noSpaces: clean,
+      indented: indentation,
+      json: JSON.stringify(obj),
+      jsObject: obj,
+      markup,
+      lines
+    };
+  }
+
+  renderErrorMessage() {
+    const { locale } = this.props;
+    const { errorMessage } = this.style;
+    // eslint-disable-next-line react/destructuring-assignment
+    const errorMsg = this.props.error || this.state.error;
+    const lang = locale || defaultLocale;
+
+    if (errorMsg === undefined) {
+      return '';
+    }
+    return (
+      <p
+        style={{
+          color: 'red',
+          fontSize: '12px',
+          position: 'absolute',
+          width: 'calc(100% - 60px)',
+          height: '60px',
+          boxSizing: 'border-box',
+          margin: 0,
+          padding: 0,
+          paddingRight: '10px',
+          overflowWrap: 'break-word',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          ...errorMessage
+        }}
+      >
+        { format(lang.format, errorMsg) }
+      </p>
+    );
   }
 
   render() {
-    const { id } = this.props;
-    const { error } = this.state;
+    const { id, error } = this.props;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { background, background_warning } = this.colors;
     const {
-      body, container, contentBox, labelColumn, outerBox, warningBox
+      body, container, contentBox, outerBox, warningBox
     } = this.style;
-    const hasError = error ? 'token' in error : false;
+    // eslint-disable-next-line react/destructuring-assignment
+    const errorMsg = error || this.state.error;
+    const hasError = !!error || (errorMsg ? 'token' in errorMsg : false);
     this.renderCount += 1;
 
     const renderStyles: ObjectCSS = {
@@ -684,18 +1702,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         color: '#D4D4D4',
         outline: 'none',
         ...contentBox
-      },
-      labels: {
-        display: 'inline-block',
-        boxSizing: 'border-box',
-        verticalAlign: 'top',
-        height: '100%',
-        width: '44px',
-        margin: 0,
-        padding: '5px 0px 5px 10px',
-        overflow: 'hidden',
-        color: '#D4D4D4',
-        ...labelColumn
       },
       outerBox: {
         display: 'block',
@@ -754,54 +1760,48 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           // name='container'
           id={ id && `${id}-container` }
           style={ renderStyles.container }
-          // onClick={ this.onClick }
+          onClick={ this.onClick }
         >
           <div
             // name='warning-box'
             id={ id && `${id}-warning-box` }
             style={ renderStyles.warningBox }
-            // onClick={ this.onClick }
+            onClick={ this.onClick }
           >
             <span
-              style={
-                {
-                  display: 'inline-block',
+              style={{
+                display: 'inline-block',
+                height: '60px',
+                width: '60px',
+                margin: 0,
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+                verticalAlign: 'top',
+                pointerEvents: 'none'
+              }}
+              onClick={ this.onClick }
+            >
+              <div
+                style={{
+                  position: 'relative',
+                  top: 0,
+                  left: 0,
                   height: '60px',
                   width: '60px',
                   margin: 0,
-                  boxSizing: 'border-box',
-                  overflow: 'hidden',
-                  verticalAlign: 'top',
                   pointerEvents: 'none'
-                }
-              }
-              // onClick={ this.onClick }
-            >
-              <div
-                style={
-                  {
-                    position: 'relative',
-                    top: 0,
-                    left: 0,
-                    height: '60px',
-                    width: '60px',
-                    margin: 0,
-                    pointerEvents: 'none'
-                  }
-                }
-                // onClick={ this.onClick }
+                }}
+                onClick={ this.onClick }
               >
                 <div
-                  style={
-                    {
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      pointerEvents: 'none'
-                    }
-                  }
-                  // onClick={ this.onClick }
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'none'
+                  }}
+                  onClick={ this.onClick }
                 >
                   <svg
                     height='25px'
@@ -820,19 +1820,17 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             </span>
 
             <span
-              style={
-                {
-                  display: 'inline-block',
-                  height: '60px',
-                  width: 'calc(100% - 60px)',
-                  margin: 0,
-                  overflow: 'hidden',
-                  verticalAlign: 'top',
-                  position: 'absolute',
-                  pointerEvents: 'none'
-                }
-              }
-              // onClick={ this.onClick }
+              style={{
+                display: 'inline-block',
+                height: '60px',
+                width: 'calc(100% - 60px)',
+                margin: 0,
+                overflow: 'hidden',
+                verticalAlign: 'top',
+                position: 'absolute',
+                pointerEvents: 'none'
+              }}
+              onClick={ this.onClick }
             >
               { this.renderErrorMessage() }
             </span>
@@ -842,21 +1840,12 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             // name='body'
             id={ id && `${id}-body` }
             style={ renderStyles.body }
-            // onClick={ this.onClick }
+            onClick={ this.onClick }
           >
             <span
-              // name='labels'
-              id={ id && `${id}-labels` }
-              ref={ this.refLabels }
-              style={ renderStyles.labels }
-              // onClick={ this.onClick }
-            >
-              { this.renderLabels() }
-            </span>
-
-            <span
               id={ id }
-              ref={ this.refContent }
+              ref={ ref => { this.refContent = ref || undefined; } }
+              className={ this.getEditStyles() }
               style={ renderStyles.contentBox }
               dangerouslySetInnerHTML={ this.createMarkup() }
               // eslint-disable-next-line react/jsx-props-no-spreading
