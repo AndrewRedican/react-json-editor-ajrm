@@ -13,7 +13,7 @@ export interface ThemeColors {
   string: string;
 }
 
-export const dark_vscode_tribute: ThemeColors = {
+const dark_vscode_tribute: ThemeColors = {
   default            : '#D4D4D4',
   background         : '#1E1E1E',
   background_warning : '#1E1E1E',
@@ -25,7 +25,7 @@ export const dark_vscode_tribute: ThemeColors = {
   primitive          : '#6392C6'
 };
 
-export const light_mitsuketa_tribute: ThemeColors = {
+const light_mitsuketa_tribute: ThemeColors = {
   default            : '#D4D4D4',
   background         : '#FCFDFD',
   background_warning : '#FEECEB',
@@ -35,4 +35,9 @@ export const light_mitsuketa_tribute: ThemeColors = {
   keys               : '#59A5D8',
   keys_whiteSpace    : '#835FB6',
   primitive          : '#386FA4'
+};
+
+export default {
+  dark_vscode_tribute,
+  light_mitsuketa_tribute
 };

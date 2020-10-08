@@ -4,8 +4,8 @@ import React, {
   ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent
 } from 'react';
 import { css } from 'emotion';
-import * as Err from './err';
-import * as Themes from './themes';
+import Err from './err';
+import Themes, { ThemeColors } from './themes';
 import { format, Locale } from './locale';
 import defaultLocale from './locale/en';
 import { getType, identical } from './mitsuketa';
@@ -54,7 +54,7 @@ interface JSONInputProps {
   onKeyPressUpdate?: boolean;
   waitAfterKeyPress?: number;
   theme?: string;
-  colors?: Partial<Themes.ThemeColors>;
+  colors?: Partial<ThemeColors>;
   style?: Partial<InputStyles>;
   error?: Tokens.ErrorMsg;
 }
@@ -82,7 +82,7 @@ const defaultProps = {
   reset: false,
   viewOnly: false,
   confirmGood: true,
-  onKeyPressUpdate: true  
+  onKeyPressUpdate: true
 };
 
 const defaultStyles: InputStyles = {
@@ -101,17 +101,17 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   static defaultProps: JSONInputProps = defaultProps;
 
   // Properties with default
-  colors: Themes.ThemeColors = Themes.dark_vscode_tribute;
+  colors: ThemeColors = Themes.dark_vscode_tribute;
   confirmGood = true;
   style = defaultStyles;
-  totalHeight = '610px';
-  totalWidth = '479px';
+  totalHeight = '100%';
+  totalWidth = '100%';
   resetConfiguration = false;
   waitAfterKeyPress = 1000;
 
   // Properties without default
   renderCount: number;
-  refContent?: HTMLSpanElement;
+  refContent?: HTMLDivElement;
   timer?: NodeJS.Timer;
   updateTime?: number;
 
@@ -406,17 +406,17 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       counterReset: 'line',
       '> div': {
         counterIncrement: 'line',
-        paddingLeft: '4.5em',
+        paddingLeft: '3.75em',
         position: 'relative',
         '&:before': {
           content: 'counter(line)',
           display: 'inline-block',
           boxSizing: 'border-box',
+          borderRight: '1px solid #D4D4D4',
           verticalAlign: 'top',
           height: '100%',
           width: '3.5em',
           margin: 0,
-          paddingRight: '.5em',
           overflow: 'hidden',
           color: '#D4D4D4',
           position: 'absolute',
@@ -432,7 +432,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       colors, confirmGood, height, onKeyPressUpdate, reset, style, theme, waitAfterKeyPress, width
     } = this.props;
 
-    let colorMix: Themes.ThemeColors;
+    let colorMix: ThemeColors;
     let styleMix: InputStyles = {
       outerBox: {},
       container: {},
@@ -446,7 +446,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     let themeMix = Themes.dark_vscode_tribute;
 
     if (theme !== undefined && typeof theme === 'string' && theme in Themes) {
-      themeMix = safeGet(Themes, theme, themeMix) as Themes.ThemeColors;
+      themeMix = safeGet(Themes, theme, themeMix) as ThemeColors;
     }
 
     colorMix = themeMix;
@@ -627,14 +627,13 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     }
   }
 
-  tokenize(obj: Record<string, any>|HTMLSpanElement): null|DomNode.DomNodeTokenize|Placeholder.PlaceholderTokenize {
+  tokenize(obj: Record<string, any>|HTMLDivElement): null|DomNode.DomNodeTokenize|Placeholder.PlaceholderTokenize {
     if (typeof obj !== 'object') {
       throw new TypeError(`tokenize() expects object type properties only. Got '${typeof obj}' type instead.`);
     }
-    
 
     // DOM NODE || ONBLUR OR UPDATE
-    if (obj instanceof HTMLSpanElement && 'nodeType' in obj) {
+    if (obj instanceof HTMLDivElement) {
       return this.tokenizeDomNode(obj);
     }
 
@@ -647,7 +646,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     return null;
   }
 
-  tokenizeDomNode(obj: HTMLElement): null|DomNode.DomNodeTokenize {
+  tokenizeDomNode(obj: HTMLDivElement): null|DomNode.DomNodeTokenize {
     const { locale } = this.props;
     const lang = locale || defaultLocale;
     const containerNode = obj.cloneNode(true);
@@ -673,7 +672,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     const setChildToken = (child: ChildNode): void => {
       switch (child.nodeName) {
         case 'SPAN':
-          const dataset = (child as HTMLSpanElement).dataset;
+          const dataset = (child as HTMLDivElement).dataset;
           buffer.tokens_unknown.push({
             string: child.textContent || '',
             type: dataset.type || 'unknown'  // child.attributes.type.textContent
@@ -687,7 +686,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           } as Tokens.SimpleToken);
           break;
         case 'BR':
-          console.log('BR')
           if (child.textContent === '') {
             buffer.tokens_unknown.push({
               string: '\n',
@@ -712,7 +710,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             child
           });
       }
-    }
+    };
 
     children.forEach(child => setChildToken(child));
 
@@ -1363,6 +1361,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         }
       });
       buffer.markup += '</div>';
+      // TODO: update line count logic
+      // lnes += (markup.match(/<\/div><div>/g) || []).length
     }
 
     if (errorMsg) {
@@ -1383,6 +1383,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
       buffer.markup += '</div>';
       lines += 1;
+      // TODO: update line count logic
+      // lnes += (markup.match(/<\/div><div>/g) || []).length
       lineFallback += 1;
       if (lines < lineFallback) {
         lines = lineFallback;
@@ -1591,7 +1593,10 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     });
 
     lines += 2;
+    // TODO: update line count logic
+    // lnes += (markup.match(/<\/div><div>/g) || []).length
     markup += '</div>';
+
     return {
       tokens: buffer2.tokens,
       noSpaces: clean,
@@ -1768,7 +1773,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             style={ renderStyles.warningBox }
             onClick={ this.onClick }
           >
-            <span
+            <div
               style={{
                 display: 'inline-block',
                 height: '60px',
@@ -1817,9 +1822,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
                   </svg>
                 </div>
               </div>
-            </span>
+            </div>
 
-            <span
+            <div
               style={{
                 display: 'inline-block',
                 height: '60px',
@@ -1833,7 +1838,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               onClick={ this.onClick }
             >
               { this.renderErrorMessage() }
-            </span>
+            </div>
           </div>
 
           <div
@@ -1842,7 +1847,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             style={ renderStyles.body }
             onClick={ this.onClick }
           >
-            <span
+            <div
               id={ id }
               ref={ ref => { this.refContent = ref || undefined; } }
               className={ this.getEditStyles() }

@@ -1,9 +1,9 @@
 const developmentEnvironments = ['development', 'test'];
 const { BABEL_ENV } = process.env;
 
-console.log("Running Babel ...", { BABEL_ENV });
+console.log('Running Babel ...', { BABEL_ENV });
 
-const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV.substring("modules:".length) : "es";
+const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV.substring('modules:'.length) : 'es';
 
 // For the ES configuration only transpile react to valid JavaScript.
 // For commonjs transpile to old JS versions.
@@ -14,7 +14,7 @@ const presets  = [
   }],
   '@babel/preset-react'
 ];
-if (moduleSystem !== "es") {
+if (moduleSystem !== 'es') {
   presets.splice(0, 0,
     ['@babel/preset-env', {
       targets: {
@@ -33,7 +33,7 @@ if (moduleSystem !== "es") {
 // The ES system does not polyfill etc, while the others do.
 const transformOptions = {
   helpers: true,
-  useESModules: moduleSystem === "es"
+  useESModules: moduleSystem === 'es'
 };
 
 module.exports = {
