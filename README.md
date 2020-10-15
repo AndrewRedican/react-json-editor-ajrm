@@ -59,9 +59,9 @@ The `./examples` folder contains two examples:
 
 5. Open `http://localhost:8080` in the web browser
 
-## Latest Spotlight Release Notes [v2.5.11] - September 14, 2020
+## Latest Spotlight Release Notes [v2.5.12] - October 15, 2020
 
-1. `onBlur` property is now available.
+1. Fixed [import issue](https://github.com/AndrewRedican/react-json-editor-ajrm/issues/140).
 
 ## Upcoming Features
 
