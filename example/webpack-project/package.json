@@ -8,9 +8,9 @@
     "build": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs webpack"
   },
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-json-editor-ajrm": "^2.5.9"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-json-editor-ajrm": "2.5.13"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -19,6 +19,6 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.11.0"
   }
 }

@@ -8,16 +8,16 @@ import "./index.css";
  */
 
 //Using distribution version in node_modules
-//import JSONInput  from 'react-json-editor-ajrm';
-//import locale     from 'react-json-editor-ajrm/locale/en';
+import JSONInput from 'react-json-editor-ajrm';
+import locale from 'react-json-editor-ajrm/locale/en';
 
 //Using distribution version from project
-//import JSONInput  from '../../../dist';
-//import locale     from '../../../dist/locale/en';
+// import JSONInput from '../../../dist';
+// import locale from '../../../dist/locale/en';
 
 //Using source code
-import JSONInput from "../../../src";
-import locale from "../../../src/locale/en";
+// import JSONInput from "../../../src";
+// import locale from "../../../src/locale/en";
 
 /**
  * Import some data. This is a sample object, which will be passed down to JSONInput placeholder properperties.
