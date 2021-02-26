@@ -397,6 +397,13 @@ class JSONInput extends Component {
         if(markupText===undefined) return { __html: '' };
         return { __html: '' + markupText };
     }
+    htmlEscape(string){
+        const htmlEscapes = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return string.replace(/[<>]/g, htmlEscapes);
+    }
     newSpan(i,token,depth){
         let
             colors   = this.colors,
@@ -413,7 +420,7 @@ class JSONInput extends Component {
         return (
             '<span' +
                 ' type="'         + type     + '"' +
-                ' value="'        + string   + '"' +
+                ' value="'        + this.htmlEscape(string)   + '"' +
                 ' depth="'        + depth    + '"' +
                 ' style="color:'  + color    + '"' +
             '>'                   + string   +
