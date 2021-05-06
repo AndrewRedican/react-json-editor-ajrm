@@ -5648,9 +5648,9 @@ react-error-overlay@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.1.tgz#417addb0814a90f3a7082eacba7cee588d00da89"
 
-react-json-editor-ajrm@^2.5.8:
-  version "2.5.9"
-  resolved "https://registry.yarnpkg.com/react-json-editor-ajrm/-/react-json-editor-ajrm-2.5.9.tgz#f9cec4aba44b82a75ff632571b84fae0d2bd4c76"
+react-json-editor-ajrm@2.5.13:
+  version "2.5.13"
+  resolved "https://registry.yarnpkg.com/react-json-editor-ajrm/-/react-json-editor-ajrm-2.5.13.tgz#d2496b6b0166ff9e6bb5dbb85ba3615d8f398151"
   dependencies:
     "@babel/runtime" "^7.0.0-rc.0"
 
@@ -6736,8 +6736,8 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
 ua-parser-js@^0.7.18:
-  version "0.7.18"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.18.tgz#a7bfd92f56edfb117083b69e31d2aa8882d4b1ed"
+  version "0.7.28"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
 
 uglify-js@3.4.x, uglify-js@^3.0.13:
   version "3.4.8"
