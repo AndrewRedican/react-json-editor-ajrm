@@ -89,11 +89,6 @@ class JSONInput extends Component {
             };
         this.style = style;
         this.confirmGood = 'confirmGood' in this.props ? this.props.confirmGood : true;
-        const
-            totalHeight  = (this.props.height||'610px'),
-            totalWidth   = (this.props.width||'479px');
-        this.totalHeight = totalHeight;
-        this.totalWidth  = totalWidth;
         if((!('onKeyPressUpdate' in this.props)) || this.props.onKeyPressUpdate){
             if(!this.timer) this.timer = setInterval(this.scheduledUpdate,100);
         }
@@ -114,8 +109,6 @@ class JSONInput extends Component {
             colors       = this.colors,
             style        = this.style,
             confirmGood  = this.confirmGood,
-            totalHeight  = this.totalHeight,
-            totalWidth   = this.totalWidth,
             hasError     = !!this.props.error || (error ? 'token' in error : false);
         this.renderCount++;
         return (
@@ -125,8 +118,8 @@ class JSONInput extends Component {
                 style = {{
                     display    : 'block',
                     overflow   : 'none',
-                    height     : totalHeight,
-                    width      : totalWidth,
+                    height     : (this.props.height||'610px'),
+                    width      : (this.props.width||'479px'),
                     margin     : 0,
                     boxSizing  : 'border-box',
                     position   : 'relative',
@@ -170,8 +163,8 @@ class JSONInput extends Component {
                     id    = {id && id + '-container'}
                     style = {{
                         display    : 'block',
-                        height     : totalHeight,
-                        width      : totalWidth,
+                        height     : (this.props.height||'610px'),
+                        width      : (this.props.width||'479px'),
                         margin     : 0,
                         boxSizing  : 'border-box',
                         overflow   : 'hidden',
