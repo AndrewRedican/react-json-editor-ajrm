@@ -486,8 +486,8 @@ class JSONInput extends Component {
     }
     update(cursorOffset=0,updateCursorPosition=true){
         const
-            container = this.refContent,
-            data      = this.tokenize(container);
+        container = this.refContent,
+        data      = this.tokenize(container);
         if('onChange' in this.props) this.props.onChange({
             plainText  : data.indented,
             markupText : data.markup,
@@ -561,7 +561,7 @@ class JSONInput extends Component {
             this.stopEvent(event);
         } else {
             event.preventDefault();
-            var text = event.clipboardData.getData('text/plain');
+            var text = event.clipboardData.getData('text/plain').replace(/(\r\n|\n|\r|\t)/gm, '');
             document.execCommand('insertText', false, text);
         }
         this.update();
