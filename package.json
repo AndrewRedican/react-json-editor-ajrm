@@ -23,7 +23,8 @@
     "test:clear": "del-cli test/__snapshots__",
     "test:watch": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --watch",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=modules:commonjs jest --coverage",
-    "test:release": "npm run build && npm pack ./dist"
+    "test:release": "npm run build && npm pack ./dist",,
+    "prepare": "yarn build"
   },
   "jest": {
     "preset": "ts-jest",
