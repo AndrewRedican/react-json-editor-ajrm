@@ -6,8 +6,8 @@
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files && npm run test",
-    "build:clean": "rimraf dist && npm run build",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:copy-files",
+    "build:clean": "rimraf dist && npm run build && npm run test",
     "build:commonjs": "cross-env NODE_ENV=production BABEL_ENV=modules:commonjs babel ./src --out-dir ./dist/ --ignore *.test.js && npm run build:commonts",
     "build:commonts": "tsc --declaration --outDir ./dist/ --module CommonJS",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=modules:es babel ./src --out-dir ./dist/es --ignore *.test.js && npm run build:ts",
