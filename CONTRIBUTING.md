@@ -1,6 +1,6 @@
 # Introduction
 
-### First off, thank you for considering contributing to react-json-editor-ajrm. It's people like you that make it such a great repository.
+### First off, thank you for considering contributing to react-json-editor. It's people like you that make it such a great repository.
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
@@ -9,13 +9,13 @@ RJEA is an open source project and we love to receive contributions from our com
 
 ### About Inquiries
 
-Until our slack channel is set up, feel free to use the [issue tracker](https://github.com/AndrewRedican/react-json-editor-ajrm/issues) for support questions.
+Until our slack channel is set up, feel free to use the [issue tracker](https://github.com/czack425/react-json-editor/issues) for support questions.
 
 # Your First Contribution
 Unsure where to begin contributing to RJEA? You can start by looking through these beginner and help-wanted issues:
 
-* [Beginner issues](https://github.com/AndrewRedican/react-json-editor-ajrm/labels/beginner) - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues](https://github.com/AndrewRedican/react-json-editor-ajrm/labels/help%20wanted) - issues which should be a bit more involved than beginner issues.
+* [Beginner issues](https://github.com/czack425/react-json-editor/labels/beginner) - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues](https://github.com/czack425/react-json-editor/labels/help%20wanted) - issues which should be a bit more involved than beginner issues.
 
 Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
@@ -63,7 +63,7 @@ If the answer to either of those two questions are "yes", then you're probably d
 > Please make sure to provide confirmation to any answers / solutions provided to an issue or inquiry in a timely manner. We expect a confirmation within 48 hours time. A thumbs up reaction will do. We volunteer our time to review inquiries to the best of our abbility in a timely manner. We expect the same kind of courtesy from those that approach us with inquiries but most importantly this is done to prevent resolved issues to remain open and stack. Any issues we consider to be resolved but lack confirmation will be closed automatically.
 
 # How to suggest a feature or enhancement
-If you find yourself wishing for a feature that doesn't exist in RJEA, you are probably not alone. There are bound to be others out there with similar needs. The proper way to do it is to open up a new issue [here](https://github.com/AndrewRedican/react-json-editor-ajrm/issues). Please make sure to check the list of existing feature requests to avoid duplication.
+If you find yourself wishing for a feature that doesn't exist in RJEA, you are probably not alone. There are bound to be others out there with similar needs. The proper way to do it is to open up a new issue [here](https://github.com/czack425/react-json-editor/issues). Please make sure to check the list of existing feature requests to avoid duplication.
 
 # Code review process
 This is the checklist that I try to go through for every single pull request that I get. If you're wondering why it takes so long for me to accept pull requests, this is why.
@@ -88,7 +88,7 @@ This is the checklist that I try to go through for every single pull request tha
     - [ ] Comment on the PR "Can you please add tests for this code to `foo_bar.js`", or...
     - [ ] Write the tests yourself.
 
-- [ ] Do the tests pass for all of the following? If not, write a note in the PR, or fix them yourself. [**Read about testing**](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/How-to-Create-and-Run-Tests)
+- [ ] Do the tests pass for all of the following? If not, write a note in the PR, or fix them yourself. [**Read about testing**](https://github.com/czack425/react-json-editor/wiki/How-to-Create-and-Run-Tests)
 
     - [ ] *Outlines have not been defined yet.*
 

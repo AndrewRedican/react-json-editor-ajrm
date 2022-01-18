@@ -1,6 +1,6 @@
-# react-json-editor-ajrm
+# react-json-editor
 
-![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors)
+![npm](https://img.shields.io/npm/v/react-json-editor.svg) ![Build Status](https://travis-ci.com/czack425/react-json-editor.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor.svg) [![Known Vulnerabilities](https://snyk.io/test/github/czack425/react-json-editor/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors)
 
 <p align="center"><img src=https://i.imgur.com/ewtebIW.gif><br /><br />A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!</p>
 
@@ -9,14 +9,14 @@
 - Using node package manager:
 
 ```
-   $ npm i --save react-json-editor-ajrm
+   $ npm i --save react-json-editor
 ```
 
 ## How to Use
 
 ```
-    import JSONInput from 'react-json-editor-ajrm';
-    import locale    from 'react-json-editor-ajrm/locale/en';
+    import JSONInput from 'react-json-editor';
+    import locale    from 'react-json-editor/locale/en';
 
     <JSONInput
         id          = 'a_unique_id'
@@ -27,7 +27,7 @@
     />
 ```
 
-*Hint*: There are two different root paths: `react-json-editor-ajrm` and `react-json-editor-ajrm/es`. The first contains polyfilled ES5 code, the second unpolyfilled ES6. The `react-json-editor-ajrm/es` version is **not compatible** with [`create-react-app`](https://github.com/facebook/create-react-app). If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
+*Hint*: There are two different root paths: `react-json-editor` and `react-json-editor/es`. The first contains polyfilled ES5 code, the second unpolyfilled ES6. The `react-json-editor/es` version is **not compatible** with [`create-react-app`](https://github.com/facebook/create-react-app). If you are unsure of which one you need/want, pick the first - it has the best compatibility with tools and browsers.
 
 ## Examples
 
@@ -39,10 +39,10 @@ The `./examples` folder contains two examples:
 ## Testing right away!
 
 1. Fork and/or clone this Github repository
-2. Go to an example project under [react-json-editor-ajrm/example](https://github.com/AndrewRedican/react-json-editor-ajrm/tree/master/example):
+2. Go to an example project under [react-json-editor/example](https://github.com/czack425/react-json-editor/tree/master/example):
 
 ```
-    $ cd path/to/repo/react-json-editor-ajrm/example/webpack-project
+    $ cd path/to/repo/react-json-editor/example/webpack-project
 ```
 
 3. Install example project dependencies:
@@ -80,7 +80,7 @@ The `./examples` folder contains two examples:
 
 | Name                          | Description                                                                                                                                                                                                                                                                                     |   Type   | Required  |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: | :-------: |
-| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor-ajrm/locale/en'`. [Learn More](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Locale-Support)                                                                                         |  object  | Mandatory |
+| [locale]()                    | The locale of your editor. Import locales like this: `import locale from 'react-json-editor/locale/en'`. [Learn More](https://github.com/czack425/react-json-editor/wiki/Locale-Support)                                                                                         |  object  | Mandatory |
 | [id]()                        | An optional `id` to assign to the actual text input DOM node. Asides the from the text input, the following nodes will also receive an id: `{id}-outer-box`, `{id}-container`, `{id}-warning-box`, `{id}-labels`                                                                                |  string  | Optional  |
 | [placeholder]()               | Send a valid javascript object to be shown once the component is mounted. Assign a different value to have the component's initial content re-rendered.                                                                                                                                         |  object  | Optional  |
 | [reset]()                     | Send `true` to have component always re-render or 'reset' to the value provided on the `placeholder` property.                                                                                                                                                                                  |  boolean | Optional  |
@@ -96,7 +96,7 @@ The `./examples` folder contains two examples:
 | [error]()                     | **Contains the following properties:**                                                                                                                                                                                                                                                          |  object  | Optional  |
 | error.[reason]()              | A string containing a custom error messsage                                                                                                                                                                                                                                                     |  string  | Optional  |
 | error.[line]()                | A number indicating the line number related to the custom error message                                                                                                                                                                                                                         |  number  | Optional  |
-| [theme]()                     | Specify which [built-in theme](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes) to use.                                                                                                                                                                            |  string  | Optional  |
+| [theme]()                     | Specify which [built-in theme](https://github.com/czack425/react-json-editor/wiki/Built-In-Themes) to use.                                                                                                                                                                            |  string  | Optional  |
 | [colors]()                    | **Contains the following properties:**                                                                                                                                                                                                                                                          |  object  | Optional  |
 | colors.[default]()            | Hex color code for any symbols, like curly `braces`, and `comma`.                                                                                                                                                                                                                               |  string  | Optional  |
 | colors.[string]()             | Hex color code for tokens identified as `string` values.                                                                                                                                                                                                                                        |  string  | Optional  |
@@ -147,7 +147,7 @@ Whenever RJEA re-renders its content, any function passed onto `onChange` proper
 
 ## Built-In Themes
 
-RJEA supports built-in theme. Here is the [list](https://github.com/AndrewRedican/react-json-editor-ajrm/wiki/Built-In-Themes).
+RJEA supports built-in theme. Here is the [list](https://github.com/czack425/react-json-editor/wiki/Built-In-Themes).
 
 ## Built With
 
@@ -170,12 +170,13 @@ Thanks goes to these wonderful people :smile::
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/AndrewRedican"><img src="https://avatars2.githubusercontent.com/u/24832471?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Redican</b></sub></a><br /><a href="#talk-AndrewRedican" title="Talks">📢</a> <a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican" title="Code">💻</a> <a href="#translation-AndrewRedican" title="Translation">🌍</a> <a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=AndrewRedican" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://patrick-sachs.de/"><img src="https://avatars3.githubusercontent.com/u/7840502?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Sachs</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs" title="Code">💻</a> <a href="#translation-PatrickSachs" title="Translation">🌍</a> <a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=PatrickSachs" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/czack425"><img src="https://avatars2.githubusercontent.com/u/11284326?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Redican</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=czack425" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/AndrewRedican"><img src="https://avatars2.githubusercontent.com/u/24832471?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Redican</b></sub></a><br /><a href="#talk-AndrewRedican" title="Talks">📢</a> <a href="https://github.com/AndrewRedican/react-json-editor/commits?author=AndrewRedican" title="Code">💻</a> <a href="#translation-AndrewRedican" title="Translation">🌍</a> <a href="https://github.com/AndrewRedican/react-json-editor/commits?author=AndrewRedican" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://patrick-sachs.de/"><img src="https://avatars3.githubusercontent.com/u/7840502?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Sachs</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=PatrickSachs" title="Code">💻</a> <a href="#translation-PatrickSachs" title="Translation">🌍</a> <a href="https://github.com/czack425/react-json-editor/commits?author=PatrickSachs" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://allankehl.com"><img src="https://avatars3.githubusercontent.com/u/37770361?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Allan Kehl</b></sub></a><br /><a href="#translation-AllanKDeveloper" title="Translation">🌍</a></td>
-    <td align="center"><a href="https://github.com/esbenvb"><img src="https://avatars3.githubusercontent.com/u/426051?v=4?s=100" width="100px;" alt=""/><br /><sub><b>esbenvb</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=esbenvb" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/esbenvb"><img src="https://avatars3.githubusercontent.com/u/426051?v=4?s=100" width="100px;" alt=""/><br /><sub><b>esbenvb</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=esbenvb" title="Documentation">📖</a></td>
     <td align="center"><a href="http://markus-petrykowski.de"><img src="https://avatars2.githubusercontent.com/u/5831420?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Markus Petrykowski</b></sub></a><br /><a href="#example-PetrykowskiM" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/rickbrunstedt"><img src="https://avatars0.githubusercontent.com/u/5797143?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rick Brunstedt</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=rickbrunstedt" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/rickbrunstedt"><img src="https://avatars0.githubusercontent.com/u/5797143?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rick Brunstedt</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=rickbrunstedt" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ADirtyCat"><img src="https://avatars3.githubusercontent.com/u/20251640?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ADirtyCat</b></sub></a><br /><a href="#translation-ADirtyCat" title="Translation">🌍</a></td>
   </tr>
   <tr>
@@ -188,10 +189,10 @@ Thanks goes to these wonderful people :smile::
     <td align="center"><a href="https://github.com/Adityaperiwal"><img src="https://avatars1.githubusercontent.com/u/35131225?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aditya Periwal</b></sub></a><br /><a href="#translation-Adityaperiwal" title="Translation">🌍</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/JustFly1984"><img src="https://avatars3.githubusercontent.com/u/2255993?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexey Lyakhov</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=JustFly1984" title="Code">💻</a></td>
-    <td align="center"><a href="http://terencehuynh.com/"><img src="https://avatars1.githubusercontent.com/u/1747517?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Terence Huynh</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=terencehuynh" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/rm-hull"><img src="https://avatars3.githubusercontent.com/u/1915543?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Richard Hull</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=rm-hull" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/tonynguyenit18"><img src="https://avatars2.githubusercontent.com/u/37351890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tonynguyenit18</b></sub></a><br /><a href="https://github.com/AndrewRedican/react-json-editor-ajrm/commits?author=tonynguyenit18" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/JustFly1984"><img src="https://avatars3.githubusercontent.com/u/2255993?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexey Lyakhov</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=JustFly1984" title="Code">💻</a></td>
+    <td align="center"><a href="http://terencehuynh.com/"><img src="https://avatars1.githubusercontent.com/u/1747517?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Terence Huynh</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=terencehuynh" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/rm-hull"><img src="https://avatars3.githubusercontent.com/u/1915543?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Richard Hull</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=rm-hull" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tonynguyenit18"><img src="https://avatars2.githubusercontent.com/u/37351890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tonynguyenit18</b></sub></a><br /><a href="https://github.com/czack425/react-json-editor/commits?author=tonynguyenit18" title="Code">💻</a></td>
   </tr>
 </table>
 
