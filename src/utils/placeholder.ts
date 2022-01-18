@@ -57,7 +57,7 @@ export function stripQuotesFromKey(text: string): string {
   const hasQuotes = /['"]/.test(nonAlphaNumeric);
 
   if (hasQuotes) {
-    val = val.split('').map(char => ["'", '"'].includes(char) ? `\\${char}` : char ).join('');
+    val = val.split('').map(char => ["'", '"'].includes(char) ? `\\${char}` : char).join('');
   }
   return mayRemoveQuotes ? val : `'${val}'`;
 }
@@ -126,7 +126,7 @@ export function determineValue(buffer: PrimaryBuffer): boolean {
     // no default
   }
   if (buffer.currentChar !== ':') {
-    buffer.isValue = buffer.brackets[buffer.brackets.length - 1] === '[';
+    buffer.isValue = buffer.brackets[buffer.brackets.length-1] === '[';
   }
   return true;
 }

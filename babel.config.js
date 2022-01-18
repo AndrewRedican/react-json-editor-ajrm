@@ -1,4 +1,3 @@
-const developmentEnvironments = ['development', 'test'];
 const { BABEL_ENV } = process.env;
 
 console.log('Running Babel ...', { BABEL_ENV });
@@ -7,13 +6,14 @@ const moduleSystem = (BABEL_ENV && BABEL_ENV.startsWith('modules:')) ? BABEL_ENV
 
 // For the ES configuration only transpile react to valid JavaScript.
 // For commonjs transpile to old JS versions.
-const presets  = [
+const presets = [
   ['@babel/preset-typescript', {
     allExtensions: true,
     isTSX: true
   }],
   '@babel/preset-react'
 ];
+
 if (moduleSystem !== 'es') {
   presets.splice(0, 0,
     ['@babel/preset-env', {
@@ -47,6 +47,8 @@ module.exports = {
     ['@babel/plugin-transform-runtime', transformOptions],
 
     // Stage 1
+    ['@babel/plugin-proposal-private-methods', { loose: true }],
+    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
 
     // Stage 2
 

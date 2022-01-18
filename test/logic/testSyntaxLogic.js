@@ -4,10 +4,10 @@ import locale from '../../src/locale/en'
 import err from './../err';
 import { deepRemoveAll_Key } from 'mitsuketa';
 
-function removeKeys(identity={},keys=[]){
+function removeKeys(identity={}, keys=[]){
   let newIdentity = identity;
   keys.forEach(keyName => {
-    newIdentity = deepRemoveAll_Key(newIdentity,keyName);
+    newIdentity = deepRemoveAll_Key(newIdentity, keyName);
   });
   return newIdentity;
 }

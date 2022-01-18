@@ -51,7 +51,7 @@ export function mergeObjects(target: Record<string, any>, ...params: Array<Recor
     });
   });
   return target;
- }
+}
 
 /**
  * SafeGet a property from an object

@@ -30,7 +30,7 @@ export interface Bracket {
   string: string;
 }
 
-type QuarkType = 'delimiter'|'number'|'space'|'string'|'symbol';
+type QuarkType = 'delimiter' | 'number' | 'space' | 'string' | 'symbol';
 
 interface QuarkBuffer {
   active?: QuarkType;
@@ -128,8 +128,7 @@ export function quarkize(text: string, prefix = ''): Array<BaseToken> {
       case '.':
         charType = (i < lastIdx && i > 0 && '0123456789'.includes(text.charAt(i + 1)) && '0123456789'.includes(text.charAt(i - 1))) ? 'number' : charType;
         break;
-      default:
-        charType = 'string';
+      // no default
     }
     pushAndStore(buffer, char, charType, prefix);
   });

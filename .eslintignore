@@ -267,6 +267,7 @@ dist
 # Non-packaged files
 config
 example
+scripts
 test
 
 # Assorted

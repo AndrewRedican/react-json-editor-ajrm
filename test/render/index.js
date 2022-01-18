@@ -16,7 +16,7 @@ function run() {
   test(`Basic Component Render`, () => {
     let wrapper = mount(
       <JSONInput
-        locale={locale}
+        locale={ locale }
       />,
       { attachTo: window.domNode }
     );
@@ -26,17 +26,17 @@ function run() {
   test(`All Component Properties Render [1]`, () => {
     let wrapper = mount(
       <JSONInput
-        locale={locale}
-        placeholder={sampleData}
-        viewOnly={true}
-        onChange={sampleFunctions.getResults}
-        onBlur={sampleFunctions.getResults}
-        confirmGood={false}
+        locale={ locale }
+        placeholder={ sampleData }
+        viewOnly={ true }
+        onChange={ sampleFunctions.getResults }
+        onBlur={ sampleFunctions.getResults }
+        confirmGood={ false }
         height='500px'
         width='100%'
-        onKeyPressUpdate={true}
-        waitAfterKeyPress={1200}
-        modifyErrorText={sampleFunctions.modWarning}
+        onKeyPressUpdate={ true }
+        waitAfterKeyPress={ 1200 }
+        modifyErrorText={ sampleFunctions.modWarning }
         theme='dark_vscode_tribute'
         colors={{
           string: '#E25E29'
@@ -58,17 +58,17 @@ function run() {
   test(`All Component Properties Render [2]`, () => {
     let wrapper = mount(
       <JSONInput
-        locale={locale}
-        placeholder={sampleData}
-        viewOnly={false}
-        onChange={sampleFunctions.getResults}
-        onBlur={sampleFunctions.getResults}
-        confirmGood={true}
+        locale={ locale }
+        placeholder={ sampleData }
+        viewOnly={ false }
+        onChange={ sampleFunctions.getResults }
+        onBlur={ sampleFunctions.getResults }
+        confirmGood={ true }
         height='500px'
         width='100%'
-        onKeyPressUpdate={false}
-        waitAfterKeyPress={600}
-        modifyErrorText={sampleFunctions.modWarning}
+        onKeyPressUpdate={ false }
+        waitAfterKeyPress={ 600 }
+        modifyErrorText={ sampleFunctions.modWarning }
         theme='light_mitsuketa_tribute'
         colors={{
           string: '#DAA520'
@@ -90,9 +90,12 @@ function run() {
   test(`Custom Error Render`, () => {
     let wrapper = mount(
       <JSONInput
-        locale={locale}
-        placeholder={sampleData}
-        error={{reason: "My custom error", line: 5}}
+        locale={ locale }
+        placeholder={ sampleData }
+        error={{
+          reason: "My custom error",
+          line: 5
+        }}
       />,
       { attachTo: window.domNode }
     );

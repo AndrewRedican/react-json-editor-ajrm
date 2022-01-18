@@ -4,18 +4,19 @@ import locale from '../../src/locale/en';
 
 function run() {
   test(`Update placeholder property value`, () => {
-    let wrapper = shallow(
+    let wrapper = mount(
       <JSONInput
-        locale={locale}
-        reset={false}
+        locale={ locale }
+        reset={ false }
         placeholder={{ valueToChange : false }}
-      />
+      />,
+      { attachTo: window.domNode }
     );
     expect(wrapper).toMatchSnapshot();
 
     function checkState(componentState) {
       const wrapperState = wrapper.state();
-      Object.keys(componentState).forEach( keyName => {
+      Object.keys(componentState).forEach(keyName => {
         expect(wrapperState[keyName]).toEqual(componentState[keyName]);
       });
     }
@@ -25,10 +26,10 @@ function run() {
     // Behavior On Component Initial Mount
     const intialState = {
         error: undefined,
-        jsObject: {},
+        jsObject: undefined,
         json: '',
         lines: 4,
-        plainText: "{\n  valueToChange: false}",
+        plainText: undefined,
         prevPlaceholder: {
             valueToChange : false
         }
@@ -39,10 +40,10 @@ function run() {
     wrapper.setProps({ placeholder: { valueToChange : true }});
     const stateAfterPlaceholderChange = {
         error: undefined,
-        jsObject: {},
+        jsObject: undefined,
         json: '',
         lines: 4,
-        plainText: "{\n  valueToChange: true}",
+        plainText: undefined,
         prevPlaceholder: {
             valueToChange : true
         }

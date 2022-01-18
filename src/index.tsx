@@ -3,7 +3,7 @@
 import React, {
   ClipboardEvent, Component, CSSProperties, KeyboardEvent, SyntheticEvent
 } from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import Err from './err';
 import Themes, { ThemeColors } from './themes';
 import { format, Locale } from './locale';
@@ -12,7 +12,7 @@ import { getType, identical } from './mitsuketa';
 import {
   // Helpers
   countCarrigeReturn, isFunction, mergeObjects, safeGet,
-  // Helper/Interfaces
+  // Helpers/Interfaces
   DomNode, Placeholder, Tokens
 } from './utils';
 
@@ -40,7 +40,7 @@ interface ChangeProps {
 }
 
 interface JSONInputProps {
-  locale: Locale,
+  locale: Locale;
   id?: string;
   placeholder?: Record<string, any>;
   reset?: boolean;
@@ -60,17 +60,13 @@ interface JSONInputProps {
 }
 
 interface JSONInputState {
-  prevPlaceholder: undefined|Record<string, any>;
+  prevPlaceholder?: Record<string, any>;
   markupText: string;
   plainText: string;
   json: string;
   jsObject: Record<string, any>;
   lines: number;
   error?: Tokens.ErrorMsg;
-}
-
-interface Chars {
-  count: number
 }
 
 // Defaults
@@ -126,7 +122,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     this.setUpdateTime       = this.setUpdateTime.bind(this);
     this.getCursorPosition   = this.getCursorPosition.bind(this);
     this.getEditProps        = this.getEditProps.bind(this);
-    this.getEditStyles       = this.getEditStyles.bind(this);
+    this.getEditorStyles     = this.getEditorStyles.bind(this);
     this.updateInternalProps = this.updateInternalProps.bind(this);
     this.update              = this.update.bind(this);
     this.createMarkup        = this.createMarkup.bind(this);
@@ -270,28 +266,29 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       return;
     }
 
-    const createRange = (node: Node, chars: Chars, range?: Range): Range => {
+    const createRange = (node: Node, chars: number, range?: Range): Range => {
       let rtnRange = range;
+      let charCount = chars;
       if (!rtnRange) {
         rtnRange = document.createRange();
         rtnRange.selectNode(node);
         rtnRange.setStart(node, 0);
       }
-      if (chars.count === 0) {
-        rtnRange.setEnd(node, chars.count);
-      } else if (node && chars.count > 0) {
+      if (charCount === 0) {
+        rtnRange.setEnd(node, charCount);
+      } else if (node && charCount > 0) {
         if (node.nodeType === Node.TEXT_NODE) {
           const contents = node.textContent || '';
-          if (contents.length < chars.count) {
-            chars.count -= contents.length;
+          if (contents.length < charCount) {
+            charCount -= contents.length;
           } else {
-            rtnRange.setEnd(node, chars.count);
-            chars.count = 0;
+            rtnRange.setEnd(node, charCount);
+            charCount = 0;
           }
         } else {
           for (let lp = 0; lp < node.childNodes.length; lp++) {
-            rtnRange = createRange(node.childNodes[lp], chars, rtnRange);
-            if (chars.count === 0) {
+            rtnRange = createRange(node.childNodes[lp], charCount, rtnRange);
+            if (charCount === 0) {
               break;
             }
           }
@@ -302,7 +299,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
     const setPosition = (chars: number) => {
       if (chars >= 0) {
-        const range = createRange(this.refContent as Node, { count: chars });
+        const range = createRange(this.refContent as Node, chars);
         if (range) {
           range.collapse(false);
           const selection = window.getSelection();
@@ -378,9 +375,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
   }
 
   getEditProps() {
-    /**
-      * Props for if the JSON Input is editable
-      */
+    // Props for if the JSON Input is editable
     const { viewOnly } = this.props;
     if (viewOnly !== undefined && viewOnly === true) {
       return {};
@@ -400,7 +395,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     };
   }
 
-  getEditStyles() {
+  getEditorStyles() {
     const { labelColumn } = this.style;
     return css({
       counterReset: 'line',
@@ -424,7 +419,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           ...labelColumn
         }
       }
-    });
+    }) as string;
   }
 
   updateInternalProps() {
@@ -501,7 +496,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     const container = this.refContent;
     if (container) {
       const data = this.tokenize(container);
-
       if (data) {
         if (onChange && isFunction(onChange)) {
           onChange({
@@ -569,10 +563,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     if (onKeyPressUpdate !== undefined && onKeyPressUpdate === false) {
       return;
     }
-    if (this.updateTime === undefined) {
-      return;
-    }
-    if (this.updateTime > new Date().getTime()) {
+    if (this.updateTime === undefined || this.updateTime > new Date().getTime()) {
       return;
     }
     this.update();
@@ -706,9 +697,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
           } as Tokens.SimpleToken);
           break;
         default:
-          console.error('Unrecognized node:', {
-            child
-          });
+          console.error('Unrecognized node:', { child });
       }
     };
 
@@ -829,11 +818,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             normalToken.type = 'primitive';
             break;
           }
-          if (normalToken.string === '\n') {
-            if (!buffer2.stringOpen) {
-              normalToken.type = 'linebreak';
-              break;
-            }
+          if (normalToken.string === '\n' && !buffer2.stringOpen) {
+            normalToken.type = 'linebreak';
+            break;
           }
           normalToken.type = buffer2.isValue ? 'string' : 'key';
           break;
@@ -1125,10 +1112,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               }));
               break;
             }
-            if (buffer2.isValue) {
-              setError(i, format(lang.string.unexpectedKey));
-              break;
-            }
           }
           if (type === 'string') {
             if (!Tokens.followsSymbol(buffer.tokens_merge, i, ['[', ':', ','])) {
@@ -1138,18 +1121,21 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               }));
               break;
             }
-            if (!buffer2.isValue) {
-              setError(i, format(lang.key.unexpectedString));
-              break;
-            }
+          }
+          if (type === 'key' && buffer2.isValue) {
+            setError(i, format(lang.string.unexpectedKey));
+            break;
+          }
+          if (type === 'string' && !buffer2.isValue) {
+            setError(i, format(lang.key.unexpectedString));
+            break;
           }
           if (firstChar === "'") {
-            buffer.json += `"${string.slice(1, -1)}"`;
+            string = `"${string.slice(1, -1)}"`;
           } else if (firstChar !== '"') {
-            buffer.json += `"${string}"`;
-          } else {
-            buffer.json += string;
+            string = `"${string}"`;
           }
+          buffer.json += string;
           break;
         case 'number':
         case 'primitive':
@@ -1245,7 +1231,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         try {
           buffer.jsObject = JSON.parse(buffer.json) as Record<string, any>;
         } catch (err) {
-          const errorMessage = err.message as string;
+          const errorMessage = (err as Error).message;
           const subsMark = errorMessage.indexOf('position');
           if (subsMark === -1) {
             throw new Error('Error parsing failed');
@@ -1293,7 +1279,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               backslashCount = 0;
             }
           }
-          if (!errorMsg) {
+          if (errorMsg === undefined) {
             setError(tokenIndex, format(lang.invalidToken.unexpected, {
               token: token.string
             }));
@@ -1365,7 +1351,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
       // lnes += (markup.match(/<\/div><div>/g) || []).length
     }
 
-    if (errorMsg) {
+    if (errorMsg !== undefined) {
       let lineFallback = 1;
       lines = 1;
       buffer.markup += '<div>';
@@ -1392,13 +1378,14 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     }
 
     buffer.tokens_merge.forEach(token => {
-      buffer.indented += token.string;
-      if (!['space', 'linebreak'].includes(token.type)) {
-        buffer.tokens_plainText += token.string;
+      const { string, type } = token;
+      buffer.indented += string;
+      if (!['space', 'linebreak'].includes(type)) {
+        buffer.tokens_plainText += string;
       }
     });
 
-    if (errorMsg) {
+    if (errorMsg !== undefined) {
       const { modifyErrorText } = this.props;
       if (modifyErrorText && isFunction(modifyErrorText)) {
         errorMsg.reason = modifyErrorText(errorMsg.reason);
@@ -1510,6 +1497,9 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         default:
           if ('\'"'.includes(token.charAt(0))) {
             rtnToken.type = buffer2.isValue ? 'string' : 'key';
+            if (rtnToken.type === 'key') {
+              rtnToken.string = Placeholder.stripQuotesFromKey(token);
+            }
             if (rtnToken.type === 'string') {
               rtnToken.string = '';
               const charList2 = token.slice(1, -1).split('');
@@ -1518,9 +1508,6 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
                 rtnToken.string += '\'"'.includes(char) ? `\\${char}` : char;
               }
               rtnToken.string = `'${rtnToken.string}'`;
-            }
-            if (rtnToken.type === 'key') {
-              rtnToken.string = Placeholder.stripQuotesFromKey(token);
             }
             rtnToken.value = rtnToken.string;
           } else if (!Number.isNaN(Number(token))) {
@@ -1676,7 +1663,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
         position: 'absolute',
         top: 0,
         right: 0,
-        transform: 'translate(-25%,25%)',
+        transform: 'translate(-25%, 25%)',
         pointerEvents: 'none',
         transitionDuration: '0.2s',
         transitionTimingFunction: 'cubic-bezier(0, 1, 0.5, 1)'
@@ -1734,20 +1721,14 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
     let confirmation: null|JSX.Element = null;
     if (this.confirmGood) {
       confirmation = (
-        <div
-          style={ renderStyles.confirmation }
-        >
-          <svg
-            height='30px'
-            width='30px'
-            viewBox='0 0 100 100'
-          >
+        <div style={ renderStyles.confirmation }>
+          <svg height="30px" width="30px" viewBox="0 0 100 100">
             <path
-              fillRule='evenodd'
-              clipRule='evenodd'
-              fill='green'
-              opacity='0.85'
-              d='M39.363,79L16,55.49l11.347-11.419L39.694,56.49L72.983,23L84,34.085L39.363,79z'
+              fillRule="evenodd"
+              clipRule="evenodd"
+              fill="green"
+              opacity="0.85"
+              d="M39.363,79L16,55.49l11.347-11.419L39.694,56.49L72.983,23L84,34.085L39.363,79z"
             />
           </svg>
         </div>
@@ -1756,19 +1737,19 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
 
     return (
       <div
-        // name='outer-box'
+        // name="outer-box"
         id={ id && `${id}-outer-box` }
         style={ renderStyles.outerBox }
       >
         { confirmation }
         <div
-          // name='container'
+          // name="container"
           id={ id && `${id}-container` }
           style={ renderStyles.container }
           onClick={ this.onClick }
         >
           <div
-            // name='warning-box'
+            // name="warning-box"
             id={ id && `${id}-warning-box` }
             style={ renderStyles.warningBox }
             onClick={ this.onClick }
@@ -1808,22 +1789,17 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
                   }}
                   onClick={ this.onClick }
                 >
-                  <svg
-                    height='25px'
-                    width='25px'
-                    viewBox='0 0 100 100'
-                  >
+                  <svg height="25px" width="25px" viewBox="0 0 100 100">
                     <path
-                      fillRule='evenodd'
-                      clipRule='evenodd'
-                      fill='red'
-                      d='M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z'
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      fill="red"
+                      d="M73.9,5.75c0.467-0.467,1.067-0.7,1.8-0.7c0.7,0,1.283,0.233,1.75,0.7l16.8,16.8  c0.467,0.5,0.7,1.084,0.7,1.75c0,0.733-0.233,1.334-0.7,1.801L70.35,50l23.9,23.95c0.5,0.467,0.75,1.066,0.75,1.8  c0,0.667-0.25,1.25-0.75,1.75l-16.8,16.75c-0.534,0.467-1.117,0.7-1.75,0.7s-1.233-0.233-1.8-0.7L50,70.351L26.1,94.25  c-0.567,0.467-1.167,0.7-1.8,0.7c-0.667,0-1.283-0.233-1.85-0.7L5.75,77.5C5.25,77,5,76.417,5,75.75c0-0.733,0.25-1.333,0.75-1.8  L29.65,50L5.75,26.101C5.25,25.667,5,25.066,5,24.3c0-0.666,0.25-1.25,0.75-1.75l16.8-16.8c0.467-0.467,1.05-0.7,1.75-0.7  c0.733,0,1.333,0.233,1.8,0.7L50,29.65L73.9,5.75z"
                     />
                   </svg>
                 </div>
               </div>
             </div>
-
             <div
               style={{
                 display: 'inline-block',
@@ -1840,9 +1816,8 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
               { this.renderErrorMessage() }
             </div>
           </div>
-
           <div
-            // name='body'
+            // name="body"
             id={ id && `${id}-body` }
             style={ renderStyles.body }
             onClick={ this.onClick }
@@ -1850,7 +1825,7 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             <div
               id={ id }
               ref={ ref => { this.refContent = ref || undefined; } }
-              className={ this.getEditStyles() }
+              className={ this.getEditorStyles() }
               style={ renderStyles.contentBox }
               dangerouslySetInnerHTML={ this.createMarkup() }
               // eslint-disable-next-line react/jsx-props-no-spreading

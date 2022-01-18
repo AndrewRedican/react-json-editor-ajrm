@@ -2,7 +2,7 @@
 import Err from '../err';
 
 // Interfaces
-export type TokenType = 'colon'|'delimiter'|'error'|'linebreak'|'key'|'null'|'number'|'primitive'|'space'|'string'|'symbol'|'undefined'|'unknown';
+export type TokenType = 'colon' | 'delimiter' | 'error' | 'key' | 'linebreak' | 'number' | 'primitive' | 'space' | 'string' | 'symbol' | 'undefined' | 'unknown';
 
 export interface BaseToken {
   string: string;
@@ -19,8 +19,8 @@ export interface FallbackToken extends SimpleToken {
 }
 
 export interface MarkupToken extends SimpleToken {
-  value: boolean|number|null|string|undefined;
   depth: number;
+  value: boolean|number|null|string|undefined;
 }
 
 export interface MergeToken extends SimpleToken {
@@ -36,13 +36,59 @@ export interface ErrorMsg {
 
 // Return Interface
 export interface Tokenize {
-  noSpaces: string,
-  indented: string,
-  json: string,
-  jsObject: Record<string, any>,
-  markup: string
-  lines: number,
-  error?: ErrorMsg
+  noSpaces: string;
+  indented: string;
+  json: string;
+  jsObject: Record<string, any>;
+  markup: string;
+  lines: number;
+  error?: ErrorMsg;
+}
+
+// Custom Helpers
+/**
+ * Get the preceding token
+ * @param {Array<SimpleToken>} tokens - Array of tokens
+ * @param {number} tokenID - ID of the token to get preceding
+ * @returns {null|SimpleToken}
+ */
+export function precedingToken(tokens: Array<SimpleToken>, tokenID: number): null|SimpleToken {
+  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
+  if (tokenID > 0 && tokenID < tokens.length) {
+    return tokens[tokenID - 1];
+  }
+  return null;
+}
+
+/**
+ * Get the following token
+ * @param {Array<SimpleToken>} tokens - Array of tokens
+ * @param {number} tokenID - ID of the token to get preceding
+ * @returns {null|SimpleToken}
+ */
+export function followingToken(tokens: Array<SimpleToken>, tokenID: number): null|SimpleToken {
+  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
+  if (tokenID >= 0 && tokenID < tokens.length - 2) {
+    return tokens[tokenID + 1];
+  }
+  return null;
+}
+
+/**
+ * Get the surrounding tokens
+ * @param {Array<SimpleToken>} tokens - Array of tokens
+ * @param {number} tokenID - ID of the token to get preceding
+ * @returns {[null|SimpleToken, null|SimpleToken]} - [preceding token, following token]
+ */
+export function surroundingTokens(tokens: Array<SimpleToken>, tokenID: number): [null|SimpleToken, null|SimpleToken] {
+  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
+  return [
+    precedingToken(tokens, tokenID),
+    followingToken(tokens, tokenID)
+  ];
 }
 
 // Helper Functions
@@ -66,51 +112,6 @@ export function tokenFollowed(tokens: Array<SimpleToken>): null|SimpleToken {
 }
 
 /**
- * Get the preceding token
- * @param {Array<SimpleToken>} tokens - Array of tokens
- * @param {number} tokenID - ID of the token to get preceding
- * @returns {null|SimpleToken}
- */
-export function precedingToken(tokens: Array<SimpleToken>, tokenID: number): null|SimpleToken {
-  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
-  if (tokenID > 0 && tokenID < tokens.length) {
-    return tokens[tokenID - 1];
-  }
-  return null;
-}
-
-/**
- * Get the following token
- * @param {Array<SimpleToken>} tokens - Array of tokens
- * @param {number} tokenID - ID of the token to get preceding
- * @returns {null|SimpleToken}
- */
-export function followingToken(tokens: Array<SimpleToken>, tokenID: number): null|SimpleToken {
-  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
-  if (tokenID >= 0 && tokenID < tokens.length - 2) {
-    return tokens[tokenID + 1];
-  }
-  return null;
-}
-
-/**
- * Get the surrounding tokens
- * @param {Array<SimpleToken>} tokens - Array of tokens
- * @param {number} tokenID - ID of the token to get preceding
- * @returns {[null|SimpleToken, null|SimpleToken]} - [preceding token, following token]
- */
-export function surroundingTokens(tokens: Array<SimpleToken>, tokenID: number): [null|SimpleToken, null|SimpleToken] {
-  Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
-  return [
-    precedingToken(tokens, tokenID),
-    followingToken(tokens, tokenID)
-  ];
-}
-
-/**
  * Determine if the given options follow the given token
  * @param {Array<SimpleToken>} tokens - Array of tokens
  * @param {number} tokenID - ID of the token to determine if the given options follow
@@ -119,8 +120,8 @@ export function surroundingTokens(tokens: Array<SimpleToken>, tokenID: number): 
  */
 export function followedBySymbol(tokens: Array<SimpleToken>, tokenID: number, options: Array<string>): boolean {
   Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
-  Err.isUndefined('options', options, 'options argument must be an array.');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
+  Err.isUndefined('options', options, 'options argument must be an array');
   for (let i = tokenID; i < tokens.length; i++) {
     const nextToken = followingToken(tokens, i);
     if (nextToken) {
@@ -148,8 +149,8 @@ export function followedBySymbol(tokens: Array<SimpleToken>, tokenID: number, op
  */
 export function followsSymbol(tokens: Array<SimpleToken>, tokenID: number, options: Array<string>): boolean {
   Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
-  Err.isUndefined('options', options, 'options argument must be an array.');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
+  Err.isUndefined('options', options, 'options argument must be an array');
   for (let i = tokenID; i >= 0; i--) {
     const prevToken = precedingToken(tokens, i);
     if (prevToken) {
@@ -174,9 +175,9 @@ export function followsSymbol(tokens: Array<SimpleToken>, tokenID: number, optio
  * @param {number} tokenID - ID of the token to find the previous type
  * @returns {null|TokenType} - Preceding token's type, if available (excluding space & linebreak)
  */
-export function typeFollowed(tokens: Array<SimpleToken>, tokenID: number): null|TokenType {
+ export function typeFollowed(tokens: Array<SimpleToken>, tokenID: number): null|TokenType {
   Err.isUndefined('tokens', tokens, 'tokens argument must be an array');
-  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer.');
+  Err.isUndefined('tokenID', tokenID, 'tokenID argument must be an integer');
   for (let i = tokenID; i > 0; i--) {
     const prevToken = precedingToken(tokens, i);
     if (prevToken) {
