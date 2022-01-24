@@ -1153,20 +1153,16 @@ class JSONInput extends Component<JSONInputProps, JSONInputState> {
             }));
             break;
           }
-          if (type !== 'key') {
-            if (!buffer2.isValue) {
-              buffer.tokens_merge[i].type = 'key';
-              type = buffer.tokens_merge[i].type;
-              string = `"${string}"`;
-            }
+          if (type !== 'key' && !buffer2.isValue) {
+            buffer.tokens_merge[i].type = 'key';
+            type = buffer.tokens_merge[i].type;
+            string = `"${string}"`;
           }
-          if (type === 'primitive') {
-            if (string === 'undefined') {
-              setError(i, format(lang.invalidToken.useInstead, {
-                badToken: 'undefined',
-                goodToken: 'null'
-              }));
-            }
+          if (type === 'primitive' && string === 'undefined') {
+            setError(i, format(lang.invalidToken.useInstead, {
+              badToken: 'undefined',
+              goodToken: 'null'
+            }));
           }
           buffer.json += string;
           break;
