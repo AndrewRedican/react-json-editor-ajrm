@@ -568,7 +568,7 @@ class JSONInput extends Component {
             this.stopEvent(event);
         } else {
             event.preventDefault();
-            var text = event.clipboardData.getData('text/plain').replace(/(\r\n|\n|\r|\t)/gm, '');
+            var text = event.clipboardData.getData('text/plain').replace(/(\r\n|\n|\r|\t|\u200B)/gm, '');
             document.execCommand('insertText', false, text);
         }
         this.update();
