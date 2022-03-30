@@ -1,10 +1,10 @@
 {
-  "name": "@soon92/react-json-editor-ajrm",
-  "version": "2.5.16",
+  "name": "react-json-editor-ajrm",
+  "version": "2.5.13",
   "description": "A stylish, editor-like, modular, react component for viewing, editing, and debugging javascript object syntax!",
   "author": "andrew.redican.mejia@gmail.com",
   "license": "MIT",
-  "homepage": "https://github.com/sOoN92/react-json-editor-ajrm#readme",
+  "homepage": "https://github.com/AndrewRedican/react-json-editor-ajrm#readme",
   "bugs": {
     "url": "https://github.com/AndrewRedican/react-json-editor-ajrm/issues"
   },
@@ -48,7 +48,7 @@
       "enzyme-to-json/serializer"
     ]
   },
-  "repository": "git@github.com:sOoN92/react-json-editor-ajrm",
+  "repository": "git@github.com:AndrewRedican/react-json-editor-ajrm.git",
   "keywords": [
     "react-json-editor-ajrm",
     "ajrm",
