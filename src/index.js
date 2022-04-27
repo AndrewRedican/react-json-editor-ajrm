@@ -153,6 +153,7 @@ class JSONInput extends Component {
                                 height  = '30px'
                                 width   = '30px'
                                 viewBox = '0 0 100 100'
+                                aria-label = 'Correct JSON Format Indicator'
                             >
                                 <path
                                     fillRule = 'evenodd'
@@ -234,7 +235,8 @@ class JSONInput extends Component {
                                     <svg
                                         height  = '25px'
                                         width   = '25px'
-                                        viewBox = '0 0 100 100'
+                                        viewBox='0 0 100 100'
+                                        aria-label = 'Incorrect JSON Format Indicator'
                                     >
                                         <path
                                             fillRule ='evenodd'
