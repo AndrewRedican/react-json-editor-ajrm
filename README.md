@@ -1,3 +1,24 @@
+**Warning:** 
+
+As you may already know, the react-json-editor-ajrm's orignal project is not actively maintained and that
+it will eventually be deprecated. So I've decided to set an official date for deprecation. The tentative date for this is June 15, 2023.
+
+### What does deprecation mean?
+- It means the Github project will be archived as read only.
+- It means the npm packages will appear deprecated, but it **WILL NOT be deleted**.
+- It means the new project will be available officially on that date.
+
+I would like to thank those who used it in their projects and those who have contributed in some way to the project. I simply no longer wish to maintain this project. It was made in the early days of my software engineer career, and it has not caught up to today's standards nor mine.
+
+But don't fret. I intend to breathe new life into this project rewriting it from the ground up.
+
+I would like to take the learnings of the past, and avoid some of the issues react-json-editor-ajrm currently has. I would also like to highlight the things done well, and I wish to carry on.
+
+I've setup home for this new project here [enio](https://github.com/enio-ireland/enio).
+I've also set up a [discussion here](https://github.com/enio-ireland/enio/discussions/62) if you have any questions or comments.
+
+<br>
+
 # react-json-editor-ajrm
 
 ![npm](https://img.shields.io/npm/v/react-json-editor-ajrm.svg) ![Build Status](https://travis-ci.com/AndrewRedican/react-json-editor-ajrm.svg?branch=master) ![npm](https://img.shields.io/npm/dm/react-json-editor-ajrm.svg) [![Known Vulnerabilities](https://snyk.io/test/github/AndrewRedican/react-json-editor-ajrm/badge.svg)](https://snyk.io/test/github/{username}/{repo}) [![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors)
